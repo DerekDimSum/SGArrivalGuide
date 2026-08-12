@@ -29,6 +29,9 @@
   }
   var checks = loadChecks();
 
+  // view routing: "home" or one of the nav section ids
+  var currentView = "home";
+
   /* ---------- helpers ---------- */
 
   // t() accepts a {en,ko} leaf or a plain string (proper nouns identical in both languages)
@@ -95,6 +98,7 @@
     });
 
     var nav = h("nav", { class: "site-nav", "aria-label": lang === "ko" ? "섹션 이동" : "Sections" });
+    nav.appendChild(h("a", { href: "#home", dataset: { navId: "home" }, text: t(CONTENT.ui.homeLabel) }));
     CONTENT.nav.forEach(function (item) {
       nav.appendChild(h("a", { href: "#" + item.id, dataset: { navId: item.id }, text: t(item.label) }));
     });
@@ -112,6 +116,18 @@
       h("h1", { text: t(CONTENT.hero.title) }),
       h("p", { class: "hero-tagline", text: t(CONTENT.hero.tagline) }),
       h("p", { class: "hero-profile", text: t(CONTENT.hero.profile) })
+    ));
+  }
+
+  function renderHome(main) {
+    main.appendChild(h("section", { id: "home", class: "home-view", "aria-label": t(CONTENT.ui.homeLabel) },
+      h("div", { class: "section-cards" }, CONTENT.nav.map(function (n) {
+        return h("a", { class: "section-card", href: "#" + n.id },
+          h("span", { class: "card-title", text: t(n.label) }),
+          h("span", { class: "card-desc", text: t(n.desc) }),
+          h("span", { class: "card-arrow", "aria-hidden": "true", text: "→" })
+        );
+      }))
     ));
   }
 
@@ -658,7 +674,7 @@
     });
   }
 
-  function renderAll() {
+  function renderAll(noScroll) {
     document.documentElement.lang = lang;
     document.title = t(CONTENT.hero.title) + " — " + t(CONTENT.hero.subtitle);
     var skip = document.querySelector(".skip-link");
@@ -668,6 +684,7 @@
     var main = document.getElementById("main");
     main.innerHTML = "";
     renderHero(main);
+    renderHome(main);
     renderChecklist(main);
     renderEducation(main);
     renderLiving(main);
@@ -677,8 +694,10 @@
     renderCar(main);
     renderApps(main);
     renderCosts(main);
+    addPagers();
     renderFooter();
-    initScrollspy();
+    renderBackToTop();
+    applyView(currentView, null, noScroll);
   }
 
   function setLang(next) {
@@ -686,36 +705,97 @@
     captureOpenState();
     lang = next;
     try { localStorage.setItem(LANG_KEY, lang); } catch (e) {}
-    renderAll();
+    renderAll(true);
     window.scrollTo(0, y);
   }
 
-  /* ---------- scrollspy ---------- */
+  /* ---------- view routing ---------- */
 
-  var spy = null;
-  function initScrollspy() {
-    if (spy) spy.disconnect();
-    var links = {};
-    document.querySelectorAll(".site-nav a[data-nav-id]").forEach(function (a) {
-      links[a.getAttribute("data-nav-id")] = a;
+  function viewIds() { return ["home"].concat(CONTENT.nav.map(function (n) { return n.id; })); }
+
+  function applyView(id, targetEl, noScroll) {
+    currentView = id;
+    var hero = document.querySelector(".hero");
+    if (hero) hero.hidden = id !== "home";
+    var home = document.getElementById("home");
+    if (home) home.hidden = id !== "home";
+    document.querySelectorAll("main section.section").forEach(function (sec) {
+      sec.hidden = sec.id !== id;
     });
-    spy = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        if (e.isIntersecting) {
-          for (var k in links) links[k].classList.remove("active");
-          var link = links[e.target.id];
-          if (link) {
-            link.classList.add("active");
-            // keep the active pill visible inside the horizontally scrollable nav
-            var navEl = link.parentElement;
-            var target = link.offsetLeft - (navEl.clientWidth - link.offsetWidth) / 2;
-            navEl.scrollTo({ left: Math.max(0, target), behavior: "smooth" });
-          }
-        }
-      });
-    }, { rootMargin: "-20% 0px -70% 0px" });
-    document.querySelectorAll("main section.section").forEach(function (sec) { spy.observe(sec); });
+    document.querySelectorAll(".site-nav a[data-nav-id]").forEach(function (a) {
+      a.classList.toggle("active", a.getAttribute("data-nav-id") === id);
+    });
+    var active = document.querySelector(".site-nav a.active");
+    if (active) {
+      var navEl = active.parentElement;
+      navEl.scrollTo({ left: Math.max(0, active.offsetLeft - (navEl.clientWidth - active.offsetWidth) / 2) });
+    }
+    if (targetEl) {
+      if (targetEl.tagName === "DETAILS") targetEl.setAttribute("open", "");
+      requestAnimationFrame(function () { targetEl.scrollIntoView({ block: "start" }); });
+    } else if (!noScroll) {
+      window.scrollTo(0, 0);
+    }
   }
+
+  function route() {
+    var hash = decodeURIComponent(location.hash.replace(/^#\/?/, ""));
+    if (!hash || hash === "home" || hash === "top") { applyView("home"); return; }
+    if (viewIds().indexOf(hash) !== -1) { applyView(hash); return; }
+    var el = document.getElementById(hash);
+    if (el) {
+      var sec = el.closest("main section.section");
+      if (sec && viewIds().indexOf(sec.id) !== -1) { applyView(sec.id, el); return; }
+    }
+    applyView("home");
+  }
+
+  window.addEventListener("hashchange", route);
+
+  // same-view anchor clicks (e.g. comparison table -> area card): make sure a <details> target opens
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest ? e.target.closest("a[href^='#']") : null;
+    if (!a) return;
+    var el = document.getElementById(a.getAttribute("href").slice(1));
+    if (el && el.tagName === "DETAILS") el.setAttribute("open", "");
+  });
+
+  /* ---------- pagers + back-to-top ---------- */
+
+  function pagerLink(item, dir) {
+    return h("a", { class: "pager-link pager-" + dir, href: "#" + item.id },
+      h("span", { class: "pager-kicker", text: t(dir === "prev" ? CONTENT.ui.prevLabel : CONTENT.ui.nextLabel) }),
+      h("span", { class: "pager-title", text: (dir === "prev" ? "← " : "") + t(item.label) + (dir === "next" ? " →" : "") })
+    );
+  }
+
+  function addPagers() {
+    var items = CONTENT.nav;
+    items.forEach(function (n, i) {
+      var sec = document.getElementById(n.id);
+      if (!sec) return;
+      var pager = h("nav", { class: "section-pager", "aria-label": lang === "ko" ? "이전·다음 섹션" : "Section pager" });
+      pager.appendChild(i > 0 ? pagerLink(items[i - 1], "prev")
+        : pagerLink({ id: "home", label: CONTENT.ui.homeLabel }, "prev"));
+      if (i < items.length - 1) pager.appendChild(pagerLink(items[i + 1], "next"));
+      sec.appendChild(pager);
+    });
+  }
+
+  function renderBackToTop() {
+    var old = document.querySelector(".back-to-top");
+    if (old) old.remove();
+    document.body.appendChild(h("button", {
+      class: "back-to-top", type: "button", text: "↑",
+      "aria-label": t(CONTENT.ui.backToTop),
+      onclick: function () { window.scrollTo({ top: 0, behavior: "smooth" }); }
+    }));
+  }
+
+  window.addEventListener("scroll", function () {
+    var b = document.querySelector(".back-to-top");
+    if (b) b.classList.toggle("visible", window.scrollY > 600);
+  }, { passive: true });
 
   /* ---------- print: open all collapsibles ---------- */
 
@@ -735,5 +815,6 @@
 
   /* ---------- go ---------- */
 
-  renderAll();
+  renderAll(true);
+  route();
 })();

@@ -21,19 +21,32 @@ var CONTENT = {
     },
     mapAriaLabel: { en: "Schematic map of Singapore with shortlisted areas", ko: "후보 지역이 표시된 싱가포르 개념 지도" },
     mrtLegend: { en: "MRT lines (simplified)", ko: "MRT 노선 (간략화)" },
-    skipToContent: { en: "Skip to content", ko: "본문으로 건너뛰기" }
+    skipToContent: { en: "Skip to content", ko: "본문으로 건너뛰기" },
+    homeLabel: { en: "Home", ko: "홈" },
+    backToTop: { en: "Back to top", ko: "맨 위로" },
+    prevLabel: { en: "Previous", ko: "이전" },
+    nextLabel: { en: "Next", ko: "다음" }
   },
 
   nav: [
-    { id: "checklist", label: { en: "First 30 days", ko: "첫 30일" } },
-    { id: "education", label: { en: "Education", ko: "교육" } },
-    { id: "living", label: { en: "Where to live", ko: "어디에 살까" } },
-    { id: "community", label: { en: "Korean community", ko: "한인 커뮤니티" } },
-    { id: "church", label: { en: "Church", ko: "교회" } },
-    { id: "helper", label: { en: "Helper", ko: "입주 헬퍼" } },
-    { id: "car", label: { en: "Car?", ko: "자동차?" } },
-    { id: "apps", label: { en: "Apps", ko: "앱" } },
-    { id: "costs", label: { en: "Monthly costs", ko: "월 생활비" } }
+    { id: "checklist", label: { en: "First 30 days", ko: "첫 30일" },
+      desc: { en: "Arrival admin in order — passes, Singpass, bank, SIM, transport.", ko: "도착 후 처리할 일을 순서대로 — 패스, 싱패스, 은행, 유심, 교통까지." } },
+    { id: "education", label: { en: "Education", ko: "교육" },
+      desc: { en: "Preschool now, primary-school paths later, and the enrichment scene.", ko: "지금 필요한 유치원부터 초등 로드맵, 사교육까지." } },
+    { id: "living", label: { en: "Where to live", ko: "어디에 살까" },
+      desc: { en: "Five areas compared — map, prices, and how renting works.", ko: "후보 다섯 지역 비교 — 지도, 가격, 임대 절차까지." } },
+    { id: "community", label: { en: "Korean community", ko: "한인 커뮤니티" },
+      desc: { en: "한인회, 한국촌, K-town, Korean marts and the Saturday Hangul school.", ko: "한인회, 한국촌, K-타운, 한국 마트, 토요한글학교." } },
+    { id: "church", label: { en: "Church", ko: "교회" },
+      desc: { en: "Korean congregations — and the fastest way to meet Korean parents.", ko: "한인 교회들 — 한인 부모들을 가장 빨리 만나는 길이기도 해요." } },
+    { id: "helper", label: { en: "Helper", ko: "입주 헬퍼" },
+      desc: { en: "Costs, process and timeline for hiring live-in help.", ko: "입주 헬퍼 고용의 비용, 절차, 소요 기간." } },
+    { id: "car", label: { en: "Car?", ko: "자동차?" },
+      desc: { en: "COE reality check and why most MRT-adjacent families skip it.", ko: "COE의 현실, 그리고 역세권 가족 대부분이 차를 안 사는 이유." } },
+    { id: "apps", label: { en: "Apps", ko: "앱" },
+      desc: { en: "Day-one downloads, one line each.", ko: "첫날 깔아야 할 앱, 한 줄씩." } },
+    { id: "costs", label: { en: "Monthly costs", ko: "월 생활비" },
+      desc: { en: "A realistic family-of-four budget, low and high.", ko: "4인 가족의 현실적인 월 예산, 최소·최대." } }
   ],
 
   hero: {
