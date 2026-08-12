@@ -21,6 +21,12 @@ var CONTENT = {
     },
     mapAriaLabel: { en: "Schematic map of Singapore with shortlisted areas", ko: "후보 지역이 표시된 싱가포르 개념 지도" },
     mrtLegend: { en: "MRT lines (simplified)", ko: "MRT 노선 (간략화)" },
+    mapTabReal: { en: "Real map", ko: "실제 지도" },
+    mapTabSchematic: { en: "MRT schematic", ko: "MRT 노선 개념도" },
+    realMapHint: {
+      en: "Pinch or double-tap to zoom. Shaded areas are approximate neighbourhood outlines — tap one to jump to its guide.",
+      ko: "손가락으로 확대하거나 두 번 탭하세요. 색칠된 구역은 대략적인 동네 범위예요 — 누르면 해당 카드로 이동해요."
+    },
     skipToContent: { en: "Skip to content", ko: "본문으로 건너뛰기" },
     homeLabel: { en: "Home", ko: "홈" },
     backToTop: { en: "Back to top", ko: "맨 위로" },
@@ -503,6 +509,40 @@ var CONTENT = {
         ccl: { en: "Circle Line", ko: "서클선 (CCL)" },
         dtl: { en: "Downtown Line", ko: "다운타운선 (DTL)" },
         tel: { en: "Thomson–East Coast Line", ko: "톰슨-이스트코스트선 (TEL)" }
+      },
+      /* Real-map overlay data (Leaflet). Approximate neighbourhood outlines + landmark pins,
+         WGS84 lat/lng. These are deliberately fuzzy — neighbourhoods, not boundaries. */
+      geo: {
+        bounds: [[1.245, 103.700], [1.385, 103.995]],
+        areas: {
+          "bukit-timah": [
+            [1.3690, 103.7620], [1.3760, 103.7730], [1.3620, 103.7830], [1.3450, 103.7900],
+            [1.3330, 103.8050], [1.3220, 103.8130], [1.3160, 103.8060], [1.3300, 103.7880],
+            [1.3420, 103.7760], [1.3560, 103.7660]
+          ],
+          "clementi": [
+            [1.3230, 103.7580], [1.3220, 103.7760], [1.3130, 103.7930], [1.3010, 103.7950],
+            [1.2900, 103.7850], [1.2870, 103.7650], [1.2990, 103.7560], [1.3150, 103.7530]
+          ],
+          "east-coast": [
+            [1.3120, 103.8850], [1.3130, 103.9100], [1.3080, 103.9230], [1.2990, 103.9260],
+            [1.2950, 103.9080], [1.2930, 103.8870], [1.3000, 103.8790]
+          ],
+          "holland-village": [
+            [1.3230, 103.8020], [1.3210, 103.8110], [1.3130, 103.8130], [1.3060, 103.8050],
+            [1.3060, 103.7930], [1.3140, 103.7890]
+          ],
+          "newton": [
+            [1.3290, 103.8390], [1.3280, 103.8480], [1.3190, 103.8500], [1.3090, 103.8440],
+            [1.3090, 103.8350], [1.3200, 103.8330]
+          ]
+        },
+        landmarks: [
+          { id: "skis", lat: 1.3446, lng: 103.7780, star: true, dir: "top", label: { en: "Korean School (SKIS)", ko: "한국국제학교 (SKIS)" } },
+          { id: "ktown", lat: 1.2785, lng: 103.8435, dir: "left", label: { en: "K-town · Tanjong Pagar", ko: "코리아타운 · 탄종파가" } },
+          { id: "cbd", lat: 1.2840, lng: 103.8510, dir: "right", label: { en: "CBD", ko: "시내 (CBD)" } },
+          { id: "changi", lat: 1.3644, lng: 103.9915, dir: "top", label: { en: "Changi Airport", ko: "창이공항" } }
+        ]
       },
       /* Hand-drawn schematic (map.svg) — coordinates and paths are verbatim; do not edit them.
          Only the .area group ids were dropped (they collided with the card ids) and

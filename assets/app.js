@@ -350,6 +350,100 @@
     });
   }
 
+  /* ---------- real map (Leaflet, self-hosted; OSM/CARTO raster tiles) ---------- */
+
+  var leafletMap = null;
+  var tileLayer = null;
+
+  function darkTiles() { return window.matchMedia("(prefers-color-scheme: dark)").matches; }
+
+  function tileUrl() {
+    return darkTiles()
+      ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+      : "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png";
+  }
+
+  function biLabel(leaf, cls) {
+    return "<span class='" + (cls || "") + " lang-en'>" + leaf.en + "</span>" +
+           "<span class='" + (cls || "") + " lang-ko'>" + leaf.ko + "</span>";
+  }
+
+  function initRealMap() {
+    var host = document.getElementById("real-map");
+    if (!host || typeof L === "undefined") return;
+    if (leafletMap) { leafletMap.invalidateSize(); return; }
+
+    var geo = CONTENT.living.map.geo;
+    var accent = getComputedStyle(document.documentElement).getPropertyValue("--accent").trim() || "#b4552d";
+
+    leafletMap = L.map(host, { scrollWheelZoom: false, attributionControl: true });
+    leafletMap.attributionControl.setPrefix(false);
+    tileLayer = L.tileLayer(tileUrl(), {
+      maxZoom: 19,
+      attribution: "&copy; <a href='https://www.openstreetmap.org/copyright' target='_blank' rel='noopener'>OpenStreetMap</a> contributors &copy; <a href='https://carto.com/attributions' target='_blank' rel='noopener'>CARTO</a>"
+    }).addTo(leafletMap);
+    leafletMap.fitBounds(geo.bounds);
+
+    CONTENT.living.areas.forEach(function (area) {
+      var pts = geo.areas[area.id];
+      if (!pts) return;
+      var poly = L.polygon(pts, {
+        color: accent, weight: 2, dashArray: "6 5",
+        fillColor: accent, fillOpacity: 0.12
+      }).addTo(leafletMap);
+      // spread the two western labels apart so their pills don't collide at island zoom
+      var labelDir = { "holland-village": "top", "clementi": "bottom" }[area.id] || "center";
+      poly.bindTooltip(biLabel(area.short), {
+        permanent: true, direction: labelDir, className: "map-real-label"
+      });
+      poly.on("click", function () { activateArea(area.id, true); });
+      poly.on("mouseover", function () { poly.setStyle({ fillOpacity: 0.25, dashArray: null }); });
+      poly.on("mouseout", function () { poly.setStyle({ fillOpacity: 0.12, dashArray: "6 5" }); });
+      var el = poly.getElement();
+      if (el) {
+        el.setAttribute("tabindex", "0");
+        el.setAttribute("role", "link");
+        el.setAttribute("aria-label", t(area.name));
+        el.addEventListener("keydown", function (e) {
+          if (e.key === "Enter" || e.key === " ") { e.preventDefault(); activateArea(area.id, true); }
+        });
+      }
+    });
+
+    geo.landmarks.forEach(function (lm) {
+      L.circleMarker([lm.lat, lm.lng], {
+        radius: lm.star ? 7 : 5,
+        color: accent, weight: 2,
+        fillColor: lm.star ? accent : "#ffffff", fillOpacity: 1
+      }).addTo(leafletMap)
+        .bindTooltip(biLabel(lm.label), {
+          permanent: true, direction: lm.dir || "top",
+          offset: lm.dir === "left" ? [-8, 0] : lm.dir === "right" ? [8, 0] : [0, -8],
+          className: "map-real-lm"
+        });
+    });
+  }
+
+  // swap tile style when the OS theme flips
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function () {
+    if (tileLayer) tileLayer.setUrl(tileUrl());
+  });
+
+  function selectMapTab(which) {
+    var isReal = which === "real";
+    var realPanel = document.getElementById("map-real-panel");
+    var schPanel = document.getElementById("map-schematic-panel");
+    if (!realPanel || !schPanel) return;
+    realPanel.hidden = !isReal;
+    schPanel.hidden = isReal;
+    document.querySelectorAll(".map-tab").forEach(function (b) {
+      var sel = b.getAttribute("data-tab") === which;
+      b.classList.toggle("active", sel);
+      b.setAttribute("aria-selected", sel ? "true" : "false");
+    });
+    if (isReal) { initRealMap(); }
+  }
+
   function renderLiving(main) {
     var lv = CONTENT.living;
     var section = h("section", { id: "living", class: "section", "aria-labelledby": "living-title" },
@@ -397,19 +491,38 @@
 
     /* map */
     var mapHost = h("div", { class: "map-host" });
+    var tabs = h("div", { class: "map-tabs", role: "tablist" },
+      h("button", {
+        class: "map-tab active", type: "button", role: "tab", dataset: { tab: "real" },
+        "aria-selected": "true", "aria-controls": "map-real-panel",
+        text: t(CONTENT.ui.mapTabReal),
+        onclick: function () { selectMapTab("real"); }
+      }),
+      h("button", {
+        class: "map-tab", type: "button", role: "tab", dataset: { tab: "schematic" },
+        "aria-selected": "false", "aria-controls": "map-schematic-panel",
+        text: t(CONTENT.ui.mapTabSchematic),
+        onclick: function () { selectMapTab("schematic"); }
+      })
+    );
+    var realPanel = h("div", { id: "map-real-panel", class: "map-panel", role: "tabpanel" },
+      h("div", { id: "real-map", class: "real-map" }),
+      h("p", { class: "map-hint", text: t(CONTENT.ui.realMapHint) })
+    );
+    var schPanel = h("div", { id: "map-schematic-panel", class: "map-panel", role: "tabpanel", hidden: true },
+      mapHost,
+      h("p", { class: "map-hint", text: t(CONTENT.ui.mapHint) }),
+      h("p", { class: "legend-title", text: t(CONTENT.ui.mrtLegend) }),
+      h("ul", { class: "mrt-legend" }, Object.keys(lv.map.lines).map(function (key) {
+        return h("li", {},
+          h("span", { class: "legend-swatch key-" + key }),
+          h("span", { text: t(lv.map.lines[key]) })
+        );
+      }))
+    );
     var mapWrap = h("figure", { class: "map-figure", id: "sg-map" },
       h("h3", { text: t(lv.map.title) }),
-      mapHost,
-      h("figcaption", {},
-        h("p", { class: "map-hint", text: t(CONTENT.ui.mapHint) }),
-        h("p", { class: "legend-title", text: t(CONTENT.ui.mrtLegend) }),
-        h("ul", { class: "mrt-legend" }, Object.keys(lv.map.lines).map(function (key) {
-          return h("li", {},
-            h("span", { class: "legend-swatch key-" + key }),
-            h("span", { text: t(lv.map.lines[key]) })
-          );
-        }))
-      )
+      tabs, realPanel, schPanel
     );
     injectMap(mapHost);
     section.appendChild(mapWrap);
@@ -599,6 +712,8 @@
     document.documentElement.lang = lang;
     // the map SVG carries paired lang-en/lang-ko text nodes toggled purely by this class
     document.documentElement.classList.toggle("ko", lang === "ko");
+    // re-render clears the DOM, so any Leaflet instance dies with it
+    if (leafletMap) { leafletMap.remove(); leafletMap = null; tileLayer = null; }
     document.title = t(CONTENT.hero.title) + " — " + t(CONTENT.hero.subtitle);
     var skip = document.querySelector(".skip-link");
     if (skip) skip.textContent = t(CONTENT.ui.skipToContent);
@@ -658,6 +773,11 @@
       requestAnimationFrame(function () { targetEl.scrollIntoView({ block: "start" }); });
     } else if (!noScroll) {
       window.scrollTo(0, 0);
+    }
+    // Leaflet can only size itself once its container is actually visible
+    if (id === "living") {
+      var realPanel = document.getElementById("map-real-panel");
+      if (realPanel && !realPanel.hidden) setTimeout(initRealMap, 50);
     }
   }
 
