@@ -16,8 +16,8 @@ var CONTENT = {
     checklistProgress: { en: "done", ko: "완료" },
     resetChecklist: { en: "Reset checklist", ko: "체크리스트 초기화" },
     mapHint: {
-      en: "Tap an area to jump to its guide. Schematic map — not to scale.",
-      ko: "지역을 누르면 해당 카드로 이동해요. 축척 없는 개념도예요."
+      en: "Tap an area to jump to its guide. Schematic — simplified, but true to real geography.",
+      ko: "지역을 누르면 해당 카드로 이동해요. 실제 지리에 기반한 개략도예요."
     },
     mapAriaLabel: { en: "Schematic map of Singapore with shortlisted areas", ko: "후보 지역이 표시된 싱가포르 개념 지도" },
     mrtLegend: { en: "MRT lines (simplified)", ko: "MRT 노선 (간략화)" },
@@ -497,19 +497,94 @@ var CONTENT = {
     },
     map: {
       title: { en: "Map — a visual table of contents", ko: "지도 — 한눈에 보는 목차" },
-      landmarks: {
-        skis: { en: "Korean School (SKIS)", ko: "한국국제학교 (SKIS)" },
-        ktown: { en: "K-town · Tanjong Pagar", ko: "K-타운 · 탄종 파가" },
-        cbd: { en: "CBD", ko: "CBD (도심)" },
-        changi: { en: "Changi Airport", ko: "창이공항" }
-      },
       lines: {
-        ewl: { en: "East–West Line", ko: "동서선 (EWL)" },
         nsl: { en: "North–South Line", ko: "남북선 (NSL)" },
+        ewl: { en: "East–West Line", ko: "동서선 (EWL)" },
         ccl: { en: "Circle Line", ko: "서클선 (CCL)" },
         dtl: { en: "Downtown Line", ko: "다운타운선 (DTL)" },
         tel: { en: "Thomson–East Coast Line", ko: "톰슨-이스트코스트선 (TEL)" }
-      }
+      },
+      /* Hand-drawn schematic (map.svg) — coordinates and paths are verbatim; do not edit them.
+         Only the .area group ids were dropped (they collided with the card ids) and
+         data-target="holland-v" was renamed to match the holland-village card. */
+      svg: `<svg id="sgmap" viewBox="0 0 1000 627" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Schematic map of Singapore showing the five shortlisted areas">
+  <rect class="sea" x="0" y="0" width="1000" height="627" rx="14"/>
+  <path class="johor" d="M 0.0,0.0 L 0.0,84.3 L 127.5,103.9 L 245.1,92.2 L 366.7,72.5 L 480.4,45.1 L 607.8,68.6 L 754.9,52.9 L 911.8,84.3 L 1000.0,68.6 L 1000.0,0.0 Z"/>
+  <path class="island" d="M 68.6,468.6 C 62.7,459.5 91.5,418.9 103.9,398.0 C 116.3,377.1 130.0,366.3 143.1,343.1 C 156.2,319.9 171.6,287.6 182.4,258.8 C 193.2,230.1 197.4,192.5 207.8,170.6 C 218.2,148.7 227.4,135.3 245.1,127.5 C 262.8,119.7 291.1,128.7 313.7,123.5 C 336.2,118.3 353.3,103.3 380.4,96.1 C 407.5,88.9 444.1,77.1 476.5,80.4 C 508.9,83.7 546.7,101.3 574.5,115.7 C 602.3,130.1 622.8,151.0 643.1,166.7 C 663.4,182.4 676.8,200.7 696.1,209.8 C 715.4,219.0 739.2,219.6 758.8,221.6 C 778.4,223.6 792.8,224.9 813.7,221.6 C 834.6,218.3 866.6,200.1 884.3,202.0 C 901.9,203.9 914.7,215.7 919.6,233.3 C 924.5,250.9 918.3,285.6 913.7,307.8 C 909.1,330.0 908.2,354.3 892.2,366.7 C 876.2,379.1 846.4,377.2 817.6,382.4 C 788.8,387.6 753.6,391.8 719.6,398.0 C 685.6,404.2 639.9,409.8 613.7,419.6 C 587.6,429.4 579.7,446.4 562.7,456.9 C 545.7,467.4 533.4,480.4 511.8,482.4 C 490.2,484.3 458.8,477.8 433.3,468.6 C 407.8,459.5 383.0,437.6 358.8,427.5 C 334.6,417.4 312.4,408.1 288.2,407.8 C 264.0,407.5 238.5,418.0 213.7,425.5 C 188.9,433.0 163.4,445.7 139.2,452.9 C 115.0,460.1 74.5,477.8 68.6,468.6 Z"/>
+  <ellipse class="island" cx="500.0" cy="502.9" rx="26" ry="8"/>
+  <g class="mrt">
+    <path class="ln nsl" d="M 327.5,337.3 C 329.8,332.1 340.6,322.9 341.2,305.9 C 341.8,288.9 327.1,260.1 331.4,235.3 C 335.6,210.5 353.0,173.9 366.7,156.9 C 380.4,139.9 394.8,141.2 413.7,133.3 C 432.6,125.5 464.4,107.2 480.4,109.8 C 496.4,112.4 500.0,123.2 509.8,149.0 C 519.6,174.8 535.0,239.2 539.2,264.7 C 543.5,290.2 537.2,285.7 535.3,302.0 C 533.3,318.3 530.8,350.0 527.5,362.7 C 524.2,375.4 519.6,373.2 515.7,378.4 C 511.8,383.6 501.3,389.9 503.9,394.1 C 506.5,398.4 524.9,400.3 531.4,403.9 C 537.9,407.5 541.5,410.8 543.1,415.7 C 544.7,420.6 540.5,427.8 541.2,433.3 C 541.9,438.9 546.1,446.4 547.1,449.0 "/>
+    <path class="ln ewl" d="M 121.6,323.5 C 144.1,323.8 222.6,323.2 256.9,325.5 C 291.2,327.8 308.2,329.5 327.5,337.3 C 346.8,345.1 356.8,364.0 372.5,372.5 C 388.2,381.0 408.2,381.6 421.6,388.2 C 435.0,394.8 436.6,403.0 452.9,411.8 C 469.2,420.6 504.9,437.6 519.6,441.2 C 534.3,444.8 537.3,437.6 541.2,433.3 C 545.1,429.1 541.5,420.9 543.1,415.7 C 544.7,410.5 544.8,407.9 551.0,402.0 C 557.2,396.1 568.3,386.3 580.4,380.4 C 592.5,374.5 604.2,370.9 623.5,366.7 C 642.8,362.4 678.8,357.8 696.1,354.9 C 713.4,351.9 722.6,358.5 727.5,349.0 C 732.4,339.5 724.5,313.0 725.5,298.0 C 726.5,283.0 732.0,265.3 733.3,258.8 "/>
+    <path class="ln ewl" d="M 727.5,349.0 C 732.4,346.4 743.2,343.1 756.9,333.3 C 770.6,323.5 801.0,297.4 809.8,290.2 "/>
+    <path class="ln ccl" d="M 531.4,403.9 C 534.3,405.9 544.1,413.7 549.0,415.7 C 553.9,417.7 554.3,419.0 560.8,415.7 C 567.3,412.4 577.8,404.3 588.2,396.1 C 598.7,387.9 624.1,382.1 623.5,366.7 C 622.9,351.3 599.0,314.7 584.3,303.9 C 569.6,293.1 546.4,297.8 535.3,302.0 C 524.2,306.2 528.4,319.9 517.6,329.4 C 506.8,338.9 481.1,352.3 470.6,358.8 C 460.2,365.3 461.1,365.0 454.9,368.6 C 448.7,372.2 438.9,377.1 433.3,380.4 C 427.8,383.7 425.5,382.3 421.6,388.2 C 417.7,394.1 409.2,405.6 409.8,415.7 C 410.4,425.8 413.1,439.9 425.5,449.0 C 437.9,458.1 467.6,469.0 484.3,470.6 C 501.0,472.2 515.0,462.4 525.5,458.8 C 536.0,455.2 541.2,456.2 547.1,449.0 C 553.0,441.8 558.5,421.2 560.8,415.7 "/>
+    <path class="ln dtl" d="M 366.7,247.1 C 368.3,252.6 371.9,268.0 376.5,280.4 C 381.1,292.8 388.9,312.8 394.1,321.6 C 399.3,330.4 400.9,330.0 407.8,333.3 C 414.7,336.6 424.8,336.9 435.3,341.2 C 445.8,345.4 461.1,355.2 470.6,358.8 C 480.1,362.4 484.7,359.4 492.2,362.7 C 499.7,366.0 508.2,374.1 515.7,378.4 C 523.2,382.6 531.4,384.3 537.3,388.2 C 543.2,392.1 547.1,397.4 551.0,402.0 C 554.9,406.6 559.8,409.8 560.8,415.7 C 561.8,421.6 562.4,434.4 556.9,437.3 C 551.4,440.2 526.5,443.8 527.5,433.3 C 528.5,422.8 547.7,388.2 562.7,374.5 C 577.7,360.8 599.3,357.9 617.6,351.0 C 635.9,344.1 654.5,342.1 672.5,333.3 C 690.5,324.5 711.4,298.0 725.5,298.0 C 739.6,298.0 751.7,327.4 756.9,333.3 "/>
+    <path class="ln tel" d="M 413.7,111.8 C 413.7,115.4 403.2,116.6 413.7,133.3 C 424.2,150.0 461.1,184.7 476.5,211.8 C 491.9,238.9 499.0,276.5 505.9,296.1 C 512.8,315.7 519.9,318.3 517.6,329.4 C 515.3,340.5 494.5,351.9 492.2,362.7 C 489.9,373.5 501.9,385.6 503.9,394.1 C 505.8,402.6 501.3,405.9 503.9,413.7 C 506.5,421.5 514.7,434.7 519.6,441.2 C 524.5,447.7 528.7,451.6 533.3,452.9 C 537.9,454.2 540.2,450.6 547.1,449.0 C 554.0,447.4 563.7,450.0 574.5,443.1 C 585.3,436.2 599.7,415.3 611.8,407.8 C 623.9,400.3 632.1,402.9 647.1,398.0 C 662.1,393.1 692.9,381.7 702.0,378.4 "/>
+  </g>
+  <text class="ctx lang-en" x="195" y="52" text-anchor="middle">JOHOR BAHRU · MALAYSIA</text><text class="ctx lang-ko" x="195" y="52" text-anchor="middle">조호르바루 · 말레이시아</text>
+  <text class="water lang-en" x="640" y="118" text-anchor="middle">Straits of Johor</text><text class="water lang-ko" x="640" y="118" text-anchor="middle">조호르 해협</text>
+  <text class="water lang-en" x="680" y="585" text-anchor="middle">Singapore Strait</text><text class="water lang-ko" x="680" y="585" text-anchor="middle">싱가포르 해협</text>
+  <text class="tiny lang-en" x="500.0" y="524.9" text-anchor="middle">Sentosa</text><text class="tiny lang-ko" x="500.0" y="524.9" text-anchor="middle">센토사</text>
+  <g class="lm">
+    <circle cx="413.7" cy="133.3" r="3.5"/>
+    <text class="tiny lang-en" x="422.7" y="137.3" text-anchor="start">Woodlands · causeway to Malaysia</text><text class="tiny lang-ko" x="422.7" y="137.3" text-anchor="start">우드랜즈 · 말레이시아 육로</text>
+    <circle cx="542.2" cy="432.4" r="3.5"/>
+    <text class="tiny lang-en" x="554.2" y="448.4" text-anchor="start">CBD</text><text class="tiny lang-ko" x="554.2" y="448.4" text-anchor="start">시내 (CBD)</text>
+    <circle cx="527.5" cy="446.1" r="4.5" class="dot-k"/>
+    <line x1="527.5" y1="452.1" x2="501.5" y2="480.1" class="leader"/>
+    <text class="lm-lbl lang-en" x="497.5" y="494.1" text-anchor="end">K-town · Tanjong Pagar</text><text class="lm-lbl lang-ko" x="497.5" y="494.1" text-anchor="end">코리아타운 · 탄종파가</text>
+    <circle cx="809.8" cy="290.2" r="3.5"/>
+    <text class="tiny lang-en" x="817.8" y="284.2" text-anchor="start">Changi Airport ✈</text><text class="tiny lang-ko" x="817.8" y="284.2" text-anchor="start">창이공항 ✈</text>
+    <path class="star" transform="translate(394.5,322.5) scale(1.15)"
+          d="M0,-7 L1.9,-2.2 7,-2.2 2.9,1 4.3,6 0,3 -4.3,6 -2.9,1 -7,-2.2 -1.9,-2.2 Z"/>
+    <line x1="388.5" y1="317.5" x2="324.5" y2="270.5" class="leader"/>
+    <text class="lm-lbl lang-en" x="320.5" y="262.5" text-anchor="end">Korean School (SKIS)</text><text class="lm-lbl lang-ko" x="320.5" y="262.5" text-anchor="end">한국국제학교 (SKIS)</text>
+  </g>
+
+  <g class="area" data-target="bukit-timah" tabindex="0" role="link"
+     aria-label="Bukit Timah — jump to section">
+    <ellipse cx="403.9" cy="319.6" rx="81.0" ry="45.8" transform="rotate(-35 403.9 319.6)"/>
+    <text class="area-name lang-en" x="403.9" y="299.6" text-anchor="middle">Bukit Timah</text><text class="area-name lang-ko" x="403.9" y="299.6" text-anchor="middle">부킷 티마</text>
+
+    <text class="area-vibe lang-en" x="403.9" y="314.6" text-anchor="middle">Leafy</text><text class="area-vibe lang-ko" x="403.9" y="314.6" text-anchor="middle">녹음</text>
+  </g>
+  <g class="area" data-target="clementi" tabindex="0" role="link"
+     aria-label="Clementi — jump to section">
+    <ellipse cx="380.4" cy="390.2" rx="74.0" ry="40.5" transform="rotate(-15 380.4 390.2)"/>
+    <text class="area-name lang-en" x="364.4" y="402.2" text-anchor="middle">Clementi</text><text class="area-name lang-ko" x="364.4" y="402.2" text-anchor="middle">클레멘티</text>
+    <text class="area-sub lang-en" x="364.4" y="418.2" text-anchor="middle">Buona Vista · West Coast</text><text class="area-sub lang-ko" x="364.4" y="418.2" text-anchor="middle">부오나비스타 · 웨스트코스트</text>
+    <text class="area-vibe lang-en" x="364.4" y="434.2" text-anchor="middle">Practical</text><text class="area-vibe lang-ko" x="364.4" y="434.2" text-anchor="middle">실속</text>
+  </g>
+  <g class="area" data-target="east-coast" tabindex="0" role="link"
+     aria-label="East Coast — jump to section">
+    <ellipse cx="649.0" cy="396.1" rx="81.0" ry="35.2" transform="rotate(12 649.0 396.1)"/>
+    <text class="area-name lang-en" x="649.0" y="392.1" text-anchor="middle">East Coast</text><text class="area-name lang-ko" x="649.0" y="392.1" text-anchor="middle">이스트 코스트</text>
+    <text class="area-sub lang-en" x="649.0" y="408.1" text-anchor="middle">Katong</text><text class="area-sub lang-ko" x="649.0" y="408.1" text-anchor="middle">카통</text>
+    <text class="area-vibe lang-en" x="649.0" y="424.1" text-anchor="middle">Breezy</text><text class="area-vibe lang-ko" x="649.0" y="424.1" text-anchor="middle">여유</text>
+  </g>
+  <g class="area" data-target="holland-village" tabindex="0" role="link"
+     aria-label="Holland V — jump to section">
+    <ellipse cx="441.2" cy="375.5" rx="40.5" ry="28.2" transform="rotate(-20 441.2 375.5)"/>
+    <text class="area-name sm lang-en" x="445.2" y="373.5" text-anchor="middle">Holland V</text><text class="area-name sm lang-ko" x="445.2" y="373.5" text-anchor="middle">홀랜드 빌리지</text>
+
+    <text class="area-vibe lang-en" x="445.2" y="388.5" text-anchor="middle">Sociable</text><text class="area-vibe lang-ko" x="445.2" y="388.5" text-anchor="middle">사교</text>
+  </g>
+  <g class="area" data-target="newton" tabindex="0" role="link"
+     aria-label="Newton · Novena — jump to section">
+    <ellipse cx="521.6" cy="368.6" rx="42.3" ry="33.5" transform="rotate(70 521.6 368.6)"/>
+    <text class="area-name sm lang-en" x="521.6" y="360.6" text-anchor="middle">Newton · Novena</text><text class="area-name sm lang-ko" x="521.6" y="360.6" text-anchor="middle">뉴튼 · 노베나</text>
+
+    <text class="area-vibe lang-en" x="521.6" y="376.6" text-anchor="middle">Central</text><text class="area-vibe lang-ko" x="521.6" y="376.6" text-anchor="middle">도심</text>
+  </g>
+  <g class="scale" transform="translate(42,593)">
+    <line x1="0" y1="0" x2="176.1" y2="0"/>
+    <line x1="0" y1="-5" x2="0" y2="5"/><line x1="176.1" y1="-5" x2="176.1" y2="5"/>
+    <text class="tiny lang-en" x="88.05" y="-8" text-anchor="middle">10 km</text><text class="tiny lang-ko" x="88.05" y="-8" text-anchor="middle">10 km</text>
+  </g>
+  <g class="north" transform="translate(954,96)">
+    <path d="M0,-14 L6,8 0,3 -6,8 Z"/><text x="0" y="24" text-anchor="middle">N</text>
+  </g>
+</svg>`
     },
     areas: [
       {

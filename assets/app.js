@@ -322,45 +322,9 @@
 
   /* ---------- where to live ---------- */
 
-  var MAP_GEO = {
-    island: "M62,238 C66,190 118,142 178,120 C240,97 310,86 385,84 C455,82 525,94 585,114 C645,134 703,158 716,184 C728,206 702,236 660,256 C612,280 558,300 498,308 C438,316 378,318 318,312 C258,306 188,298 138,284 C96,272 58,270 62,238 Z",
-    lines: [
-      { id: "nsl", color: "#d42e12", d: "M298,108 C320,142 382,150 406,186 C426,216 436,252 442,290" },
-      { id: "ewl", color: "#009645", d: "M700,190 C640,236 560,262 460,272 C370,282 258,274 118,220" },
-      { id: "ccl", color: "#fa9e0d", d: "M442,288 C360,300 268,268 268,204 C268,164 330,140 396,152" },
-      { id: "dtl", color: "#005ec4", d: "M224,134 C270,170 302,186 342,216 C392,250 430,264 470,272 C512,280 546,256 572,236" },
-      { id: "tel", color: "#9d5b25", d: "M374,114 C390,164 410,214 438,262 C458,294 520,292 586,262" }
-    ],
-    areas: {
-      "bukit-timah":     { cx: 298, cy: 182, rx: 62, ry: 40, lx: 298, ly: 178 },
-      "clementi":        { cx: 205, cy: 268, rx: 66, ry: 33, lx: 205, ly: 264 },
-      "holland-village": { cx: 338, cy: 247, rx: 45, ry: 27, lx: 338, ly: 243 },
-      "newton":          { cx: 413, cy: 203, rx: 42, ry: 26, lx: 413, ly: 199 },
-      "east-coast":      { cx: 566, cy: 271, rx: 64, ry: 29, lx: 566, ly: 267 }
-    },
-    landmarks: [
-      { key: "skis",   x: 283, y: 152, lx: 283, ly: 138, anchor: "middle" },
-      { key: "ktown",  x: 430, y: 302, lx: 430, ly: 322, anchor: "middle" },
-      { key: "cbd",    x: 462, y: 286, lx: 476, ly: 282, anchor: "start" },
-      { key: "changi", x: 686, y: 186, lx: 686, ly: 172, anchor: "middle" }
-    ]
-  };
-
-  var SVG_NS = "http://www.w3.org/2000/svg";
-  function s(tag, attrs) {
-    var el = document.createElementNS(SVG_NS, tag);
-    if (attrs) for (var k in attrs) el.setAttribute(k, attrs[k]);
-    for (var i = 2; i < arguments.length; i++) {
-      var c = arguments[i];
-      if (c == null) continue;
-      el.appendChild(typeof c === "string" ? document.createTextNode(c) : c);
-    }
-    return el;
-  }
-
   function activateArea(id, scroll) {
-    document.querySelectorAll(".map-area").forEach(function (g) {
-      g.classList.toggle("active", g.getAttribute("data-area") === id);
+    document.querySelectorAll(".map-figure .area").forEach(function (g) {
+      g.classList.toggle("active", g.getAttribute("data-target") === id);
     });
     if (scroll) {
       var card = document.getElementById("area-" + id);
@@ -374,61 +338,16 @@
     }
   }
 
-  function buildMap() {
-    var svg = s("svg", {
-      viewBox: "0 0 800 430", class: "sg-map", role: "group",
-      "aria-label": t(CONTENT.ui.mapAriaLabel)
-    });
-
-    svg.appendChild(s("path", { d: MAP_GEO.island, class: "island" }));
-
-    MAP_GEO.lines.forEach(function (l) {
-      svg.appendChild(s("path", { d: l.d, class: "mrt-line", stroke: l.color }));
-    });
-
-    CONTENT.living.areas.forEach(function (area) {
-      var g = MAP_GEO.areas[area.id];
-      if (!g) return;
-      var group = s("g", {
-        class: "map-area", "data-area": area.id, tabindex: "0", role: "button",
-        "aria-label": t(area.name)
-      },
-        s("ellipse", { cx: g.cx, cy: g.cy, rx: g.rx, ry: g.ry }),
-        s("text", { x: g.lx, y: g.ly, "text-anchor": "middle", class: "area-label" }, t(area.short)),
-        s("text", { x: g.lx, y: g.ly + 15, "text-anchor": "middle", class: "area-vibe" }, t(area.vibe))
-      );
-      group.appendChild(s("title", {}, t(area.name)));
-      function go() { activateArea(area.id, true); }
-      group.addEventListener("click", go);
-      group.addEventListener("keydown", function (e) {
+  // inject the hand-drawn schematic (content.js living.map.svg) and wire its clickable areas
+  function injectMap(host) {
+    host.innerHTML = CONTENT.living.map.svg;
+    host.querySelectorAll(".area").forEach(function (a) {
+      function go() { activateArea(a.getAttribute("data-target"), true); }
+      a.addEventListener("click", go);
+      a.addEventListener("keydown", function (e) {
         if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); }
       });
-      svg.appendChild(group);
     });
-
-    MAP_GEO.landmarks.forEach(function (lm) {
-      var label = t(CONTENT.living.map.landmarks[lm.key]);
-      var isSkis = lm.key === "skis";
-      var mark = isSkis
-        ? s("path", { class: "landmark-star", d: starPath(lm.x, lm.y, 7) })
-        : s("circle", { class: "landmark-dot", cx: lm.x, cy: lm.y, r: 4 });
-      svg.appendChild(s("g", { class: "landmark" },
-        mark,
-        s("text", { x: lm.lx, y: lm.ly, "text-anchor": lm.anchor, class: "landmark-label" }, label)
-      ));
-    });
-
-    return svg;
-  }
-
-  function starPath(cx, cy, r) {
-    var pts = [];
-    for (var i = 0; i < 10; i++) {
-      var rad = (i % 2 === 0) ? r : r * 0.45;
-      var a = -Math.PI / 2 + i * Math.PI / 5;
-      pts.push((cx + rad * Math.cos(a)).toFixed(1) + "," + (cy + rad * Math.sin(a)).toFixed(1));
-    }
-    return "M" + pts.join("L") + "Z";
   }
 
   function renderLiving(main) {
@@ -477,20 +396,22 @@
     )));
 
     /* map */
+    var mapHost = h("div", { class: "map-host" });
     var mapWrap = h("figure", { class: "map-figure", id: "sg-map" },
       h("h3", { text: t(lv.map.title) }),
-      buildMap(),
+      mapHost,
       h("figcaption", {},
         h("p", { class: "map-hint", text: t(CONTENT.ui.mapHint) }),
         h("p", { class: "legend-title", text: t(CONTENT.ui.mrtLegend) }),
-        h("ul", { class: "mrt-legend" }, MAP_GEO.lines.map(function (l) {
+        h("ul", { class: "mrt-legend" }, Object.keys(lv.map.lines).map(function (key) {
           return h("li", {},
-            h("span", { class: "legend-swatch", style: "background:" + l.color }),
-            h("span", { text: t(lv.map.lines[l.id]) })
+            h("span", { class: "legend-swatch key-" + key }),
+            h("span", { text: t(lv.map.lines[key]) })
           );
         }))
       )
     );
+    injectMap(mapHost);
     section.appendChild(mapWrap);
 
     /* area cards */
@@ -676,6 +597,8 @@
 
   function renderAll(noScroll) {
     document.documentElement.lang = lang;
+    // the map SVG carries paired lang-en/lang-ko text nodes toggled purely by this class
+    document.documentElement.classList.toggle("ko", lang === "ko");
     document.title = t(CONTENT.hero.title) + " — " + t(CONTENT.hero.subtitle);
     var skip = document.querySelector(".skip-link");
     if (skip) skip.textContent = t(CONTENT.ui.skipToContent);

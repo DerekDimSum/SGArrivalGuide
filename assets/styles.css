@@ -15,6 +15,22 @@
   --radius: 12px;
   --font-head: "Fraunces", "Noto Serif KR", "Noto Sans KR", serif;
   --font-body: "Noto Sans KR", -apple-system, "Segoe UI", sans-serif;
+
+  /* map — official MRT line colours on the light surface */
+  --nsl: #d42e12;
+  --ewl: #009645;
+  --ccl: #fa9e0d;
+  --dtl: #005ec4;
+  --tel: #9d5b25;
+  --map-sea: #dde9e6;
+  --map-land: #f7f1e5;
+  --map-johor: #ece4d3;
+  --map-coast: #c3b59e;
+  --map-water: #8ba39b;
+  --map-dot: #8a7a63;
+  --map-area-fill: rgba(180, 85, 45, 0.08);
+  --map-area-fill-hot: rgba(180, 85, 45, 0.16);
+  --map-area-stroke: #c98a5e;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -30,8 +46,28 @@
     --green: #8db89b;
     --focus: #e08a5c;
     --shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+
+    /* map — official line colours, brightened for the dark surface */
+    --nsl: #e5533d;
+    --ewl: #35b76f;
+    --ccl: #f0a63a;
+    --dtl: #5b93e6;
+    --tel: #b5814f;
+    --map-sea: #15100c;
+    --map-land: #2a231c;
+    --map-johor: #221b14;
+    --map-coast: #5c4a38;
+    --map-water: #6b5843;
+    --map-dot: #cbb392;
+    --map-area-fill: rgba(233, 196, 138, 0.08);
+    --map-area-fill-hot: rgba(233, 196, 138, 0.17);
+    --map-area-stroke: #c49d62;
   }
 }
+
+/* bilingual text nodes inside the map SVG (paired lang-en / lang-ko) */
+html.ko .lang-en { display: none; }
+html:not(.ko) .lang-ko { display: none; }
 
 * { box-sizing: border-box; }
 
@@ -304,42 +340,64 @@ tbody tr:last-child th, tbody tr:last-child td { border-bottom: none; }
 /* ---------- map ---------- */
 
 .map-figure { margin: 2rem 0; }
-.sg-map {
-  width: 100%; height: auto; display: block;
-  background: var(--bg-raised);
+.map-host svg {
+  display: block; width: 100%; height: auto;
   border: 1px solid var(--line); border-radius: var(--radius);
   box-shadow: var(--shadow);
 }
 
-.sg-map .island { fill: var(--bg-accent); stroke: var(--line); stroke-width: 2; }
-.sg-map .mrt-line { fill: none; stroke-width: 3.5; stroke-linecap: round; opacity: 0.75; }
+.map-figure text { fill: var(--ink-soft); font-family: var(--font-body); }
+.map-figure .sea { fill: var(--map-sea); }
+.map-figure .island { fill: var(--map-land); stroke: var(--map-coast); stroke-width: 1.5; }
+.map-figure .johor { fill: var(--map-johor); stroke: var(--map-coast); stroke-width: 1; opacity: 0.85; }
 
-.map-area { cursor: pointer; }
-.map-area ellipse {
-  fill: var(--accent); fill-opacity: 0.13;
-  stroke: var(--accent); stroke-width: 1.5; stroke-dasharray: 4 3;
-  transition: fill-opacity 0.15s ease;
+.map-figure .ln { fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; opacity: 0.72; }
+.map-figure .nsl { stroke: var(--nsl); }
+.map-figure .ewl { stroke: var(--ewl); }
+.map-figure .ccl { stroke: var(--ccl); }
+.map-figure .dtl { stroke: var(--dtl); }
+.map-figure .tel { stroke: var(--tel); }
+
+.map-figure .area { cursor: pointer; outline: none; }
+.map-figure .area ellipse {
+  fill: var(--map-area-fill); stroke: var(--map-area-stroke);
+  stroke-width: 1.6; stroke-dasharray: 6 5; transition: all 0.18s;
 }
-.map-area:hover ellipse, .map-area:focus ellipse { fill-opacity: 0.3; stroke-dasharray: none; }
-.map-area.active ellipse { fill-opacity: 0.4; stroke-width: 2.5; stroke-dasharray: none; }
-.map-area:focus { outline: none; }
-.map-area:focus-visible ellipse { stroke-width: 3; stroke-dasharray: none; }
-
-.area-label {
-  font-family: var(--font-body); font-size: 14px; font-weight: 700;
-  fill: var(--ink); pointer-events: none;
+.map-figure .area:hover ellipse,
+.map-figure .area:focus-visible ellipse,
+.map-figure .area.active ellipse {
+  fill: var(--map-area-fill-hot);
+  stroke: var(--accent); stroke-dasharray: none; stroke-width: 2.2;
 }
-.area-vibe { font-size: 11px; fill: var(--ink-soft); pointer-events: none; }
+.map-figure .area.active ellipse { stroke-width: 2.6; }
+.map-figure .area:focus-visible ellipse { stroke-width: 3; }
 
-.landmark-dot { fill: var(--ink-soft); }
-.landmark-star { fill: var(--accent); }
-.landmark-label { font-size: 11.5px; font-weight: 700; fill: var(--ink-soft); }
+.map-figure .area-name { fill: var(--ink); font-size: 15.5px; font-weight: 700; }
+.map-figure .area-name.sm { font-size: 13px; }
+.map-figure .area-sub { fill: var(--ink-soft); font-size: 11.5px; }
+.map-figure .area-vibe { fill: var(--ink-soft); font-size: 11.5px; font-style: italic; }
+.map-figure .ctx { fill: var(--ink-soft); font-size: 12px; letter-spacing: 2.5px; font-weight: 600; }
+.map-figure .water { fill: var(--map-water); font-size: 13px; font-style: italic; letter-spacing: 1.5px; }
+.map-figure .tiny { fill: var(--ink-soft); font-size: 11px; }
+.map-figure .lm circle { fill: var(--map-dot); }
+.map-figure .lm .dot-k { fill: var(--accent); }
+.map-figure .lm-lbl { fill: var(--ink); font-size: 12.5px; font-weight: 600; }
+.map-figure .leader { stroke: var(--ink-soft); stroke-width: 1; stroke-dasharray: 2 3; }
+.map-figure .star { fill: var(--accent); stroke: #00000055; stroke-width: 0.5; }
+.map-figure .scale line { stroke: var(--ink-soft); stroke-width: 1.5; }
+.map-figure .north path { fill: var(--ink-soft); }
+.map-figure .north text { font-size: 11px; fill: var(--ink-soft); }
 
 .map-hint { font-size: 0.85rem; color: var(--ink-soft); }
 .legend-title { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-soft); margin-bottom: 0.2em; }
 .mrt-legend { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 0.4em 1.4em; margin: 0.2em 0; }
 .mrt-legend li { display: flex; align-items: center; gap: 0.45em; font-size: 0.82rem; color: var(--ink-soft); }
 .legend-swatch { width: 1.1em; height: 0.35em; border-radius: 999px; display: inline-block; }
+.key-nsl { background: var(--nsl); }
+.key-ewl { background: var(--ewl); }
+.key-ccl { background: var(--ccl); }
+.key-dtl { background: var(--dtl); }
+.key-tel { background: var(--tel); }
 
 /* ---------- entries & lists ---------- */
 
