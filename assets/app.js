@@ -186,14 +186,45 @@
       h("div", { class: "header-controls" }, langSeg, curSeg)
     ));
     header.appendChild(nav);
+    header.appendChild(h("div", { class: "sub-nav", id: "sub-nav", hidden: true }));
+  }
+
+  /* the header's second row: subsection anchors for the current view */
+  var subSpy = null;
+  function updateSubNav(viewId) {
+    var row = document.getElementById("sub-nav");
+    if (!row) return;
+    var item = null;
+    CONTENT.nav.forEach(function (n) { if (n.id === viewId) item = n; });
+    var subs = item && item.subs;
+    row.innerHTML = "";
+    row.hidden = !subs;
+    document.documentElement.classList.toggle("has-subnav", !!subs);
+    if (subSpy) { subSpy.disconnect(); subSpy = null; }
+    if (!subs) return;
+    var links = {};
+    subs.forEach(function (s) {
+      links[s.id] = row.appendChild(h("a", { href: "#" + s.id, dataset: { subId: s.id }, text: t(s.label) }));
+    });
+    subSpy = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        for (var k in links) links[k].classList.remove("active");
+        var l = links[e.target.id];
+        if (l) l.classList.add("active");
+      });
+    }, { rootMargin: "-25% 0px -65% 0px" });
+    subs.forEach(function (s) {
+      var el = document.getElementById(s.id);
+      if (el) subSpy.observe(el);
+    });
   }
 
   function renderHero(main) {
     main.appendChild(h("section", { class: "hero", id: "top" },
       h("p", { class: "hero-kicker", text: t(CONTENT.hero.subtitle) }),
       h("h1", { text: t(CONTENT.hero.title) }),
-      h("p", { class: "hero-tagline", text: t(CONTENT.hero.tagline) }),
-      h("p", { class: "hero-profile", text: t(CONTENT.hero.profile) })
+      h("p", { class: "hero-tagline", text: t(CONTENT.hero.tagline) })
     ));
   }
 
@@ -285,10 +316,118 @@
     return td;
   }
 
+  /* ---------- age calculator ---------- */
+
+  var DOB_KEY = "sgguide:childdob";
+
+  function levelLocal(a) {
+    if (a <= 1) return { en: "infant care", ko: "영유아 보육" };
+    if (a === 2) return "Playgroup";
+    if (a === 3) return "N1";
+    if (a === 4) return "N2";
+    if (a === 5) return "K1";
+    if (a === 6) return "K2";
+    if (a <= 12) return "P" + (a - 6);
+    return { en: "Secondary", ko: "중등 과정" };
+  }
+  function levelBritish(a) {
+    if (a < 2) return { en: "too young", ko: "아직 어려요" };
+    if (a === 2) return "Pre-Nursery";
+    if (a === 3) return "Nursery";
+    if (a === 4) return "Reception";
+    return "Year " + (a - 4);
+  }
+  function levelAmerican(a) {
+    if (a < 2) return { en: "too young", ko: "아직 어려요" };
+    if (a === 2) return { en: "Early years", ko: "Early years (영유아반)" };
+    if (a === 3) return "Preschool";
+    if (a === 4) return "Pre-K";
+    if (a === 5) return "Kindergarten";
+    return "Grade " + (a - 5);
+  }
+
+  function calcLevels(m, y) {
+    var now = new Date();
+    var cy = now.getFullYear();
+    // local system: the age the child turns this calendar year
+    var aLocal = cy - y;
+    // Sep-cutoff systems: current academic year started last September if we're before it
+    var ayStart = (now.getMonth() + 1 >= 9) ? cy : cy - 1;
+    var aSep = (ayStart - y) - (m >= 9 ? 1 : 0);
+    function ayLabel(s) { return s + "/" + String(s + 1).slice(2); }
+    return [
+      { sys: "local", now: levelLocal(aLocal), next: levelLocal(aLocal + 1), nowAy: String(cy), nextAy: String(cy + 1) },
+      { sys: "british", now: levelBritish(aSep), next: levelBritish(aSep + 1), nowAy: ayLabel(ayStart), nextAy: ayLabel(ayStart + 1) },
+      { sys: "american", now: levelAmerican(aSep), next: levelAmerican(aSep + 1), nowAy: ayLabel(ayStart), nextAy: ayLabel(ayStart + 1) }
+    ];
+  }
+
+  function renderCalculator() {
+    var cal = CONTENT.education.calculator;
+    var saved = {};
+    try { saved = JSON.parse(localStorage.getItem(DOB_KEY)) || {}; } catch (e) {}
+
+    var monthSel = h("select", { "aria-label": t(cal.monthLabel) });
+    for (var m = 1; m <= 12; m++) {
+      monthSel.appendChild(h("option", { value: m, selected: saved.m === m, text: lang === "ko" ? m + "월" : new Date(2000, m - 1, 1).toLocaleString("en", { month: "short" }) }));
+    }
+    var yearSel = h("select", { "aria-label": t(cal.yearLabel) });
+    var cy = new Date().getFullYear();
+    yearSel.appendChild(h("option", { value: "", text: lang === "ko" ? "연도" : "year", disabled: true, selected: saved.y == null }));
+    for (var yv = cy; yv >= cy - 17; yv--) {
+      yearSel.appendChild(h("option", { value: yv, selected: saved.y === yv, text: String(yv) }));
+    }
+
+    var results = h("div", { class: "calc-results" });
+
+    function update() {
+      var mv = parseInt(monthSel.value, 10);
+      var yv2 = parseInt(yearSel.value, 10);
+      results.innerHTML = "";
+      if (!yv2) return;
+      try { localStorage.setItem(DOB_KEY, JSON.stringify({ m: mv, y: yv2 })); } catch (e) {}
+      var rows = calcLevels(mv, yv2);
+      results.appendChild(h("div", { class: "table-wrap" }, h("table", { class: "data-table calc-table" },
+        h("thead", {}, h("tr", {},
+          h("th", { text: t(cal.cols.system) }),
+          h("th", { text: t(cal.cols.cutoff) }),
+          h("th", { text: t(cal.cols.now) }),
+          h("th", { text: t(cal.cols.next) })
+        )),
+        h("tbody", {}, rows.map(function (r) {
+          var s = cal.systems[r.sys];
+          return h("tr", {},
+            h("th", { scope: "row", text: t(s.name) }),
+            h("td", { text: t(s.cutoff) }),
+            h("td", {}, h("strong", { text: t(r.now) }), h("span", { class: "ay-label", text: " · " + r.nowAy })),
+            h("td", {}, h("span", { text: t(r.next) }), h("span", { class: "ay-label", text: " · " + r.nextAy }))
+          );
+        }))
+      )));
+    }
+    monthSel.addEventListener("change", update);
+    yearSel.addEventListener("change", update);
+
+    var box = h("div", { id: "edu-calculator", class: "calc-box" },
+      h("h3", { text: t(cal.title) }),
+      h("p", { class: "section-intro", text: t(cal.intro) }),
+      h("div", { class: "calc-inputs" },
+        h("label", {}, h("span", { text: t(cal.yearLabel) }), yearSel),
+        h("label", {}, h("span", { text: t(cal.monthLabel) }), monthSel)
+      ),
+      results,
+      h("p", { class: "table-note" }, h("span", { text: t(cal.note) + " " }), verifyBadge())
+    );
+    if (saved.y) update();
+    return box;
+  }
+
   function renderEducation(main) {
     var ed = CONTENT.education;
     var section = h("section", { id: "education", class: "section", "aria-labelledby": "education-title" },
       sectionHeader("education", ed.title, "✎"));
+
+    section.appendChild(renderCalculator());
 
     /* preschool */
     var ps = ed.preschool;
@@ -388,7 +527,7 @@
 
   // collapsible subsection (<details>) — open by default on wide screens
   function sub(key, titleLeaf, bodyEl) {
-    var d = h("details", { class: "subsection", dataset: { key: key } },
+    var d = h("details", { class: "subsection", id: key, dataset: { key: key } },
       h("summary", {}, h("h3", { text: t(titleLeaf) })),
       h("div", { class: "sub-body" }, bodyEl)
     );
@@ -522,10 +661,143 @@
     if (isReal) { initRealMap(); }
   }
 
+  /* ---------- priorities picker ---------- */
+
+  var PICKS_KEY = "sgguide:picks";
+
+  function loadPicks() {
+    try { return JSON.parse(localStorage.getItem(PICKS_KEY)) || {}; } catch (e) { return {}; }
+  }
+
+  function renderPicker() {
+    var pk = CONTENT.living.picker;
+    var entries = CONTENT.living.atlas.entries;
+    var picks = loadPicks();
+
+    var results = h("div", { class: "picker-results" });
+
+    function critLabel(id) {
+      var found = null;
+      pk.criteria.forEach(function (c) { if (c.id === id) found = c; });
+      return found ? t(found.label) : id;
+    }
+
+    function renderResults() {
+      results.innerHTML = "";
+      var musts = [], nices = [];
+      for (var k in picks) (picks[k] === "must" ? musts : nices).push(k);
+      var selected = musts.concat(nices);
+      if (!selected.length) {
+        results.appendChild(h("p", { class: "table-note", text: t(pk.empty) }));
+        return;
+      }
+      var matches = entries.filter(function (e) {
+        return musts.every(function (m) { return e.tags.indexOf(m) !== -1; });
+      }).map(function (e) {
+        var hit = selected.filter(function (s) { return e.tags.indexOf(s) !== -1; });
+        return { e: e, hit: hit, score: hit.length };
+      }).filter(function (r) { return r.score > 0; });
+      matches.sort(function (a, b) {
+        return (b.score - a.score) || ((b.e.researched ? 1 : 0) - (a.e.researched ? 1 : 0));
+      });
+      if (!matches.length) {
+        results.appendChild(h("p", { class: "table-note", text: t(pk.noMatch) }));
+        return;
+      }
+      results.appendChild(h("h4", { text: t(pk.resultsTitle) }));
+      matches.forEach(function (r) {
+        var e = r.e;
+        var href = e.cardId ? "#area-" + e.cardId : "#atlas-" + e.id;
+        results.appendChild(h("a", { class: "match-card", href: href },
+          h("span", { class: "match-head" },
+            h("strong", { text: t(e.name) }),
+            h("span", { class: "match-dist", text: e.dist }),
+            h("span", { class: "vibe-tag", text: t(e.vibe) })
+          ),
+          h("span", { class: "match-tags", text: t(pk.matchedLabel) + " " + r.hit.map(critLabel).join(" · ") })
+        ));
+      });
+    }
+
+    var chips = h("div", { class: "chips" });
+    pk.criteria.forEach(function (c) {
+      var stateEl = h("span", { class: "chip-state" });
+      var chip = h("button", { type: "button", class: "chip" }, h("span", { text: t(c.label) }), stateEl);
+      function paint() {
+        var s = picks[c.id];
+        chip.classList.toggle("nice", s === "nice");
+        chip.classList.toggle("must", s === "must");
+        chip.setAttribute("aria-pressed", s ? "true" : "false");
+        stateEl.textContent = s === "must" ? t(pk.stateMust) : s === "nice" ? t(pk.stateNice) : "";
+      }
+      chip.addEventListener("click", function () {
+        picks[c.id] = picks[c.id] === "nice" ? "must" : picks[c.id] === "must" ? undefined : "nice";
+        if (!picks[c.id]) delete picks[c.id];
+        try { localStorage.setItem(PICKS_KEY, JSON.stringify(picks)); } catch (e) {}
+        paint(); renderResults();
+      });
+      paint();
+      chips.appendChild(chip);
+    });
+
+    var reset = h("button", {
+      class: "reset-btn", type: "button", text: t(pk.reset),
+      onclick: function () {
+        picks = {};
+        try { localStorage.setItem(PICKS_KEY, "{}"); } catch (e) {}
+        chips.querySelectorAll(".chip").forEach(function (ch) {
+          ch.classList.remove("nice", "must");
+          ch.setAttribute("aria-pressed", "false");
+          ch.querySelector(".chip-state").textContent = "";
+        });
+        renderResults();
+      }
+    });
+
+    renderResults();
+    return h("div", { id: "living-picker", class: "picker" },
+      h("h3", { text: t(pk.title) }),
+      h("p", { class: "section-intro", text: t(pk.intro) }),
+      chips, reset, results
+    );
+  }
+
+  /* ---------- neighbourhood atlas ---------- */
+
+  function renderAtlas() {
+    var at = CONTENT.living.atlas;
+    var wrap = h("div", { id: "living-atlas" },
+      h("h3", { text: t(at.title) }),
+      h("p", { class: "section-intro", text: t(at.intro) })
+    );
+    var grid = h("div", { class: "atlas-grid" });
+    at.entries.forEach(function (e) {
+      grid.appendChild(h("article", { class: "atlas-card" + (e.researched ? " researched" : ""), id: "atlas-" + e.id },
+        h("div", { class: "match-head" },
+          h("strong", { text: t(e.name) }),
+          h("span", { class: "match-dist", text: e.dist }),
+          h("span", { class: "vibe-tag", text: t(e.vibe) })
+        ),
+        h("p", { text: t(e.body) }),
+        e.researched
+          ? h("a", { class: "atlas-badge researched", href: "#area-" + e.cardId, text: t(at.researchedBadge) + " ↓" })
+          : h("span", { class: "atlas-badge", text: t(at.sketchBadge) })
+      ));
+    });
+    wrap.appendChild(grid);
+    return wrap;
+  }
+
   function renderLiving(main) {
     var lv = CONTENT.living;
     var section = h("section", { id: "living", class: "section", "aria-labelledby": "living-title" },
       sectionHeader("living", lv.title, "⌂"));
+
+    /* overview: island intro + district decoder + housing types + market + office */
+    var ov = h("div", { id: "living-overview" },
+      h("h3", { text: t(lv.overviewTitle) }),
+      h("p", { text: t(lv.overviewIntro) })
+    );
 
     /* §3.0 district decoder */
     var dd = h("div", {},
@@ -547,11 +819,11 @@
       ))
     );
     lv.districts.notes.forEach(function (n) { dd.appendChild(h("p", { text: t(n) })); });
-    section.appendChild(dd);
+    ov.appendChild(dd);
 
     /* §3.1 housing types */
-    section.appendChild(h("h3", { text: t(lv.housingTypes.title) }));
-    section.appendChild(h("ul", { class: "apps-list htype-list" }, lv.housingTypes.items.map(function (i) {
+    ov.appendChild(h("h3", { text: t(lv.housingTypes.title) }));
+    ov.appendChild(h("ul", { class: "apps-list htype-list" }, lv.housingTypes.items.map(function (i) {
       return h("li", {},
         h("strong", { text: t(i.name) }),
         h("span", { text: " — " + t(i.body) + " " }),
@@ -563,28 +835,20 @@
     var mk = h("div", {}, h("h3", { text: t(lv.market.title) }));
     lv.market.paras.forEach(function (p) { mk.appendChild(h("p", { text: t(p) })); });
     mk.appendChild(h("p", {}, srcLink(lv.market.srcUrl), " ", srcLink(lv.market.scarcityUrl), " ", srcLink(lv.market.hdbUrl, { en: "HDB quota tool ↗", ko: "HDB 쿼터 조회 ↗" })));
-    section.appendChild(mk);
+    ov.appendChild(mk);
 
     /* §3.3 office anchor */
     var office = h("aside", { class: "info-box office-box" }, h("h3", { text: t(lv.office.title) }));
     lv.office.paras.forEach(function (p) { office.appendChild(h("p", { text: t(p) })); });
     office.appendChild(h("p", {}, srcLink(lv.office.srcUrl), " ", srcLink(lv.office.cclUrl, { en: "CCL Stage 6 (LTA) ↗", ko: "서클선 6단계 (LTA) ↗" })));
-    section.appendChild(office);
+    ov.appendChild(office);
+    section.appendChild(ov);
 
-    /* criteria */
-    var cr = h("aside", { class: "info-box criteria-box" },
-      h("h3", { text: t(lv.criteria.title) }),
-      h("ul", { class: "criteria-list" }, lv.criteria.items.map(function (c) {
-        return h("li", { class: "w-" + c.weight },
-          h("span", { text: t(c.label) }),
-          h("span", { class: "weight-tag", text: t(lv.criteria.weightLabels[c.weight]) })
-        );
-      }))
-    );
-    section.appendChild(cr);
+    /* priorities picker */
+    section.appendChild(renderPicker());
 
     /* §3.4 comparison table */
-    section.appendChild(h("h3", { text: t(lv.comparison.title) }));
+    section.appendChild(h("h3", { id: "living-compare", text: t(lv.comparison.title) }));
     section.appendChild(h("p", { class: "table-note", text: t(lv.comparison.note) }));
     var cols = lv.comparison.cols;
     section.appendChild(h("div", { class: "table-wrap" }, h("table", { class: "data-table cmp-table" },
@@ -650,6 +914,9 @@
     );
     injectMap(mapHost);
     section.appendChild(mapWrap);
+
+    /* neighbourhood atlas */
+    section.appendChild(renderAtlas());
 
     /* area cards */
     lv.areas.forEach(function (a) {
@@ -887,7 +1154,6 @@
     main.innerHTML = "";
     renderHero(main);
     renderHome(main);
-    renderChecklist(main);
     renderEducation(main);
     renderLiving(main);
     renderCommunity(main);
@@ -896,6 +1162,7 @@
     renderCar(main);
     renderApps(main);
     renderCosts(main);
+    renderChecklist(main);
     addPagers();
     renderFooter();
     renderBackToTop();
@@ -941,6 +1208,7 @@
       var navEl = active.parentElement;
       navEl.scrollTo({ left: Math.max(0, active.offsetLeft - (navEl.clientWidth - active.offsetWidth) / 2) });
     }
+    updateSubNav(id);
     if (targetEl) {
       if (targetEl.tagName === "DETAILS") targetEl.setAttribute("open", "");
       requestAnimationFrame(function () { targetEl.scrollIntoView({ block: "start" }); });

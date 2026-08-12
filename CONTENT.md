@@ -72,6 +72,24 @@ Ordered sequence. Each item: what + key fact + official link.
 
 **Path 3 — Singapore Korean International School (SKIS).** 71 Bukit Tinggi Road (Upper Bukit Timah, near Beauty World); K–12, est. 1993, approved by both governments; Korean-medium with parallel international curriculum and English instruction. ~S$13,425/yr kindergarten (⚠️VERIFY current fees) — a fraction of Western international schools; keeps Korean identity and eases a later return to Korea. Contact admission@skis.kr, +65-6741-0778. → https://en.wikipedia.org/wiki/Singapore_Korean_International_School and https://www.skis.kr/
 
+### 2b-ii. School-entry age cut-offs (data for the birthday→level calculator)
+
+Every system counts age differently — the same child carries different labels per school. Rules verified Aug 2026:
+
+| System | Year starts | Cut-off rule | Level anchors |
+|---|---|---|---|
+| SG local (MOE/ECDA) | January | Birth window **2 Jan – 1 Jan** (born exactly 1 Jan → previous cohort; MOE-official for K1/P1) | PG turns 2 · N1 turns 3 · N2 turns 4 · K1 turns 5 · K2 turns 6 · P1 turns 7 → https://www.moe.gov.sg/news/press-releases/20260429-2026-primary-one-registration-exercise |
+| Tanglin Trust (UK) | August | Age on 1 Sept; **strictly no out-of-age placement** | Nursery 3 · Reception 4 · Year 1 = 5 (Year = age−4) → https://www.tts.edu.sg/admissions/admissions-faqs/age-appropriate-year-group-table |
+| Dulwich (UK) | August | Age on 1 Sept; exceptions "extraordinary" only | Toddler 2 · Nursery 3 · Reception 4 · Year 1 = 5 → https://assets.dulwich.org/blocks/file/dcsg-admissions-policy.pdf |
+| UWCSEA (IB) | August | Age on 1 Sept; no above-grade in Infant School | K1 = 4 · K2 = 5 · Grade 1 = 6 (Grade = age−5) → https://www.uwcsea.edu.sg/admissions/admissions-resources/age-grade-placement |
+| SAS (US) | August | Age by 1 Sept | Preschool 3 · Pre-K 4 · Kindergarten 5 · Grade 1 = 6 → https://www.sas.edu.sg/admissions/entry-requirements/age-and-grade-placements |
+| Stamford (US/IB) | August | 1 Sept birth windows | Nursery 2 · Pre-K 3 · KG1 4 · KG2 5 · Grade 1 = 6 → https://www.sais.edu.sg/admissions/grade-listings/ |
+| CIS | August | 31 Aug; accepts up to 1 year older in exceptional cases | Pre-K 3 · JK 4 · SK 5 · Grade 1 = 6 → https://www.cis.edu.sg/admissions/age-grade-placement-guidelines |
+| GESS | Aug/Sept | Euro section 1 Sep–31 Aug window; **German section 1 Aug–31 Jul** | non-selective, by age → https://www.gess.edu.sg/en/admissions/grade-placement |
+| SKIS (Korean) | **March** ⚠️VERIFY | Korean law: 초1 = March of year child turns 7 (Jan–Dec cohort, 초·중등교육법 제13조); 유치부 만3/4/5세반 by birth year (만3세반 birth yr = school yr − 4) — ⚠️VERIFY bands with admission@skis.kr | 유치부 from 만3 · 초1 = turns-7 year |
+
+Calculator display rule: show the local-system level as the headline (that's the immediate preschool decision), then a per-system table (level this school year + when formal school starts), then a placement disclaimer: published age rules ≠ final placement — most international schools assess and review records; Tanglin is strict, CIS allows +1 year; SKIS follows the Korean system, confirm directly.
+
 ### 2c. Enrichment (ages 2–4)
 
 Everywhere in Singapore; Korean-style education intensity maps naturally onto this scene. Typical costs:

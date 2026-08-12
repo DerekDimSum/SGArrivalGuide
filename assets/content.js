@@ -58,12 +58,24 @@ var CONTENT = {
   },
 
   nav: [
-    { id: "checklist", label: { en: "First 30 days", ko: "첫 30일" },
-      desc: { en: "Arrival admin in order — passes, Singpass, bank, SIM, transport.", ko: "도착 후 처리할 일을 순서대로 — 패스, 싱패스, 은행, 유심, 교통까지." } },
     { id: "education", label: { en: "Education", ko: "교육" },
-      desc: { en: "Preschool now, primary-school paths later, and the enrichment scene.", ko: "지금 필요한 유치원부터 초등 로드맵, 사교육까지." } },
+      desc: { en: "The age calculator, preschool now, primary-school paths, and enrichment.", ko: "나이 계산기부터 유치원, 초등 로드맵, 사교육까지." },
+      subs: [
+        { id: "edu-calculator", label: { en: "Age calculator", ko: "나이 계산기" } },
+        { id: "edu-preschool", label: { en: "Preschool", ko: "유치원" } },
+        { id: "edu-primary", label: { en: "Primary school", ko: "초등학교" } },
+        { id: "edu-enrichment", label: { en: "Enrichment", ko: "사교육" } }
+      ] },
     { id: "living", label: { en: "Where to live", ko: "어디에 살까" },
-      desc: { en: "Five areas compared — map, prices, and how renting works.", ko: "후보 다섯 지역 비교 — 지도, 가격, 임대 절차까지." } },
+      desc: { en: "How the island works, a priorities matcher, and a neighbourhood atlas.", ko: "싱가포르 구조 해설, 우선순위 매처, 동네 아틀라스까지." },
+      subs: [
+        { id: "living-overview", label: { en: "Overview", ko: "개요" } },
+        { id: "living-picker", label: { en: "Priorities", ko: "우선순위" } },
+        { id: "living-compare", label: { en: "Compare", ko: "비교표" } },
+        { id: "sg-map", label: { en: "Map", ko: "지도" } },
+        { id: "living-atlas", label: { en: "Neighbourhoods", ko: "동네별" } },
+        { id: "renting-box", label: { en: "Renting", ko: "임대 절차" } }
+      ] },
     { id: "community", label: { en: "Korean community", ko: "한인 커뮤니티" },
       desc: { en: "한인회, 한국촌, K-town, Korean marts and the Saturday Hangul school.", ko: "한인회, 한국촌, K-타운, 한국 마트, 토요한글학교." } },
     { id: "church", label: { en: "Church", ko: "교회" },
@@ -71,23 +83,21 @@ var CONTENT = {
     { id: "helper", label: { en: "Helper", ko: "입주 헬퍼" },
       desc: { en: "Costs, process and timeline for hiring live-in help.", ko: "입주 헬퍼 고용의 비용, 절차, 소요 기간." } },
     { id: "car", label: { en: "Car?", ko: "자동차?" },
-      desc: { en: "COE reality check and why most MRT-adjacent families skip it.", ko: "COE의 현실, 그리고 역세권 가족 대부분이 차를 안 사는 이유." } },
+      desc: { en: "COE reality check and why most MRT-adjacent households skip it.", ko: "COE의 현실, 그리고 역세권에 살면 차를 안 사는 이유." } },
     { id: "apps", label: { en: "Apps", ko: "앱" },
       desc: { en: "Day-one downloads, one line each.", ko: "첫날 깔아야 할 앱, 한 줄씩." } },
     { id: "costs", label: { en: "Monthly costs", ko: "월 생활비" },
-      desc: { en: "A realistic family-of-four budget, low and high.", ko: "4인 가족의 현실적인 월 예산, 최소·최대." } }
+      desc: { en: "A realistic monthly budget, low and high.", ko: "현실적인 월 예산, 최소·최대." } },
+    { id: "checklist", label: { en: "First 30 days", ko: "첫 30일" },
+      desc: { en: "The landing checklist — passes, Singpass, bank, SIM, transport, in order.", ko: "정착 체크리스트 — 패스, 싱패스, 은행, 유심, 교통을 순서대로." } }
   ],
 
   hero: {
     title: { en: "Moving to Singapore", ko: "싱가포르 이주 가이드" },
-    subtitle: { en: "A Family Guide", ko: "우리 가족을 위한 안내서" },
+    subtitle: { en: "A Practical Guide", ko: "한국인을 위한 실전 가이드" },
     tagline: {
-      en: "A practical, honest guide for a Korean family of four — twin toddlers, an Employment Pass, and a new life on the little red dot.",
-      ko: "쌍둥이 아이들과 함께 싱가포르에 정착하는 한국인 네 가족을 위한, 현실적이고 솔직한 안내서예요."
-    },
-    profile: {
-      en: "Husband on Employment Pass · wife & twins (2–4) on Dependant's Passes",
-      ko: "남편 EP(취업비자) · 아내와 쌍둥이(2–4세)는 DP(동반비자)"
+      en: "A practical, honest guide for anyone moving from Korea to Singapore — visas, schools, neighbourhoods, and what life really costs.",
+      ko: "한국에서 싱가포르로 이주하는 분들을 위한 현실적이고 솔직한 안내서예요 — 비자, 학교, 동네, 그리고 진짜 생활비까지."
     }
   },
 
@@ -120,8 +130,8 @@ var CONTENT = {
         id: "singpass",
         title: { en: "Singpass registration", ko: "싱패스 (Singpass) 등록" },
         body: {
-          en: "Register at singpass.gov.sg once your passes are issued. EP and DP holders aged 15+ are eligible. It is the single digital ID for all government services, tax, clinics and bank verification — the wife should register too (kids are too young).",
-          ko: "패스가 발급되면 singpass.gov.sg에서 등록하세요. EP·DP 소지자(만 15세 이상)가 가입할 수 있어요. 정부 서비스, 세금, 병원, 은행 본인인증까지 모두 쓰이는 디지털 신분증이라 아내분도 꼭 등록하는 게 좋아요. (아이들은 아직 나이가 안 돼요.)",
+          en: "Register at singpass.gov.sg once your passes are issued. EP and DP holders aged 15+ are eligible. It is the single digital ID for all government services, tax, clinics and bank verification — every adult in the household should register.",
+          ko: "패스가 발급되면 singpass.gov.sg에서 등록하세요. EP·DP 소지자(만 15세 이상)가 가입할 수 있어요. 정부 서비스, 세금, 병원, 은행 본인인증까지 모두 쓰이는 디지털 신분증이라 가족 중 성인은 모두 등록하는 게 좋아요.",
         },
         url: "https://ask.gov.sg/singpass/questions/clul28lp4002t3b8g3hnggivy"
       },
@@ -156,8 +166,8 @@ var CONTENT = {
         id: "simplygo",
         title: { en: "Transport — SimplyGo", ko: "교통 — SimplyGo" },
         body: {
-          en: "Contactless Visa/Mastercard works directly on MRT and buses; fares S$1.20–2.80 per ride. Kids: under 7 and up to 0.9m ride free; under 7 but taller than 0.9m still ride free with a free Child Concession Card (any SimplyGo Ticket Office, passport accepted, foreign kids eligible). Both twins ride free — get 2 cards once they pass 0.9m.",
-          ko: "컨택리스 Visa/Mastercard를 그대로 MRT·버스 단말기에 찍으면 돼요. 요금은 회당 S$1.20–2.80. 아이들은 만 7세 미만·키 0.9m 이하면 무료, 0.9m를 넘어도 무료 아동 카드(Child Concession Card)를 만들면 계속 무료예요(SimplyGo 매표소에서 여권으로 발급, 외국인 아동도 가능). 쌍둥이 둘 다 무료 — 키가 0.9m를 넘으면 카드 2장을 만들어 두세요."
+          en: "Contactless Visa/Mastercard works directly on MRT and buses; fares S$1.20–2.80 per ride. Kids: under 7 and up to 0.9m ride free; under 7 but taller than 0.9m still ride free with a free Child Concession Card (any SimplyGo Ticket Office, passport accepted, foreign kids eligible) — get one per child once they pass 0.9m.",
+          ko: "컨택리스 Visa/Mastercard를 그대로 MRT·버스 단말기에 찍으면 돼요. 요금은 회당 S$1.20–2.80. 아이들은 만 7세 미만·키 0.9m 이하면 무료, 0.9m를 넘어도 무료 아동 카드(Child Concession Card)를 만들면 계속 무료예요(SimplyGo 매표소에서 여권으로 발급, 외국인 아동도 가능). 키가 0.9m를 넘으면 아이별로 한 장씩 만들어 두세요."
         },
         url: "https://simplygo.com.sg/travel-fares/child-concessionary-fares/"
       },
@@ -176,8 +186,8 @@ var CONTENT = {
         id: "preschool-visits",
         title: { en: "Preschool visits & waitlists", ko: "유치원 투어 · 대기 등록" },
         body: {
-          en: "Start immediately — popular centres have 12–18 month waitlists, and you need two places at once. Details in the Education section.",
-          ko: "도착하자마자 시작하세요. 인기 있는 곳은 대기가 12–18개월이고, 쌍둥이라 자리가 두 개 필요해요. 자세한 내용은 교육 섹션에 있어요."
+          en: "If you're bringing young kids, start immediately — popular centres have 12–18 month waitlists. Details in the Education section.",
+          ko: "어린 아이와 함께라면 도착하자마자 시작하세요. 인기 있는 곳은 대기가 12–18개월이에요. 자세한 내용은 교육 섹션에 있어요."
         },
         anchor: "education"
       },
@@ -202,7 +212,7 @@ var CONTENT = {
       }
     ],
     dpFacts: {
-      title: { en: "DP & visa facts worth knowing", ko: "DP·비자 핵심 정보" },
+      title: { en: "Bringing family? DP & visa facts worth knowing", ko: "가족과 함께라면 — DP·비자 핵심 정보" },
       items: [
         {
           body: {
@@ -246,11 +256,39 @@ var CONTENT = {
   education: {
     title: { en: "Education", ko: "교육" },
 
-    preschool: {
-      title: { en: "Preschool now (ages 2–4)", ko: "지금 당장: 유치원 (2–4세)" },
+    /* Age calculator — one input, one answer per school system */
+    calculator: {
+      title: { en: "What level is my child? — age calculator", ko: "우리 아이는 몇 학년? — 나이 계산기" },
       intro: {
-        en: "Levels are named by the calendar year your child turns that age — not by a birthday cut-off. Preschool is not compulsory. Twins born around 2022–2024 land in N1/N2 now.",
-        ko: "반 배정은 '그 해에 몇 살이 되는지' 기준이에요(생일 기준 아님). 유치원은 의무교육이 아니에요. 2022–2024년생 쌍둥이라면 지금 N1/N2에 해당해요."
+        en: "Singapore levels don't map one-to-one from Korea, and each school system uses a different cutoff date. Enter a birth month and year to see where a child lands in each system.",
+        ko: "싱가포르 학제는 한국과 1:1로 맞지 않고, 학교 시스템마다 기준일도 달라요. 출생 연월을 입력하면 시스템별로 어느 반·학년인지 보여드려요."
+      },
+      monthLabel: { en: "Birth month", ko: "출생 월" },
+      yearLabel: { en: "Birth year", ko: "출생 연도" },
+      cols: {
+        system: { en: "School system", ko: "학교 시스템" },
+        cutoff: { en: "Cutoff", ko: "기준일" },
+        now: { en: "This academic year", ko: "올해 학년" },
+        next: { en: "Next academic year", ko: "내년 학년" }
+      },
+      systems: {
+        local: { name: { en: "Local preschool / MOE", ko: "로컬 유치원 · MOE" }, cutoff: { en: "calendar year (1 Jan)", ko: "역년 (1월 1일)" } },
+        british: { name: { en: "British (Tanglin, Dulwich, NLCS…)", ko: "영국계 (Tanglin, Dulwich, NLCS…)" }, cutoff: { en: "1 September", ko: "9월 1일" } },
+        american: { name: { en: "American (SAS, SAIS…)", ko: "미국계 (SAS, SAIS…)" }, cutoff: { en: "1 September", ko: "9월 1일" } }
+      },
+      tooYoung: { en: "too young — infant care", ko: "아직 어려요 — 영유아 보육" },
+      note: {
+        en: "Cutoff dates are each system's standard convention — some schools flex a month or two, and the Australian system (AIS) runs a southern-hemisphere January calendar with its own cutoffs. Always confirm the placement with the specific school.",
+        ko: "기준일은 각 시스템의 일반적인 관행이에요 — 학교에 따라 한두 달 유연하게 보기도 하고, 호주계(AIS)는 남반구 1월 학기제라 기준이 또 달라요. 반 배정은 반드시 해당 학교에 직접 확인하세요."
+      },
+      noteVerify: true
+    },
+
+    preschool: {
+      title: { en: "Preschool (ages 2–4)", ko: "유치원 (2–4세)" },
+      intro: {
+        en: "Levels are named by the calendar year your child turns that age — not by a birthday cut-off. Preschool is not compulsory.",
+        ko: "반 배정은 '그 해에 몇 살이 되는지' 기준이에요(생일 기준 아님). 유치원은 의무교육이 아니에요."
       },
       levels: {
         title: { en: "Level names vs age", ko: "레벨 이름과 나이" },
@@ -266,7 +304,7 @@ var CONTENT = {
       },
       dpNote: {
         en: "DP kids can enrol at any ECDA-licensed preschool — the DP exempts them from needing a Student's Pass. But all government subsidies are citizens-only, so foreigners pay the top fee tier. That means the price gap between \"subsidised local\" and \"private\" chains narrows a lot for you.",
-        ko: "DP 자녀는 ECDA 인가 유치원 어디든 등록할 수 있어요 — DP가 있으면 학생비자(Student's Pass)가 따로 필요 없어요. 다만 정부 보조금은 시민권자 전용이라 외국인은 최고 요율을 내요. 그래서 '보조금 받는 로컬'과 '사립' 체인의 가격 차이가 우리 가족 기준으로는 크게 줄어들어요."
+        ko: "DP 자녀는 ECDA 인가 유치원 어디든 등록할 수 있어요 — DP가 있으면 학생비자(Student's Pass)가 따로 필요 없어요. 다만 정부 보조금은 시민권자 전용이라 외국인은 최고 요율을 내요. 그래서 '보조금 받는 로컬'과 '사립' 체인의 가격 차이가 외국인 기준으로는 크게 줄어들어요."
       },
       dpNoteUrl: "https://www.ica.gov.sg/reside/STP/apply/msf",
       fees: {
@@ -283,7 +321,7 @@ var CONTENT = {
           { tier: { en: "Mid-tier private (same fee for all nationalities)", ko: "중가 사립 (국적 무관 동일 학비)" }, example: "MindChamps", fee: { en: "~S$1,700–2,100", ko: "약 S$1,700–2,100" }, url: "https://www.littleolivetree.edu.sg/post/net-fee-calculator-comparing-5-big-preschool-chains-in-singapore" },
           { tier: { en: "", ko: "" }, example: "Pat's Schoolhouse", fee: { en: "~S$1,850–2,600", ko: "약 S$1,850–2,600" }, url: "https://skoolopedia.com/blog/top-30-preschools-in-singapore-complete-fee-comparison-and-parent-reviews/" },
           { tier: { en: "", ko: "" }, example: "MapleBear", fee: { en: "~S$1,500–2,600", ko: "약 S$1,500–2,600" }, url: "https://maplebearjurongwest.com/blog/preschool-fees-comparison-singapore-2026" },
-          { tier: { en: "Premium", ko: "프리미엄" }, example: "EtonHouse (Newton)", fee: { en: "~S$2,800–3,000/mo equivalent (S$8,392–9,007 per term, 4 terms). 10% sibling discount — applies to twins", ko: "월 환산 약 S$2,800–3,000 (학기당 S$8,392–9,007, 연 4학기). 형제 할인 10% — 쌍둥이에게 적용" }, url: "https://www.etonhouse.edu.sg/school/newton/fees/" },
+          { tier: { en: "Premium", ko: "프리미엄" }, example: "EtonHouse (Newton)", fee: { en: "~S$2,800–3,000/mo equivalent (S$8,392–9,007 per term, 4 terms). 10% sibling discount", ko: "월 환산 약 S$2,800–3,000 (학기당 S$8,392–9,007, 연 4학기). 형제 할인 10%" }, url: "https://www.etonhouse.edu.sg/school/newton/fees/" },
           { tier: { en: "", ko: "" }, example: "Odyssey", fee: { en: "~S$2,650–3,900", ko: "약 S$2,650–3,900" }, url: "https://skoolopedia.com/blog/top-30-preschools-in-singapore-complete-fee-comparison-and-parent-reviews/" },
           { tier: { en: "International school early years", ko: "국제학교 유아부" }, example: "SAIS Early Learning Village", fee: { en: "S$30,820/yr (pre-N/N full day, 2026/27)", ko: "연 S$30,820 (pre-N/N 종일반, 2026/27)" }, url: "https://www.sais.edu.sg/admissions/fees/early-year-fees-schedule/" },
           { tier: { en: "", ko: "" }, example: "Tanglin Trust", fee: { en: "Nursery S$36,300/yr", ko: "Nursery 연 S$36,300" }, url: "https://www.tts.edu.sg/admissions/fees" },
@@ -291,17 +329,17 @@ var CONTENT = {
         ]
       },
       twins: {
-        title: { en: "Twins math", ko: "쌍둥이 계산법" },
+        title: { en: "Two kids? The math", ko: "아이가 둘이라면" },
         body: {
-          en: "Everything ×2. Anchor operator ≈ S$2,400–2,600/month total; mid-tier ≈ S$3,400–5,200/month total. Sibling discounts of 5–10% exist at some chains (EtonHouse gives 10%); twin-specific discounts are rare.",
-          ko: "모든 비용이 ×2예요. 앵커 오퍼레이터 기준 월 합계 약 S$2,400–2,600, 중가 사립은 월 S$3,400–5,200. 일부 체인에 형제 할인 5–10%가 있고(EtonHouse는 10%), 쌍둥이 전용 할인은 드물어요."
+          en: "Everything doubles. Two children at an anchor operator ≈ S$2,400–2,600/month total; mid-tier ≈ S$3,400–5,200/month total. Sibling discounts of 5–10% exist at some chains (EtonHouse gives 10%).",
+          ko: "모든 비용이 두 배예요. 아이 둘 기준 앵커 오퍼레이터는 월 합계 약 S$2,400–2,600, 중가 사립은 월 S$3,400–5,200. 일부 체인에 형제 할인 5–10%가 있어요(EtonHouse는 10%)."
         }
       },
       waitlist: {
         title: { en: "Waitlists", ko: "대기 리스트" },
         body: {
-          en: "Popular centres fill 12–18 months ahead. January (start-of-year) intakes are the easiest point to get two places together — start touring the moment you land.",
-          ko: "인기 센터는 12–18개월 전에 마감돼요. 두 자리를 한 번에 잡기엔 1월(학년 시작) 입학이 가장 수월해요. 도착하자마자 투어를 시작하세요."
+          en: "Popular centres fill 12–18 months ahead. January (start-of-year) intakes are the easiest point to land a spot — or sibling spots together. Start touring the moment you land.",
+          ko: "인기 센터는 12–18개월 전에 마감돼요. 자리를 잡기엔(형제 자리를 한 번에 잡기에도) 1월 학년 시작 입학이 가장 수월해요. 도착하자마자 투어를 시작하세요."
         },
         srcUrl: "https://skoolopedia.com/blog/top-30-preschools-in-singapore-complete-fee-comparison-and-parent-reviews/"
       },
@@ -319,10 +357,10 @@ var CONTENT = {
     },
 
     primary: {
-      title: { en: "Primary school paths (planning ahead)", ko: "초등학교 로드맵 (미리 보기)" },
+      title: { en: "Primary school paths", ko: "초등학교 로드맵" },
       framing: {
-        en: "P1 starts the year a child turns 7 — for twins born around 2022–2024 that means P1 around 2029–2031, so this is planning, not action. One honest note up front: Singapore has no official school tiers. Every \"tier\" below is informal expat/parent convention.",
-        ko: "P1(초1)은 그 해 7세가 되는 해에 시작해요 — 2022–2024년생 쌍둥이라면 대략 2029–2031년이라 지금은 '준비' 단계예요. 미리 솔직하게 말씀드리면, 싱가포르에 공식적인 학교 등급은 없어요. 아래의 '티어'는 모두 학부모들 사이의 비공식 관행이에요."
+        en: "Local P1 starts the year a child turns 7. But note the calendar trap: international schools start formal school much earlier — British-system Reception at 4 and Year 1 at 5, American Kindergarten at 5 — so if you're leaning international, the \"primary decision\" arrives two to three years before local P1. One honest note up front: Singapore has no official school tiers. Every \"tier\" below is informal expat/parent convention.",
+        ko: "로컬 P1(초1)은 그 해 7세가 되는 해에 시작해요. 다만 '달력 함정'을 알아두세요: 국제학교는 정규 과정을 훨씬 일찍 시작해요 — 영국계는 4세에 Reception, 5세에 Year 1, 미국계는 5세에 Kindergarten. 국제학교 쪽으로 기운다면 '초등 결정'이 로컬 P1보다 2–3년 일찍 찾아와요. 그리고 미리 솔직하게 말씀드리면, 싱가포르에 공식적인 학교 등급은 없어요. 아래의 '티어'는 모두 학부모들 사이의 비공식 관행이에요."
       },
       local: {
         title: { en: "Path 1 — Local (MOE) schools", ko: "경로 1 — 로컬 (MOE) 학교" },
@@ -340,8 +378,8 @@ var CONTENT = {
             ko: "외국인(비아세안) 학비는 2026년 기준 월 S$1,035이고 매년 올라요 — 그래도 국제학교보다는 훨씬 저렴해요."
           },
           {
-            en: "Twins are separate applicants — there is no same-school guarantee in Phase 3. Verify with MOE.",
-            ko: "쌍둥이는 각각 별도 지원자예요 — Phase 3에서는 같은 학교 배정이 보장되지 않아요. MOE에 직접 확인하세요.",
+            en: "Siblings (twins included) are separate applicants — there is no same-school guarantee in Phase 3. Verify with MOE.",
+            ko: "형제자매(쌍둥이 포함)는 각각 별도 지원자예요 — Phase 3에서는 같은 학교 배정이 보장되지 않아요. MOE에 직접 확인하세요.",
             verify: true
           },
           {
@@ -477,6 +515,12 @@ var CONTENT = {
 
   living: {
     title: { en: "Where to live", ko: "어디에 살까" },
+
+    overviewTitle: { en: "How the island works", ko: "싱가포르, 이렇게 생겼어요" },
+    overviewIntro: {
+      en: "Singapore is a city-state you can cross in under an hour. The CBD and Marina Bay sit on the south coast, Orchard and the embassy belt just north of them, and the island fans out from there: leafy central districts, the family-heavy east coast, the value-and-nature west, and HDB heartlands everywhere in between. Almost everywhere is safe and green — the real variables are commute, space per dollar, and which community you want around you.",
+      ko: "싱가포르는 한 시간이면 가로지르는 도시국가예요. 남쪽 해안에 CBD와 Marina Bay가 있고 바로 그 위가 오차드와 대사관 벨트, 거기서부터 섬이 펼쳐져요: 숲이 우거진 중부, 가족이 많은 동해안, 실속과 자연의 서부, 그리고 그 사이사이의 HDB 주거지대까지. 어디든 대체로 안전하고 푸르기 때문에, 실제 변수는 통근, 돈 대비 공간, 그리고 어떤 커뮤니티 곁에 살고 싶은지예요."
+    },
 
     /* §3.0 — the district decoder */
     districts: {
@@ -619,21 +663,243 @@ var CONTENT = {
       srcUrl: "https://landtransportguru.net/shenton-way-station/",
       cclUrl: "https://www.lta.gov.sg/content/ltagov/en/newsroom/2026/5/news-releases/circle-line-stage-6-to-open-for-public-preview-on-4-july-2026.html"
     },
-    criteria: {
-      title: { en: "What this family is optimising for", ko: "우리 가족의 우선순위" },
-      items: [
-        { label: { en: "Walk to MRT, supermarket, restaurants", ko: "MRT·마트·식당 도보 거리" }, weight: "high" },
-        { label: { en: "Schools & enrichment nearby", ko: "유치원·학원 근접성" }, weight: "high" },
-        { label: { en: "Families with young kids around", ko: "또래 아이 있는 가족 밀집도" }, weight: "med" },
-        { label: { en: "Condo amenities (pool, playground)", ko: "콘도 편의시설 (수영장·놀이터)" }, weight: "med" },
-        { label: { en: "3BR + helper room layout", ko: "방 3개 + 헬퍼룸 구조" }, weight: "med" },
-        { label: { en: "Commute to work", ko: "직장 통근 거리" }, weight: "low" }
-      ],
-      weightLabels: {
-        high: { en: "top priority", ko: "최우선" },
-        med: { en: "important", ko: "중요" },
-        low: { en: "lower priority", ko: "후순위" }
-      }
+    /* Priorities picker — chips with nice-to-have / must-have states.
+       Every atlas entry carries `tags` from these criterion ids. */
+    picker: {
+      title: { en: "What are you optimising for?", ko: "무엇을 우선하시나요?" },
+      intro: {
+        en: "Tap what matters — tap again to make it a must-have (neighbourhoods without it drop out). Matches appear below, best first, and your picks are saved on this device.",
+        ko: "중요한 항목을 눌러 선택하세요 — 한 번 더 누르면 '필수'가 돼요(해당 없는 동네는 결과에서 빠져요). 아래에 잘 맞는 동네부터 나타나고, 선택은 이 기기에 저장돼요."
+      },
+      stateNice: { en: "nice to have", ko: "있으면 좋음" },
+      stateMust: { en: "must-have", ko: "필수" },
+      resultsTitle: { en: "Your matches", ko: "잘 맞는 동네" },
+      empty: { en: "Select a few priorities above to see neighbourhood matches.", ko: "위에서 우선순위를 몇 개 고르면 잘 맞는 동네가 나와요." },
+      noMatch: { en: "No neighbourhood ticks every must-have — try relaxing one.", ko: "모든 필수 조건을 만족하는 동네가 없어요 — 조건 하나만 완화해 보세요." },
+      matchedLabel: { en: "matches:", ko: "일치:" },
+      reset: { en: "Clear picks", ko: "선택 초기화" },
+      criteria: [
+        { id: "mrt", label: { en: "Walk to MRT & daily errands", ko: "MRT·장보기 도보 생활권" } },
+        { id: "schools", label: { en: "Preschools & enrichment nearby", ko: "유치원·학원 근접" } },
+        { id: "families", label: { en: "Families with young kids around", ko: "또래 아이 있는 가족들" } },
+        { id: "amenities", label: { en: "Condo facilities (pool, playground)", ko: "콘도 시설 (수영장·놀이터)" } },
+        { id: "helper-room", label: { en: "Helper's-room layouts", ko: "헬퍼룸 나오는 구조" } },
+        { id: "commute", label: { en: "Short CBD commute", ko: "CBD 통근 짧게" } },
+        { id: "korean", label: { en: "Korean community & marts", ko: "한인 커뮤니티·한국 마트" } },
+        { id: "skis", label: { en: "Near the Korean school (SKIS)", ko: "한국학교(SKIS) 가까이" } },
+        { id: "expat", label: { en: "Expat social network", ko: "외국인 네트워크" } },
+        { id: "value", label: { en: "Space per dollar", ko: "돈 대비 공간·가성비" } },
+        { id: "hdb", label: { en: "Open to HDB", ko: "HDB도 고려" } },
+        { id: "landed", label: { en: "Landed / cluster house", ko: "단독주택·클러스터" } },
+        { id: "br4", label: { en: "4BR+ space", ko: "4BR 이상" } },
+        { id: "beach", label: { en: "Beach & big parks", ko: "바다·대형 공원" } },
+        { id: "quiet", label: { en: "Quiet & green", ko: "조용하고 푸른 동네" } },
+        { id: "city", label: { en: "City buzz & dining", ko: "도심 활기·다이닝" } }
+      ]
+    },
+
+    /* Neighbourhood atlas — the 7 researched sub-areas plus qualitative profiles.
+       Entries WITHOUT `researched: true` deliberately carry no figures. */
+    atlas: {
+      title: { en: "Neighbourhood atlas", ko: "동네 아틀라스" },
+      intro: {
+        en: "A wider sweep of the island. The shortlist areas link to their researched deep-dive cards below; the rest are qualitative sketches — no rent figures until they've been properly researched.",
+        ko: "섬 전체를 조금 더 넓게 훑어본 지도예요. 후보 지역은 아래의 상세 조사 카드로 이어지고, 나머지는 분위기 중심의 스케치예요 — 제대로 조사하기 전까지 시세 숫자는 싣지 않아요."
+      },
+      researchedBadge: { en: "researched — card below", ko: "상세 조사됨 — 아래 카드" },
+      sketchBadge: { en: "no researched figures yet", ko: "조사된 시세 없음" },
+      entries: [
+        {
+          id: "beauty-world", cardId: "bukit-timah",
+          name: { en: "Beauty World / Upper Bukit Timah", ko: "Beauty World · Upper Bukit Timah" },
+          dist: "D21", vibe: { en: "Leafy", ko: "숲세권" }, researched: true,
+          tags: ["korean", "skis", "schools", "families", "quiet", "mrt", "helper-room", "landed"],
+          body: {
+            en: "The Korean node — SKIS walkable, Sol Mart and Korean restaurants at Bukit Timah Plaza, nature reserve at the back door.",
+            ko: "한인 거점 — SKIS 도보권, Bukit Timah Plaza의 Sol Mart와 한식당들, 뒷문이 자연보호구역이에요."
+          }
+        },
+        {
+          id: "kap-sixth", cardId: "bukit-timah",
+          name: { en: "KAP / Sixth Avenue / Tan Kah Kee", ko: "KAP · Sixth Avenue · Tan Kah Kee" },
+          dist: "D10/D21", vibe: { en: "Prestige", ko: "명문가" }, researched: true,
+          tags: ["schools", "quiet", "landed", "families", "skis", "mrt"],
+          body: {
+            en: "The prestige end of the corridor: elite local schools, landed enclaves, a handful of condos around the DTL stations.",
+            ko: "코리도의 명문가 구간: 명문 로컬 학교들, 단독주택 단지, DTL역 주변의 소수 콘도들."
+          }
+        },
+        {
+          id: "hillview", cardId: "bukit-timah",
+          name: { en: "Hillview", ko: "Hillview" },
+          dist: "D23", vibe: { en: "Tucked-away", ko: "아늑" }, researched: true,
+          tags: ["value", "quiet", "skis", "families", "amenities", "landed"],
+          body: {
+            en: "The value play near the Korean school — condo strip plus cluster houses by the nature reserve, anchored by the HillV2 mall.",
+            ko: "한국학교 생활권의 가성비 카드 — 자연보호구역 옆 콘도 스트립과 클러스터하우스, HillV2 몰이 중심이에요."
+          }
+        },
+        {
+          id: "clementi-bv", cardId: "clementi",
+          name: { en: "Clementi / Buona Vista / West Coast", ko: "Clementi · Buona Vista · West Coast" },
+          dist: "D5", vibe: { en: "Practical", ko: "실속" }, researched: true,
+          tags: ["value", "hdb", "mrt", "families", "schools"],
+          body: {
+            en: "Authentically local heartland with the island's best HDB play, hawker food, and West Coast Park's playgrounds.",
+            ko: "진짜 로컬 동네 — 섬에서 가장 쏠쏠한 HDB 선택지, 호커 음식, West Coast Park의 놀이터들."
+          }
+        },
+        {
+          id: "holland-v", cardId: "holland-village",
+          name: { en: "Holland Village / Farrer", ko: "Holland Village · Farrer" },
+          dist: "D10", vibe: { en: "Sociable", ko: "사교" }, researched: true,
+          tags: ["expat", "families", "amenities", "mrt", "schools", "city", "br4"],
+          body: {
+            en: "The classic expat-family heartland: brunch-and-playdate density, Botanic Gardens, now one-seat to Marina Bay.",
+            ko: "전형적인 외국인 가족 중심지: 브런치와 플레이데이트 밀도, 보타닉 가든, 이제 Marina Bay까지 한 번에."
+          }
+        },
+        {
+          id: "east-coast", cardId: "east-coast",
+          name: { en: "East Coast / Katong", ko: "East Coast · Katong" },
+          dist: "D15", vibe: { en: "Breezy", ko: "여유" }, researched: true,
+          tags: ["beach", "families", "commute", "mrt", "city", "helper-room", "value", "br4", "landed"],
+          body: {
+            en: "Beach-park living with heritage food streets and the best CBD commute since the TEL opened.",
+            ko: "바닷가 공원 라이프에 헤리티지 맛집 거리, TEL 개통 이후 CBD 통근 최강."
+          }
+        },
+        {
+          id: "newton-novena", cardId: "newton",
+          name: { en: "Newton / Novena", ko: "Newton · Novena" },
+          dist: "D11", vibe: { en: "Central", ko: "도심" }, researched: true,
+          tags: ["commute", "mrt", "city", "schools", "helper-room", "amenities", "br4"],
+          body: {
+            en: "Maximum convenience: two lines, the United Square enrichment mall, the medical hub, and big older units with helper's rooms.",
+            ko: "편의성 최강: 두 개 노선, United Square 학원 몰, 의료 허브, 헬퍼룸 있는 구축 대형 평형까지."
+          }
+        },
+        {
+          id: "river-valley",
+          name: { en: "River Valley / Robertson Quay", ko: "River Valley · Robertson Quay" },
+          dist: "D9", vibe: { en: "Riverside", ko: "리버사이드" },
+          tags: ["city", "commute", "mrt", "amenities"],
+          body: {
+            en: "Between Orchard and the river, west of Fort Canning: a dense condo belt with quay-side dining. It splits into Robertson Quay (riverside restaurants, strollable promenade), the Great World pocket (mall + TEL station), and the older boutique condos up Institution Hill / Mohamed Sultan. Couples and young families who want town living without living on Orchard Road.",
+            ko: "오차드와 강 사이, Fort Canning 서쪽의 촘촘한 콘도 벨트예요. Robertson Quay(강변 레스토랑, 산책로), Great World 포켓(몰 + TEL역), 그리고 Institution Hill·Mohamed Sultan 쪽 구축 부티크 콘도로 나뉘어요. 오차드 한복판은 아니면서 시내 생활을 원하는 커플·젊은 가족의 선택지예요."
+          }
+        },
+        {
+          id: "orchard-tanglin",
+          name: { en: "Orchard / Tanglin", ko: "Orchard · Tanglin" },
+          dist: "D9/D10", vibe: { en: "Polished", ko: "럭셔리" },
+          tags: ["city", "commute", "amenities", "expat", "mrt"],
+          body: {
+            en: "The retail spine and the embassy belt behind it. Luxury condos and serviced apartments; the Tanglin end is quieter, greener and borders the Botanic Gardens. Convenience is absolute — neighbourhood feel is not the point.",
+            ko: "쇼핑 중심축과 그 뒤의 대사관 벨트예요. 럭셔리 콘도와 서비스드 아파트가 많고, Tanglin 쪽 끝은 더 조용하고 푸르며 보타닉 가든과 맞닿아 있어요. 편의성은 절대적이지만, 동네 감성은 이곳의 포인트가 아니에요."
+          }
+        },
+        {
+          id: "tiong-bahru",
+          name: { en: "Tiong Bahru / Queenstown", ko: "Tiong Bahru · Queenstown" },
+          dist: "D3", vibe: { en: "Heritage-hip", ko: "힙한 구도심" },
+          tags: ["city", "hdb", "mrt", "value", "commute"],
+          body: {
+            en: "Pre-war walk-ups, indie cafes and a famous wet market, ringed by ordinary HDB estates — the Redhill/Queenstown corridor on the EWL is one of the practical value plays close to town (and where the Holland Close/Ghim Moh HDB hack sits administratively).",
+            ko: "전전(戰前) 워크업과 인디 카페, 유명한 재래시장이 있는 동네를 평범한 HDB 단지들이 둘러싸요. EWL의 Redhill·Queenstown 구간은 도심 가까운 실속 카드 중 하나예요(Holland Close·Ghim Moh HDB 꿀팁도 행정상 여기 소속이에요)."
+          }
+        },
+        {
+          id: "tanjong-rhu",
+          name: { en: "Tanjong Rhu / Mountbatten", ko: "Tanjong Rhu · Mountbatten" },
+          dist: "D15", vibe: { en: "Waterfront-quiet", ko: "조용한 수변" },
+          tags: ["quiet", "beach", "amenities", "commute"],
+          body: {
+            en: "A calm waterfront condo pocket between the Sports Hub and the western end of East Coast Park — stadium-side TEL access, water views, very little street life of its own. People pick it for quiet and proximity, not buzz.",
+            ko: "Sports Hub와 East Coast Park 서쪽 끝 사이의 조용한 수변 콘도 포켓이에요. 경기장 쪽 TEL역, 물가 전망이 장점이고 동네 자체의 번화함은 거의 없어요. 활기보다는 고요함과 접근성 때문에 선택하는 곳이에요."
+          }
+        },
+        {
+          id: "thomson",
+          name: { en: "Thomson / Upper Thomson", ko: "Thomson · Upper Thomson" },
+          dist: "D20/D26", vibe: { en: "Local-green", ko: "로컬 그린" },
+          tags: ["quiet", "landed", "value", "families", "mrt"],
+          body: {
+            en: "Food streets, MacRitchie Reservoir trails and the TEL spine. A mix of landed pockets, older condos and new TEL-side launches — a local-flavour alternative to Bukit Timah for nature-adjacent family living.",
+            ko: "맛집 거리, MacRitchie 저수지 트레일, 그리고 TEL 축이 있는 동네예요. 단독주택 포켓과 구축 콘도, TEL역 주변 신축이 섞여 있어요 — 자연 곁 가족 생활을 원한다면 부킷 티마의 로컬 감성 대안이에요."
+          }
+        },
+        {
+          id: "serangoon",
+          name: { en: "Serangoon Gardens / Kovan", ko: "Serangoon Gardens · Kovan" },
+          dist: "D19", vibe: { en: "Villagey", ko: "동네 감성" },
+          tags: ["landed", "value", "families", "hdb", "quiet"],
+          body: {
+            en: "A landed enclave with its own village centre (Chomp Chomp food centre, myVillage mall) and a Franco-expat pocket around the French school. Cheaper landed living than Bukit Timah, further from the CBD.",
+            ko: "자체 중심가(Chomp Chomp 호커센터, myVillage 몰)를 갖춘 단독주택 동네이고, 프랑스학교 주변에 프랑스계 외국인 포켓이 있어요. 부킷 티마보다 저렴한 단독주택 생활이 가능하지만 CBD에서는 더 멀어요."
+          }
+        },
+        {
+          id: "pasir-panjang",
+          name: { en: "Pasir Panjang / Kent Ridge", ko: "Pasir Panjang · Kent Ridge" },
+          dist: "D5", vibe: { en: "Hillside", ko: "언덕 동네" },
+          tags: ["quiet", "value", "mrt"],
+          body: {
+            en: "Hillside condos between the ridge parks and the port, on the Circle Line. An academic/NUS crowd, sea glimpses, Labrador and Kent Ridge parks — quiet value close to the west-coast job nodes.",
+            ko: "능선 공원과 항구 사이 언덕의 콘도들로, 서클선 라인이에요. NUS·학계 사람들이 많고 바다가 언뜻 보이며 Labrador·Kent Ridge 공원이 곁에 있어요 — 서부 업무지구와 가까운 조용한 실속 동네예요."
+          }
+        },
+        {
+          id: "bishan-amk",
+          name: { en: "Bishan / Ang Mo Kio", ko: "Bishan · Ang Mo Kio" },
+          dist: "D20", vibe: { en: "Heartland-prime", ko: "중심 주거지" },
+          tags: ["hdb", "value", "families", "mrt", "schools"],
+          body: {
+            en: "Dead-centre heartland with cross-island MRT access, big parks (Bishan–AMK Park) and one of the strongest local-school belts — a favourite of families playing the local-education long game.",
+            ko: "섬 정중앙의 주거지대로, MRT 접근성이 사방으로 좋고 Bishan–AMK Park 같은 대형 공원과 손꼽히는 로컬 학군이 있어요 — 로컬 교육 장기전을 노리는 가족들이 좋아하는 동네예요."
+          }
+        },
+        {
+          id: "tampines",
+          name: { en: "Tampines / Pasir Ris", ko: "Tampines · Pasir Ris" },
+          dist: "D18", vibe: { en: "East-hub", ko: "동부 허브" },
+          tags: ["hdb", "value", "families", "mrt", "schools"],
+          body: {
+            en: "The east's own regional centre: three malls at one interchange, big HDB estates, beach-adjacent Pasir Ris — and the orbit of UWCSEA East and Overseas Family School.",
+            ko: "동부의 자체 중심지예요: 환승역 하나에 몰 세 개, 대형 HDB 단지, 바닷가의 Pasir Ris — 그리고 UWCSEA East와 Overseas Family School 생활권이에요."
+          }
+        },
+        {
+          id: "woodlands",
+          name: { en: "Woodlands", ko: "Woodlands" },
+          dist: "D25", vibe: { en: "Frontier", ko: "북부 관문" },
+          tags: ["value", "quiet", "expat"],
+          body: {
+            en: "The far north by the Malaysia causeway — practical, spacious and cheap, and home to the Singapore American School orbit; a long haul from the CBD.",
+            ko: "말레이시아 코즈웨이 옆 최북단이에요 — 실속 있고 넓고 저렴하며, Singapore American School 생활권이에요. 대신 CBD까지는 꽤 멀어요."
+          }
+        },
+        {
+          id: "sentosa",
+          name: { en: "Sentosa Cove / HarbourFront", ko: "Sentosa Cove · HarbourFront" },
+          dist: "D4", vibe: { en: "Resort", ko: "리조트" },
+          tags: ["beach", "amenities", "landed", "quiet"],
+          body: {
+            en: "Marina-side villas and condos on the resort island, plus the HarbourFront/Keppel Bay towers opposite. Waterfront living with a holiday feel — and a daily reminder that the island gate adds time to every trip.",
+            ko: "리조트 섬의 마리나 빌라·콘도, 그리고 맞은편 HarbourFront·Keppel Bay 타워들이에요. 휴양지 감성의 수변 생활이 가능하지만, 섬 게이트 때문에 모든 이동에 시간이 조금씩 더 든다는 점은 매일 체감하게 돼요."
+          }
+        },
+        {
+          id: "bukit-batok",
+          name: { en: "Bukit Batok / Bukit Panjang", ko: "Bukit Batok · Bukit Panjang" },
+          dist: "D23", vibe: { en: "Heartland-green", ko: "자연 옆 주거지" },
+          tags: ["hdb", "value", "quiet", "families"],
+          body: {
+            en: "The HDB heartland wrapped around Hillview's condo pocket — nature parks, new DTL access, and some of the cheapest family-sized flats near the Korean school's orbit.",
+            ko: "Hillview 콘도 포켓을 둘러싼 HDB 주거지대예요 — 자연공원, DTL 접근성, 그리고 한국학교 생활권에서 가장 저렴한 축에 드는 가족형 HDB가 있어요."
+          }
+        }
+      ]
     },
 
     /* §3.4 — comparison table (7 rows; commutes are estimates) */
@@ -957,8 +1223,8 @@ var CONTENT = {
         vibe: { en: "Breezy", ko: "여유" },
         gmapsQuery: "Katong, Singapore",
         pitch: {
-          en: "Beach-park weekends, stroller-flat terrain, Singapore's best casual food — and since the TEL opened, the best office commute of any area: Marine Parade → Shenton Way direct, exiting into Marina One's basement (~20–30 min door-to-door). The trade-off is the school run: SKIS is cross-island (35–45 min at peak), so this area fits best if the twins attend preschool locally.",
-          ko: "주말마다 바닷가 공원, 유모차 끌기 좋은 평지, 싱가포르 최고의 캐주얼 맛집 — 그리고 TEL 개통 이후로는 모든 후보 중 통근이 가장 좋아요: Marine Parade에서 Shenton Way까지 직행해서 Marina One 지하로 바로 나와요(문앞부터 약 20–30분). 대신 등하교가 트레이드오프예요: SKIS까지 섬을 가로질러야 해서(러시아워 35–45분), 아이들이 동네 유치원에 다닐 때 가장 잘 맞는 동네예요."
+          en: "Beach-park weekends, stroller-flat terrain, Singapore's best casual food — and since the TEL opened, the best CBD commute of any area: Marine Parade → Shenton Way direct, exiting into the Marina One basement (~20–30 min door-to-door). The trade-off is the Korean-school run: SKIS is cross-island (35–45 min at peak), so this area fits best if young kids attend preschool locally.",
+          ko: "주말마다 바닷가 공원, 유모차 끌기 좋은 평지, 싱가포르 최고의 캐주얼 맛집 — 그리고 TEL 개통 이후로는 모든 후보 중 CBD 통근이 가장 좋아요: Marine Parade에서 Shenton Way까지 직행해서 Marina One 지하로 바로 나와요(문앞부터 약 20–30분). 대신 한국학교 등하교가 트레이드오프예요: SKIS까지 섬을 가로질러야 해서(러시아워 35–45분), 아이들이 동네 유치원에 다닐 때 가장 잘 맞는 동네예요."
         },
         subAreas: [
           {
@@ -1106,7 +1372,7 @@ var CONTENT = {
           }
         },
         {
-          priority: { en: "Expat network for the spouse", ko: "배우자의 네트워크" },
+          priority: { en: "Expat network for a non-working partner", ko: "함께 오는 배우자의 네트워크" },
           pick: {
             en: "Holland Village — the deepest expat-family bench, now one-seat to Marina Bay; the highest rents of the realistic options.",
             ko: "Holland Village — 외국인 가족 네트워크가 가장 두텁고, 이제 Marina Bay까지 한 번에 가요. 대신 현실적인 옵션 중 임대료가 가장 높아요."
@@ -1273,15 +1539,15 @@ var CONTENT = {
   helper: {
     title: { en: "Hiring a helper", ko: "입주 헬퍼 고용" },
     intro: {
-      en: "With twin toddlers, a live-in helper (MDW — migrant domestic worker) is one of the most common quality-of-life decisions expat families make here. EP families are eligible; first-time employers complete MOM's Employers' Orientation Programme at least 2 working days before the Work Permit application.",
-      ko: "쌍둥이 유아를 키우는 집이라면, 입주 헬퍼(MDW) 고용은 이곳 외국인 가정이 가장 흔하게 선택하는 삶의 질 투자예요. EP 가정은 고용 자격이 있고, 첫 고용주는 Work Permit 신청 최소 2영업일 전에 MOM의 고용주 오리엔테이션(EOP)을 이수해야 해요."
+      en: "For households with young children, a live-in helper (MDW — migrant domestic worker) is one of the most common quality-of-life decisions expat families make here. EP families are eligible; first-time employers complete MOM's Employers' Orientation Programme at least 2 working days before the Work Permit application.",
+      ko: "어린 아이가 있는 집이라면, 입주 헬퍼(MDW) 고용은 이곳 외국인 가정이 가장 흔하게 선택하는 삶의 질 투자예요. EP 가정은 고용 자격이 있고, 첫 고용주는 Work Permit 신청 최소 2영업일 전에 MOM의 고용주 오리엔테이션(EOP)을 이수해야 해요."
     },
     items: [
       {
         title: { en: "Levy", ko: "고용부담금 (Levy)" },
         body: {
-          en: "S$300/month at the standard rate. The S$60 concessionary rate does NOT apply to this family — it requires a Singapore-citizen child, a detail agency websites often gloss over.",
-          ko: "표준 요율 월 S$300이에요. S$60 할인 요율은 우리 가족에게는 해당되지 않아요 — 싱가포르 시민권 자녀가 있어야 하는 조건인데, 에이전시 사이트들이 이 부분을 얼버무리는 경우가 많아요."
+          en: "S$300/month at the standard rate. The S$60 concessionary rate does NOT apply to foreigner households — it requires a Singapore-citizen child, a detail agency websites often gloss over.",
+          ko: "표준 요율 월 S$300이에요. S$60 할인 요율은 외국인 가정에는 해당되지 않아요 — 싱가포르 시민권 자녀가 있어야 하는 조건인데, 에이전시 사이트들이 이 부분을 얼버무리는 경우가 많아요."
         },
         url: "https://www.mom.gov.sg/passes-and-permits/work-permit-for-foreign-domestic-worker/foreign-domestic-worker-levy/levy-concession"
       },
@@ -1318,8 +1584,8 @@ var CONTENT = {
       {
         title: { en: "Timeline", ko: "소요 기간" },
         body: {
-          en: "Transfer helper (already in Singapore): ~2 weeks. Fresh overseas hire: 6–8+ weeks. With twins, start the search before or immediately on arrival.",
-          ko: "트랜스퍼 헬퍼(이미 싱가포르 체류 중)는 약 2주, 해외 신규 채용은 6–8주 이상 걸려요. 쌍둥이 육아라면 도착 전이나 도착 즉시 알아보기 시작하세요."
+          en: "Transfer helper (already in Singapore): ~2 weeks. Fresh overseas hire: 6–8+ weeks. If you'll need the help, start the search before or immediately on arrival.",
+          ko: "트랜스퍼 헬퍼(이미 싱가포르 체류 중)는 약 2주, 해외 신규 채용은 6–8주 이상 걸려요. 헬퍼가 필요할 예정이라면 도착 전이나 도착 즉시 알아보기 시작하세요."
         },
         url: "https://www.jazhelpers.com.sg/guides/how-long-hiring-a-helper-takes"
       }
@@ -1355,7 +1621,7 @@ var CONTENT = {
       srcUrl: "https://www.smartcalculator.sg/articles/how-much-car-cost-singapore-2026"
     },
     childSeats: {
-      title: { en: "Child seats — twins under 1.35m", ko: "카시트 — 키 1.35m 미만 쌍둥이" },
+      title: { en: "Child seats — kids under 1.35m", ko: "카시트 — 키 1.35m 미만 아이들" },
       body: {
         en: "Child restraints are mandatory in private cars AND in Grab/private-hire (not exempt — S$150 fine + 3 demerit points for the driver). Taxis ARE exempt (kids ride in the rear seat). Options: GrabFamily (car-seat-equipped, ~S$2–5 extra, limited availability), carry portable seats, or simply use taxis (the CDG Zig app).",
         ko: "자가용과 Grab 같은 승차공유 차량에서는 카시트가 의무예요(면제 아님 — 위반 시 벌금 S$150 + 벌점 3점). 택시는 면제예요(아이는 뒷좌석 탑승). 선택지: GrabFamily(카시트 장착 차량, 추가 요금 약 S$2–5, 배차 제한적), 휴대용 카시트 지참, 아니면 그냥 택시 이용(CDG Zig 앱)이에요."
@@ -1383,7 +1649,7 @@ var CONTENT = {
       { name: "Parking.sg", why: { en: "Street parking payment (if you ever drive).", ko: "노상 주차 결제용이에요 (운전할 일이 생기면)." } },
       { name: "MyICA", why: { en: "Immigration services, incl. the SG Arrival Card.", ko: "출입국 서비스 — SG 입국 카드 제출도 여기서 해요." } },
       { name: "SGWorkPass", why: { en: "Check pass validity by scanning the card.", ko: "패스 카드를 스캔해 유효성을 확인하는 앱이에요." } },
-      { name: "CDG Zig", why: { en: "Taxis — child-seat-exempt, so the easiest twin transport.", ko: "택시 호출 — 카시트 면제라 쌍둥이 이동에 가장 간편해요." } },
+      { name: "CDG Zig", why: { en: "Taxis — child-seat-exempt, so the easiest way to move small kids.", ko: "택시 호출 — 카시트 면제라 어린 아이와 이동할 때 가장 간편해요." } },
       { name: "myENV", why: { en: "Rain radar — trust it, this is the tropics.", ko: "비 레이더예요 — 열대지방이니 믿고 쓰세요." } },
       { name: { en: "한국촌 app", ko: "한국촌 앱" }, why: { en: "The Korean community hub in your pocket.", ko: "한인 커뮤니티 허브를 주머니에 넣는 셈이에요." } }
     ],
@@ -1393,8 +1659,8 @@ var CONTENT = {
   costs: {
     title: { en: "Monthly cost snapshot", ko: "월 생활비 한눈에" },
     intro: {
-      en: "A realistic family-of-four monthly budget. Low = anchor preschool + value area; High = mid-tier preschool + pricier area.",
-      ko: "4인 가족의 현실적인 월 예산이에요. Low는 앵커 유치원 + 실속 지역, High는 중가 사립 유치원 + 비싼 지역 기준이에요."
+      en: "A realistic monthly budget, modelled on a family of four with two preschoolers — scale it to your situation. Low = anchor preschool + value area; High = mid-tier preschool + pricier area.",
+      ko: "미취학 아이 둘이 있는 4인 가족을 모델로 한 현실적인 월 예산이에요 — 각자 상황에 맞게 조정하세요. Low는 앵커 유치원 + 실속 지역, High는 중가 사립 유치원 + 비싼 지역 기준이에요."
     },
     cols: {
       item: { en: "Item", ko: "항목" },
@@ -1443,7 +1709,7 @@ var CONTENT = {
       { label: "Singpass", url: "https://www.singpass.gov.sg" },
       { label: { en: "Korean Embassy in Singapore", ko: "주싱가포르 대한민국대사관" }, url: "https://overseas.mofa.go.kr/sg-ko" }
     ],
-    openTitle: { en: "Open questions for the family", ko: "가족이 확인할 것들" },
+    openTitle: { en: "Worth confirming directly", ko: "직접 확인해 둘 것들" },
     openItems: [
       { en: "SKIS school-bus coverage — free shuttles to Newton MRT and Clementi MRT are reported; confirm routes and eligibility at admission@skis.kr.", ko: "SKIS 스쿨버스 — Newton MRT·Clementi MRT 무료 셔틀이 있다고 알려져 있어요. 노선과 이용 자격을 admission@skis.kr로 확인하세요." },
       { en: "Rent budget → narrows the sub-area shortlist.", ko: "월세 예산 → 후보 동네를 좁힐 수 있어요." },

@@ -153,6 +153,26 @@ li { margin: 0.45em 0; }
 .site-nav a.active { background: var(--accent-soft); color: var(--accent); font-weight: 700; }
 .site-nav a:hover { color: var(--accent); }
 
+/* header second row: subsection anchors of the current view */
+.sub-nav {
+  display: flex; gap: 0.2rem;
+  overflow-x: auto; scrollbar-width: none;
+  max-width: 880px; margin: 0 auto;
+  padding: 0 1rem 0.5rem;
+  border-top: 1px dashed var(--line);
+  padding-top: 0.35rem;
+}
+.sub-nav::-webkit-scrollbar { display: none; }
+.sub-nav a {
+  flex: 0 0 auto;
+  font-size: 0.78rem; color: var(--ink-soft); text-decoration: none;
+  padding: 0.15em 0.65em; border-radius: 999px; white-space: nowrap;
+}
+.sub-nav a.active, .sub-nav a:hover { color: var(--accent); }
+.sub-nav a.active { background: var(--accent-soft); font-weight: 700; }
+
+html.has-subnav { scroll-padding-top: 148px; }
+
 /* ---------- layout ---------- */
 
 main { max-width: 880px; margin: 0 auto; padding: 0 1rem 3rem; }
@@ -165,11 +185,6 @@ main { max-width: 880px; margin: 0 auto; padding: 0 1rem 3rem; }
 }
 .hero h1 { font-size: clamp(2rem, 7vw, 3.1rem); margin: 0.1em 0 0.25em; font-weight: 700; }
 .hero-tagline { font-size: 1.1rem; color: var(--ink-soft); max-width: 34em; }
-.hero-profile {
-  display: inline-block;
-  background: var(--bg-accent); border-radius: 999px;
-  padding: 0.3em 1em; font-size: 0.85rem; color: var(--ink-soft);
-}
 
 .section { padding: 2.2rem 0 0.6rem; }
 
@@ -360,16 +375,73 @@ tbody tr:last-child th, tbody tr:last-child td { border-bottom: none; }
 }
 .btn-link:hover { background: var(--accent); color: var(--bg); }
 
-/* ---------- criteria ---------- */
+/* ---------- age calculator ---------- */
 
-.criteria-list { list-style: none; padding: 0; }
-.criteria-list li {
-  display: flex; justify-content: space-between; gap: 1em; align-items: baseline;
-  border-bottom: 1px dashed var(--line); padding: 0.3em 0;
+.calc-box {
+  background: var(--bg-raised);
+  border: 1px solid var(--accent); border-radius: var(--radius);
+  padding: 1rem 1.2rem; margin: 1.2rem 0 1.8rem;
+  box-shadow: var(--shadow);
 }
-.weight-tag { font-size: 0.75rem; font-weight: 700; white-space: nowrap; color: var(--ink-soft); }
-.criteria-list .w-high .weight-tag { color: var(--accent); }
-.criteria-list .w-high span:first-child { font-weight: 700; }
+.calc-box h3 { margin-top: 0.2em; }
+.calc-inputs { display: flex; gap: 1rem; flex-wrap: wrap; margin: 0.8rem 0; }
+.calc-inputs label { display: flex; flex-direction: column; gap: 0.25em; font-size: 0.8rem; font-weight: 700; color: var(--ink-soft); }
+.calc-inputs select {
+  font-family: var(--font-body); font-size: 1rem;
+  padding: 0.4em 0.7em; min-width: 7em;
+  border: 1.5px solid var(--line); border-radius: 8px;
+  background: var(--bg); color: var(--ink);
+}
+.calc-table .ay-label { color: var(--ink-soft); font-size: 0.8rem; white-space: nowrap; }
+
+/* ---------- priorities picker ---------- */
+
+.picker { margin: 2.2rem 0; }
+.chips { display: flex; flex-wrap: wrap; gap: 0.45rem; margin: 0.9rem 0; }
+.chip {
+  font-family: var(--font-body); font-size: 0.85rem;
+  padding: 0.35em 0.9em; border-radius: 999px; cursor: pointer;
+  border: 1.5px solid var(--line); background: var(--bg-raised); color: var(--ink);
+  display: inline-flex; align-items: center; gap: 0.5em;
+}
+.chip:hover { border-color: var(--accent); }
+.chip.nice { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); font-weight: 700; }
+.chip.must { border-color: var(--accent); background: var(--accent); color: var(--bg); font-weight: 700; }
+.chip-state { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.04em; opacity: 0.85; }
+.chip-state:empty { display: none; }
+
+.picker-results { margin-top: 1.2rem; }
+.match-card {
+  display: block; text-decoration: none; color: var(--ink);
+  background: var(--bg-raised);
+  border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 0.75rem 1rem; margin: 0.5rem 0;
+  box-shadow: var(--shadow);
+}
+.match-card:hover { border-color: var(--accent); }
+.match-head { display: flex; align-items: center; gap: 0.6em; flex-wrap: wrap; }
+.match-dist { font-size: 0.75rem; font-weight: 700; color: var(--ink-soft); }
+.match-tags { display: block; margin-top: 0.3em; font-size: 0.8rem; color: var(--accent); }
+
+/* ---------- neighbourhood atlas ---------- */
+
+.atlas-grid { display: grid; grid-template-columns: 1fr; gap: 0.8rem; margin: 1rem 0 1.6rem; }
+@media (min-width: 700px) { .atlas-grid { grid-template-columns: 1fr 1fr; } }
+.atlas-card {
+  background: var(--bg-raised);
+  border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 0.9rem 1.1rem;
+  box-shadow: var(--shadow);
+}
+.atlas-card.researched { border-left: 3px solid var(--accent); }
+.atlas-card p { font-size: 0.9rem; color: var(--ink-soft); margin: 0.5em 0; }
+.atlas-badge {
+  display: inline-block; font-size: 0.72rem; font-weight: 700;
+  border-radius: 999px; padding: 0.15em 0.8em;
+  background: var(--bg-accent); color: var(--ink-soft);
+}
+a.atlas-badge.researched { background: var(--accent-soft); color: var(--accent); text-decoration: none; }
+a.atlas-badge.researched:hover { background: var(--accent); color: var(--bg); }
 
 /* ---------- map ---------- */
 

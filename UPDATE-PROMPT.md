@@ -25,17 +25,27 @@ Render order becomes: district decoder → housing-types decoder → market cont
 - **Schematic (`CONTENT.living.map.svg`)**: apply two small diffs only, keeping everything else byte-identical: (1) the CBD dot/label becomes a small gold square labeled "Marina One (office)" / "마리나 원 (회사)" (add a `.office` class in `styles.css`, gold fill matching `.star`); (2) widen the Bukit Timah ellipse to cover the Beauty World–KAP–Hillview corridor: `cx=400 cy=312 rx=90 ry=52 rotate(-35 400 312)`, with its name label at y≈288 and vibe label at y≈303. The updated `map.svg` in the project root shows the target result — use it as the reference diff, not a wholesale replacement, and preserve the existing click-wiring and `lang-en`/`lang-ko` conventions.
 - After the change, screenshot or eyeball both maps against the current build: if any label now overlaps, revert that addition and note it instead.
 
-## 3. Smaller syncs
+## 3. Education — replace the static level table with a birthday → level calculator
+
+`age-calculator-prototype.html` in the project root is a **working, tested reference implementation** — port its logic and content verbatim into the site (content strings into `content.js` as `{en, ko}` leaves under `education.calculator`, logic into `app.js`, styling adapted to existing tokens). The cut-off rules and sources are in CONTENT.md §2b-ii.
+
+- UI: date input (default a sensible 2023 date) → headline result ("Right now in the local system: **N1**") → per-system table: SG local, British (Tanglin/Dulwich), UWCSEA, American (SAS/Stamford), Korean SKIS — each row shows the cut-off rule badge, the level this school year, and when formal school starts (P1 Jan YYYY / Year 1 Aug YYYY / Grade 1 Aug YYYY / 초1 Mar YYYY).
+- Keep the existing static "Level names vs age" table but demote it to a collapsible "reference table" below the calculator (it's still useful offline/printed).
+- Port the placement disclaimer callout exactly (Tanglin strict, CIS +1 year, SKIS ⚠️ confirm with admission@skis.kr).
+- Edge cases the prototype already handles — preserve them: SG local born-on-1-Jan → previous cohort; Sept-1 systems flip academic year on 1 Aug; SKIS 유치부 band = school year − birth year − 1, minimum 만3, March year-start; children too young/old get graceful messages.
+- The calculator must work fully offline (no libraries) and both languages must flip every string including computed level names.
+
+## 4. Smaller syncs
 
 - **Costs section**: update the rent row per CONTENT.md §9 (3BR low end now ~S$4,000 — Hillview from ~S$3,900; note the sub-area spread).
 - **Footer/TODO surface**: office TODO is resolved; keep visible ⚠️VERIFY items (SKIS school-bus shuttle claim — Newton MRT + Clementi MRT, confirm with admission@skis.kr; SKIS fees; Shichida fees; anchor-operator foreigner tiers).
-- Checklist/education/community/church/helper/car/apps sections: no content changes this round — leave untouched.
+- Checklist/community/church/helper/car/apps sections: no content changes this round — leave untouched. (Education changes are exactly the calculator in §3 — nothing else in that section.)
 
-## 4. Korean copy
+## 5. Korean copy
 
 All new strings need natural written Korean (해요체, consistent with the existing copy — mirror its tone). Keep proper nouns in English with Korean gloss where the existing copy does. Do not machine-translate literally; match register.
 
-## 5. Definition of done
+## 6. Definition of done
 
 - No visible "TODO" text remains for the office/commute anywhere, in either language.
 - Language toggle flips every new string (district table, housing cards, sub-area cards, local takes, office block, map labels).
