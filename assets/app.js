@@ -706,7 +706,10 @@
           var link = links[e.target.id];
           if (link) {
             link.classList.add("active");
-            link.scrollIntoView({ block: "nearest", inline: "nearest" });
+            // keep the active pill visible inside the horizontally scrollable nav
+            var navEl = link.parentElement;
+            var target = link.offsetLeft - (navEl.clientWidth - link.offsetWidth) / 2;
+            navEl.scrollTo({ left: Math.max(0, target), behavior: "smooth" });
           }
         }
       });
