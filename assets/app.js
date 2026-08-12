@@ -5,20 +5,33 @@
   "use strict";
 
   var LANG_KEY = "sgguide:lang";
+  var CUR_KEY = "sgguide:currency";
   var CHECK_KEY = "sgguide:checklist";
 
   /* ---------- state ---------- */
 
+  function langCodes() { return CONTENT.languages.map(function (l) { return l.code; }); }
+
   function detectLang() {
     try {
       var saved = localStorage.getItem(LANG_KEY);
-      if (saved === "en" || saved === "ko") return saved;
+      if (langCodes().indexOf(saved) !== -1) return saved;
     } catch (e) {}
     var nav = (navigator.language || "").toLowerCase();
-    return nav.indexOf("ko") === 0 ? "ko" : "en";
+    var match = langCodes().filter(function (c) { return c !== "en" && nav.indexOf(c) === 0; })[0];
+    return match || "en";
+  }
+
+  function detectCurrency() {
+    try {
+      var saved = localStorage.getItem(CUR_KEY);
+      if (CONTENT.currencies.list.some(function (c) { return c.code === saved; })) return saved;
+    } catch (e) {}
+    return CONTENT.currencies.base;
   }
 
   var lang = detectLang();
+  var currency = detectCurrency();
 
   function loadChecks() {
     try { return JSON.parse(localStorage.getItem(CHECK_KEY)) || {}; }
@@ -34,13 +47,63 @@
 
   /* ---------- helpers ---------- */
 
-  // t() accepts a {en,ko} leaf or a plain string (proper nouns identical in both languages)
+  /* ---------- money conversion ----------
+     Base amounts in content are written as S$. When a non-base currency is selected,
+     every S$ amount (single, range, k-shorthand, decimal) is rewritten at render time. */
+
+  function activeCurrency() {
+    return CONTENT.currencies.list.filter(function (c) { return c.code === currency; })[0]
+      || CONTENT.currencies.list[0];
+  }
+
+  function niceRound(v, code) {
+    if (code === "KRW") {
+      if (v < 10000) return Math.round(v / 10) * 10;
+      if (v < 1000000) return Math.round(v / 1000) * 1000;
+      if (v < 10000000) return Math.round(v / 10000) * 10000;
+      return Math.round(v / 100000) * 100000;
+    }
+    // USD
+    if (v < 10) return Math.round(v * 10) / 10;
+    if (v < 100) return Math.round(v);
+    if (v < 1000) return Math.round(v / 5) * 5;
+    if (v < 10000) return Math.round(v / 50) * 50;
+    return Math.round(v / 500) * 500;
+  }
+
+  function fmtAmount(sgd, cur, asK) {
+    var v = sgd * cur.rate;
+    if (asK && cur.code === "USD") return Math.round(v / 1000) + "k";
+    var r = niceRound(v, cur.code);
+    return r.toLocaleString("en-US", { maximumFractionDigits: r < 10 ? 1 : 0 });
+  }
+
+  var MONEY_RE = /S\$\s?([\d,]+(?:\.\d+)?)(k)?(?:\s?(–|-)\s?([\d,]+(?:\.\d+)?)(k)?)?(\+)?/g;
+
+  function convertMoney(str) {
+    var cur = activeCurrency();
+    if (cur.code === CONTENT.currencies.base || !str || str.indexOf("S$") === -1) return str;
+    return str.replace(MONEY_RE, function (m, n1, k1, dash, n2, k2, plus) {
+      var a = parseFloat(n1.replace(/,/g, ""));
+      var b = n2 != null ? parseFloat(n2.replace(/,/g, "")) : null;
+      // "S$15–28k" means 15k–28k: a k on the upper bound implies it on the lower
+      if (k2 && !k1) k1 = "k";
+      if (k1) a *= 1000;
+      if (k2) b *= 1000;
+      var asK = !!(k1 || k2);
+      var out = cur.label + fmtAmount(a, cur, asK);
+      if (b != null) out += (dash || "–") + fmtAmount(b, cur, asK);
+      return out + (plus || "");
+    });
+  }
+
+  // t() accepts a {en,ko,...} leaf or a plain string (proper nouns identical in every language);
+  // missing languages fall back to English. All money passes through convertMoney.
   function t(leaf) {
     if (leaf == null) return "";
-    if (typeof leaf === "string") return leaf;
-    return leaf[lang] != null ? leaf[lang] : (leaf.en || "");
+    var s = typeof leaf === "string" ? leaf : (leaf[lang] != null ? leaf[lang] : (leaf.en || ""));
+    return convertMoney(s);
   }
-  function other(leaf) { return typeof leaf === "string" ? leaf : leaf[lang === "en" ? "ko" : "en"]; }
 
   function h(tag, attrs) {
     var el = document.createElement(tag);
@@ -84,18 +147,33 @@
 
   /* ---------- header + hero ---------- */
 
+  function segControl(groupLabel, options, isActive, onSelect) {
+    return h("div", { class: "seg", role: "group", "aria-label": groupLabel },
+      options.map(function (o) {
+        return h("button", {
+          type: "button",
+          class: isActive(o) ? "active" : null,
+          "aria-pressed": isActive(o) ? "true" : "false",
+          lang: o.code && langCodes().indexOf(o.code) !== -1 ? o.code : null,
+          text: o.label,
+          onclick: function () { onSelect(o); }
+        });
+      })
+    );
+  }
+
   function renderHeader() {
     var header = document.getElementById("site-header");
     header.innerHTML = "";
 
-    var toggle = h("button", {
-      class: "lang-toggle",
-      type: "button",
-      lang: lang === "en" ? "ko" : "en",
-      "aria-label": t(CONTENT.ui.langToggleAria),
-      text: t(CONTENT.ui.langToggle),
-      onclick: function () { setLang(lang === "en" ? "ko" : "en"); }
-    });
+    var langSeg = segControl(t(CONTENT.ui.langGroup), CONTENT.languages,
+      function (o) { return o.code === lang; },
+      function (o) { if (o.code !== lang) setLang(o.code); });
+
+    var curSeg = segControl(t(CONTENT.ui.curGroup), CONTENT.currencies.list,
+      function (o) { return o.code === currency; },
+      function (o) { if (o.code !== currency) setCurrency(o.code); });
+    curSeg.setAttribute("title", t(CONTENT.currencies.note));
 
     var nav = h("nav", { class: "site-nav", "aria-label": lang === "ko" ? "섹션 이동" : "Sections" });
     nav.appendChild(h("a", { href: "#home", dataset: { navId: "home" }, text: t(CONTENT.ui.homeLabel) }));
@@ -105,7 +183,7 @@
 
     header.appendChild(h("div", { class: "header-row" },
       h("a", { class: "site-title", href: "#top", text: t(CONTENT.ui.siteTitle) }),
-      toggle
+      h("div", { class: "header-controls" }, langSeg, curSeg)
     ));
     header.appendChild(nav);
   }
@@ -262,7 +340,7 @@
         return h("tr", {},
           h("td", { class: "tier-cell", text: r.tier }),
           h("td", { text: t(r.schools) }),
-          h("td", { text: r.fees }),
+          h("td", { text: t(r.fees) }),
           h("td", { text: t(r.waitlist) }),
           h("td", { text: t(r.eal) })
         );
@@ -659,6 +737,9 @@
     var section = h("section", { id: "costs", class: "section", "aria-labelledby": "costs-title" },
       sectionHeader("costs", c.title, "◫"),
       h("p", { class: "section-intro", text: t(c.intro) }));
+    if (currency !== CONTENT.currencies.base) {
+      section.appendChild(h("p", { class: "table-note", text: t(CONTENT.currencies.note) }));
+    }
     section.appendChild(h("div", { class: "table-wrap" }, h("table", { class: "data-table costs-table" },
       h("thead", {}, h("tr", {},
         h("th", { text: t(c.cols.item) }), h("th", { text: t(c.cols.low) }),
@@ -668,13 +749,13 @@
         c.rows.map(function (r) {
           return h("tr", {},
             h("th", { scope: "row", text: t(r.item) }),
-            h("td", { text: r.low }), h("td", { text: r.high }),
+            h("td", { text: t(r.low) }), h("td", { text: t(r.high) }),
             h("td", { class: "note-cell", text: t(r.note) })
           );
         }),
         h("tr", { class: "total-row" },
           h("th", { scope: "row", text: t(c.total.item) }),
-          h("td", { text: c.total.low }), h("td", { text: c.total.high }),
+          h("td", { text: t(c.total.low) }), h("td", { text: t(c.total.high) }),
           h("td", { class: "note-cell", text: t(c.total.note) })
         )
       )
@@ -688,6 +769,9 @@
     var footer = document.getElementById("site-footer");
     footer.innerHTML = "";
     footer.appendChild(h("p", { class: "footer-updated", text: t(f.updated) }));
+    if (currency !== CONTENT.currencies.base) {
+      footer.appendChild(h("p", { class: "footer-fx-note", text: t(CONTENT.currencies.note) }));
+    }
     footer.appendChild(h("p", { text: t(f.disclaimer) }));
     footer.appendChild(h("h3", { text: t(f.sourcesTitle) }));
     footer.appendChild(h("ul", { class: "sources-list" }, f.sources.map(function (sVal) {
@@ -743,6 +827,15 @@
     captureOpenState();
     lang = next;
     try { localStorage.setItem(LANG_KEY, lang); } catch (e) {}
+    renderAll(true);
+    window.scrollTo(0, y);
+  }
+
+  function setCurrency(next) {
+    var y = window.scrollY;
+    captureOpenState();
+    currency = next;
+    try { localStorage.setItem(CUR_KEY, currency); } catch (e) {}
     renderAll(true);
     window.scrollTo(0, y);
   }

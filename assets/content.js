@@ -4,10 +4,32 @@
 
 var CONTENT = {
 
+  /* Language registry — to add a language later: add an entry here, then add that
+     code to every leaf in this file (t() falls back to English for missing keys). */
+  languages: [
+    { code: "en", label: "EN" },
+    { code: "ko", label: "한국어" }
+  ],
+
+  /* Currency registry. Base amounts throughout this file are written as S$.
+     Rates are APPROXIMATE (Aug 2026) and exist for orientation only — edit here. */
+  currencies: {
+    base: "SGD",
+    list: [
+      { code: "SGD", label: "S$", rate: 1 },
+      { code: "USD", label: "US$", rate: 0.78 },
+      { code: "KRW", label: "₩", rate: 1080 }
+    ],
+    note: {
+      en: "Amounts converted from Singapore dollars at approximate August 2026 rates (SGD 1 ≈ USD 0.78 ≈ KRW 1,080) and rounded — for orientation only.",
+      ko: "금액은 싱가포르달러 기준을 2026년 8월 대략적인 환율(SGD 1 ≈ USD 0.78 ≈ KRW 1,080)로 환산해 반올림한 참고용 수치예요."
+    }
+  },
+
   ui: {
     siteTitle: { en: "Moving to Singapore", ko: "싱가포르 이주 가이드" },
-    langToggle: { en: "한국어", ko: "EN" },
-    langToggleAria: { en: "Switch language to Korean", ko: "영어로 전환" },
+    langGroup: { en: "Language", ko: "언어" },
+    curGroup: { en: "Currency", ko: "통화" },
     openInMaps: { en: "Open in Google Maps ↗", ko: "구글 지도에서 열기 ↗" },
     showOnMap: { en: "▲ Show on map", ko: "▲ 지도에서 보기" },
     officialLink: { en: "Official link ↗", ko: "공식 링크 ↗" },

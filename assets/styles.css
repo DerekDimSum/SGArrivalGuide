@@ -118,16 +118,22 @@ li { margin: 0.45em 0; }
   color: var(--ink); text-decoration: none;
 }
 
-.lang-toggle {
-  font-family: var(--font-body);
-  font-size: 0.9rem; font-weight: 700;
-  padding: 0.35em 0.95em;
-  border: 1.5px solid var(--accent);
-  border-radius: 999px;
-  background: transparent; color: var(--accent);
+.header-controls { display: flex; gap: 0.45rem; flex-wrap: wrap; justify-content: flex-end; }
+
+.seg {
+  display: inline-flex;
+  border: 1.5px solid var(--line); border-radius: 999px;
+  overflow: hidden; background: var(--bg-raised);
+}
+.seg button {
+  font-family: var(--font-body); font-size: 0.8rem; font-weight: 700;
+  padding: 0.3em 0.75em;
+  border: none; background: transparent; color: var(--ink-soft);
   cursor: pointer;
 }
-.lang-toggle:hover { background: var(--accent); color: var(--bg); }
+.seg button + button { border-left: 1px solid var(--line); }
+.seg button:hover { color: var(--accent); }
+.seg button.active { background: var(--accent); color: var(--bg); }
 
 .site-nav {
   display: flex; gap: 0.25rem;
@@ -464,6 +470,7 @@ tbody tr:last-child th, tbody tr:last-child td { border-bottom: none; }
 #site-footer > * { max-width: 880px; margin-left: auto; margin-right: auto; }
 #site-footer h3 { font-size: 1rem; color: var(--ink); margin-top: 1.6em; }
 .footer-updated { font-weight: 700; color: var(--ink); }
+.footer-fx-note { color: var(--accent); font-weight: 700; font-size: 0.85rem; }
 .sources-list { columns: 2; list-style: none; padding: 0; }
 .sources-list li { break-inside: avoid; }
 @media (max-width: 480px) { .sources-list { columns: 1; } }
@@ -482,7 +489,7 @@ tbody tr:last-child th, tbody tr:last-child td { border-bottom: none; }
 @media print {
   main section.section[hidden], .hero[hidden] { display: block !important; }
   #map-schematic-panel[hidden] { display: block !important; }
-  #site-header, .lang-toggle, .reset-btn, .btn-link, .map-hint,
+  #site-header, .header-controls, .reset-btn, .btn-link, .map-hint,
   .section-pager, .back-to-top, .home-view,
   .map-tabs, #map-real-panel { display: none; }
   body { background: #fff; color: #000; font-size: 11pt; }
