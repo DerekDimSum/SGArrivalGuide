@@ -19,8 +19,8 @@
   <g class="lm">
     <circle cx="413.7" cy="133.3" r="3.5"/>
     <text class="tiny lang-en" x="422.7" y="137.3" text-anchor="start">Woodlands · causeway to Malaysia</text><text class="tiny lang-ko" x="422.7" y="137.3" text-anchor="start">우드랜즈 · 말레이시아 육로</text>
-    <circle cx="542.2" cy="432.4" r="3.5"/>
-    <text class="tiny lang-en" x="554.2" y="448.4" text-anchor="start">CBD</text><text class="tiny lang-ko" x="554.2" y="448.4" text-anchor="start">시내 (CBD)</text>
+    <rect x="543.5" y="443.5" width="8" height="8" rx="1.5" class="office"/>
+    <text class="lm-lbl lang-en" x="557" y="453" text-anchor="start">Marina One (office)</text><text class="lm-lbl lang-ko" x="557" y="453" text-anchor="start">마리나 원 (회사)</text>
     <circle cx="527.5" cy="446.1" r="4.5" class="dot-k"/>
     <line x1="527.5" y1="452.1" x2="501.5" y2="480.1" class="leader"/>
     <text class="lm-lbl lang-en" x="497.5" y="494.1" text-anchor="end">K-town · Tanjong Pagar</text><text class="lm-lbl lang-ko" x="497.5" y="494.1" text-anchor="end">코리아타운 · 탄종파가</text>
@@ -34,10 +34,10 @@
   
   <g class="area" id="area-bukit-timah" data-target="bukit-timah" tabindex="0" role="link"
      aria-label="Bukit Timah — jump to section">
-    <ellipse cx="403.9" cy="319.6" rx="81.0" ry="45.8" transform="rotate(-35 403.9 319.6)"/>
-    <text class="area-name lang-en" x="403.9" y="299.6" text-anchor="middle">Bukit Timah</text><text class="area-name lang-ko" x="403.9" y="299.6" text-anchor="middle">부킷 티마</text>
+    <ellipse cx="400" cy="312" rx="90" ry="52" transform="rotate(-35 400 312)"/>
+    <text class="area-name lang-en" x="400" y="288" text-anchor="middle">Bukit Timah</text><text class="area-name lang-ko" x="400" y="288" text-anchor="middle">부킷 티마</text>
     
-    <text class="area-vibe lang-en" x="403.9" y="314.6" text-anchor="middle">Leafy</text><text class="area-vibe lang-ko" x="403.9" y="314.6" text-anchor="middle">녹음</text>
+    <text class="area-vibe lang-en" x="400" y="303" text-anchor="middle">Leafy</text><text class="area-vibe lang-ko" x="400" y="303" text-anchor="middle">녹음</text>
   </g>
   <g class="area" id="area-clementi" data-target="clementi" tabindex="0" role="link"
      aria-label="Clementi — jump to section">

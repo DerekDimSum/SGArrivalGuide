@@ -527,11 +527,49 @@
     var section = h("section", { id: "living", class: "section", "aria-labelledby": "living-title" },
       sectionHeader("living", lv.title, "⌂"));
 
-    /* market context */
+    /* §3.0 district decoder */
+    var dd = h("div", {},
+      h("h3", { text: t(lv.districts.title) }),
+      h("p", { text: t(lv.districts.intro) }),
+      h("div", { class: "table-wrap" }, h("table", { class: "data-table" },
+        h("thead", {}, h("tr", {},
+          h("th", { text: t(lv.districts.cols.d) }), h("th", { text: t(lv.districts.cols.name) }),
+          h("th", { text: t(lv.districts.cols.sub) }), h("th", { text: t(lv.districts.cols.rel) })
+        )),
+        h("tbody", {}, lv.districts.rows.map(function (r) {
+          return h("tr", {},
+            h("th", { scope: "row", text: r.d }),
+            h("td", { text: t(r.name) }),
+            h("td", { text: t(r.sub) }),
+            h("td", { text: t(r.rel) })
+          );
+        }))
+      ))
+    );
+    lv.districts.notes.forEach(function (n) { dd.appendChild(h("p", { text: t(n) })); });
+    section.appendChild(dd);
+
+    /* §3.1 housing types */
+    section.appendChild(h("h3", { text: t(lv.housingTypes.title) }));
+    section.appendChild(h("ul", { class: "apps-list htype-list" }, lv.housingTypes.items.map(function (i) {
+      return h("li", {},
+        h("strong", { text: t(i.name) }),
+        h("span", { text: " — " + t(i.body) + " " }),
+        i.url ? srcLink(i.url) : null
+      );
+    })));
+
+    /* §3.2 market context */
     var mk = h("div", {}, h("h3", { text: t(lv.market.title) }));
     lv.market.paras.forEach(function (p) { mk.appendChild(h("p", { text: t(p) })); });
-    mk.appendChild(h("p", {}, srcLink(lv.market.srcUrl), " ", srcLink(lv.market.hdbUrl, { en: "HDB quota tool ↗", ko: "HDB 쿼터 조회 ↗" })));
+    mk.appendChild(h("p", {}, srcLink(lv.market.srcUrl), " ", srcLink(lv.market.scarcityUrl), " ", srcLink(lv.market.hdbUrl, { en: "HDB quota tool ↗", ko: "HDB 쿼터 조회 ↗" })));
     section.appendChild(mk);
+
+    /* §3.3 office anchor */
+    var office = h("aside", { class: "info-box office-box" }, h("h3", { text: t(lv.office.title) }));
+    lv.office.paras.forEach(function (p) { office.appendChild(h("p", { text: t(p) })); });
+    office.appendChild(h("p", {}, srcLink(lv.office.srcUrl), " ", srcLink(lv.office.cclUrl, { en: "CCL Stage 6 (LTA) ↗", ko: "서클선 6단계 (LTA) ↗" })));
+    section.appendChild(office);
 
     /* criteria */
     var cr = h("aside", { class: "info-box criteria-box" },
@@ -541,31 +579,39 @@
           h("span", { text: t(c.label) }),
           h("span", { class: "weight-tag", text: t(lv.criteria.weightLabels[c.weight]) })
         );
-      })),
-      h("p", { class: "todo-note", text: t(lv.criteria.commuteTodo) })
+      }))
     );
     section.appendChild(cr);
 
-    /* comparison table */
+    /* §3.4 comparison table */
     section.appendChild(h("h3", { text: t(lv.comparison.title) }));
     section.appendChild(h("p", { class: "table-note", text: t(lv.comparison.note) }));
     var cols = lv.comparison.cols;
     section.appendChild(h("div", { class: "table-wrap" }, h("table", { class: "data-table cmp-table" },
       h("thead", {}, h("tr", {},
-        h("th", { text: t(cols.area) }), h("th", { text: t(cols.mrt) }), h("th", { text: t(cols.community) }),
-        h("th", { text: t(cols.kids) }), h("th", { text: t(cols.rent) }), h("th", { text: t(cols.vibe) })
+        h("th", { text: t(cols.area) }), h("th", { text: t(cols.br3) }), h("th", { text: t(cols.br4) }),
+        h("th", { text: t(cols.commute) }), h("th", { text: t(cols.skis) }),
+        h("th", { text: t(cols.hdb) }), h("th", { text: t(cols.vibe) })
       )),
-      h("tbody", {}, lv.areas.map(function (a) {
+      h("tbody", {}, lv.comparison.rows.map(function (r) {
         return h("tr", {},
-          h("th", { scope: "row" }, h("a", { href: "#area-" + a.id, text: t(a.short) })),
-          h("td", { text: t(a.cmp.mrt) }),
-          h("td", { text: t(a.cmp.community) }),
-          h("td", { text: t(a.cmp.kids) }),
-          h("td", { text: t(a.cmp.rent) }),
-          h("td", { text: t(a.vibe) })
+          h("th", { scope: "row" }, h("a", { href: "#area-" + r.target, text: t(r.area) })),
+          h("td", { text: t(r.br3) }),
+          h("td", { text: t(r.br4) }),
+          h("td", { text: t(r.commute) }),
+          h("td", { text: t(r.skis) }),
+          h("td", { text: t(r.hdb) }),
+          h("td", { text: t(r.vibe) })
         );
       }))
     )));
+    lv.comparison.footNotes.forEach(function (n, i) {
+      section.appendChild(h("p", { class: "table-note" },
+        h("span", { text: t(n) + " " }),
+        n.verify ? verifyBadge() : null, " ",
+        srcLink(i === 0 ? lv.comparison.erpUrl : lv.comparison.skisBusUrl)
+      ));
+    });
 
     /* map */
     var mapHost = h("div", { class: "map-host" });
@@ -610,6 +656,7 @@
       var gmaps = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(a.gmapsQuery);
       var parts = [
         { title: { en: "The pitch", ko: "한 줄 요약" }, body: a.pitch },
+        { subAreas: true },
         { title: { en: "Walkability check", ko: "도보 생활권 점검" }, body: a.walk },
         { title: { en: "Kids", ko: "아이 키우기" }, body: a.kids, verify: a.kidsVerify },
         { title: { en: "Community makeup", ko: "커뮤니티 구성" }, body: a.community },
@@ -617,6 +664,20 @@
       ];
       var body = h("div", { class: "sub-body" });
       parts.forEach(function (p) {
+        if (p.subAreas) {
+          (a.subAreas || []).forEach(function (sa) {
+            body.appendChild(h("div", { class: "subarea" },
+              h("h4", { class: "subarea-name", text: t(sa.name) }),
+              h("p", {}, h("span", { text: t(sa.body) + " " }), sa.verify ? verifyBadge() : null),
+              sa.take ? h("div", { class: "local-take" },
+                h("span", { class: "take-badge", text: t(CONTENT.ui.localTake) }),
+                h("span", { text: t(sa.take) })
+              ) : null
+            ));
+          });
+          return;
+        }
+        if (!p.body) return;
         body.appendChild(h("h4", { text: t(p.title) }));
         body.appendChild(h("p", {}, h("span", { text: t(p.body) + " " }), p.verify ? verifyBadge() : null));
       });
@@ -641,6 +702,25 @@
       if (openState.hasOwnProperty("area-" + a.id) ? openState["area-" + a.id] : wideScreen()) card.setAttribute("open", "");
       section.appendChild(card);
     });
+
+    /* §3.6 helper's-room rule */
+    section.appendChild(h("aside", { class: "info-box" },
+      h("h3", { text: t(lv.helperRoom.title) }),
+      h("p", {}, h("span", { text: t(lv.helperRoom.body) + " " }), srcLink(lv.helperRoom.srcUrl))
+    ));
+
+    /* §3.7 decision block */
+    var dec = h("div", { class: "decision-block" },
+      h("h3", { text: t(lv.decision.title) }),
+      h("p", { class: "table-note", text: t(lv.decision.intro) }),
+      h("ul", { class: "decision-list" }, lv.decision.items.map(function (d) {
+        return h("li", {},
+          h("strong", { text: t(d.priority) + " → " }),
+          h("span", { text: t(d.pick) })
+        );
+      }))
+    );
+    section.appendChild(dec);
 
     /* renting box */
     var rb = h("aside", { class: "info-box renting-box", id: "renting-box" },

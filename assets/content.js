@@ -35,6 +35,7 @@ var CONTENT = {
     officialLink: { en: "Official link ↗", ko: "공식 링크 ↗" },
     source: { en: "Source ↗", ko: "출처 ↗" },
     verify: { en: "⚠ verify directly", ko: "⚠ 직접 확인 필요" },
+    localTake: { en: "Local take", ko: "로컬 팁" },
     checklistProgress: { en: "done", ko: "완료" },
     resetChecklist: { en: "Reset checklist", ko: "체크리스트 초기화" },
     mapHint: {
@@ -476,20 +477,147 @@ var CONTENT = {
 
   living: {
     title: { en: "Where to live", ko: "어디에 살까" },
+
+    /* §3.0 — the district decoder */
+    districts: {
+      title: { en: "How Singapore is divided — the district decoder", ko: "싱가포르 구역 읽는 법 — 디스트릭트 해설" },
+      intro: {
+        en: "Property listings and agents speak in postal districts (D1–D28) — an old classification the market still runs on. Analysts group them into three bands: CCR (Core Central: D9/D10/D11 plus the CBD — priciest), RCR (city fringe) and OCR (suburbs). Government statistics use URA planning-area names instead, which mostly overlap.",
+        ko: "부동산 매물과 에이전트들은 우편 구역(D1–D28) 단위로 이야기해요 — 오래된 분류지만 시장은 여전히 이걸로 돌아가요. 분석에서는 이걸 세 구간으로 묶어요: CCR(핵심 중심부: D9·D10·D11 + CBD — 가장 비쌈), RCR(시티 프린지), OCR(외곽). 정부 통계는 URA 계획구역 이름을 따로 쓰는데, 범위는 대체로 겹쳐요."
+      },
+      cols: {
+        d: { en: "District", ko: "구역" },
+        name: { en: "Name", ko: "이름" },
+        sub: { en: "Sub-areas that matter", ko: "눈여겨볼 동네" },
+        rel: { en: "For this guide", ko: "이 가이드에서는" }
+      },
+      rows: [
+        { d: "D10", name: "Bukit Timah / Holland / Tanglin", sub: { en: "Holland Village, Farrer Road, Sixth Avenue, Tan Kah Kee, the landed Avenues/Namly belt", ko: "Holland Village, Farrer Road, Sixth Avenue, Tan Kah Kee, 단독주택 벨트(Avenues/Namly)" }, rel: { en: "Shortlist (cards 1b, 4)", ko: "후보 (카드 1b, 4)" } },
+        { d: "D21", name: "Upper Bukit Timah", sub: { en: "Beauty World, King Albert Park, Toh Tuck/Eng Kong, Hume", ko: "Beauty World, King Albert Park, Toh Tuck/Eng Kong, Hume" }, rel: { en: "Shortlist (card 1a) — SKIS + the Korean node", ko: "후보 (카드 1a) — SKIS + 한인 거점" } },
+        { d: "D23", name: "Hillview / Bukit Batok / Bukit Panjang", sub: { en: "Hillview is the upscale pocket of a heartland district", ko: "Hillview는 서민형 구역 속의 고급 포켓이에요" }, rel: { en: "Shortlist (card 1c)", ko: "후보 (카드 1c)" } },
+        { d: "D5", name: "Clementi / Buona Vista / West Coast", sub: { en: "Clementi, Dover, one-north, Pasir Panjang", ko: "Clementi, Dover, one-north, Pasir Panjang" }, rel: { en: "Shortlist (card 2)", ko: "후보 (카드 2)" } },
+        { d: "D15", name: "Katong / Marine Parade", sub: { en: "Katong/Joo Chiat, Amber–Meyer, Marine Parade, Tanjong Rhu", ko: "Katong/Joo Chiat, Amber–Meyer, Marine Parade, Tanjong Rhu" }, rel: { en: "Shortlist (card 3)", ko: "후보 (카드 3)" } },
+        { d: "D11", name: "Newton / Novena / Thomson", sub: { en: "Newton, Novena, Chancery", ko: "Newton, Novena, Chancery" }, rel: { en: "Shortlist (card 5)", ko: "후보 (카드 5)" } },
+        { d: "D9", name: "Orchard / River Valley", sub: { en: "Robertson Quay, Emerald Hill", ko: "Robertson Quay, Emerald Hill" }, rel: { en: "Couples more than families", ko: "가족보다는 커플 취향" } },
+        { d: "D16", name: "Bedok / Upper East Coast", sub: { en: "Siglap, Frankel — the quieter landed continuation of D15", ko: "Siglap, Frankel — D15에서 이어지는 조용한 주택가" }, rel: { en: "Adjacent option", ko: "인접 대안" } },
+        { d: "D1/D2", name: "CBD / Tanjong Pagar", sub: { en: "Marina One (the office) is D1; K-town is D2", ko: "Marina One(회사)은 D1, K-타운은 D2" }, rel: { en: "Work + play, not toddler territory", ko: "일과 외식의 동네 — 유아 육아 지역은 아님" } },
+        { d: "D3", name: "Queenstown / Tiong Bahru", sub: { en: "The Holland Close/Ghim Moh HDB hack lives here administratively", ko: "Holland Close/Ghim Moh HDB 꿀팁이 행정상 여기 소속이에요" }, rel: { en: "Budget lever", ko: "예산 조절 카드" } },
+        { d: "D25", name: "Woodlands", sub: { en: "American school orbit", ko: "미국학교 생활권" }, rel: { en: "Off-shortlist", ko: "후보 외" } }
+      ],
+      notes: [
+        {
+          en: "\"District + sub-area + layout\" is a complete agent brief — \"D21, Beauty World side, 3BR with utility room\" is how the search actually runs.",
+          ko: "'디스트릭트 + 동네 + 구조'면 에이전트 브리핑으로 충분해요 — 실제 검색은 \"D21, Beauty World 쪽, 유틸리티룸 있는 3BR\" 이런 식으로 돌아가요."
+        },
+        {
+          en: "District labels carry price signaling — D10 on a listing commands a premium partly for the label itself, which is why same-quality condos in D21/D23, sometimes literally across the road, rent S$1,500–2,000/month cheaper. That is the Hillview arbitrage in one sentence.",
+          ko: "디스트릭트 라벨 자체가 가격 신호예요 — 매물에 D10이 붙으면 라벨값만으로도 프리미엄이 붙어요. 그래서 말 그대로 길 하나 건너인데도 D21/D23의 같은 급 콘도가 월 S$1,500–2,000 저렴해요. 이게 한 문장으로 요약한 '힐뷰 아비트라지'예요."
+        }
+      ]
+    },
+
+    /* §3.1 — housing types decoder */
+    housingTypes: {
+      title: { en: "Housing types — a newcomer's decoder", ko: "주거 형태 해설 — 처음 온 사람용" },
+      items: [
+        {
+          name: { en: "HDB flat", ko: "HDB (공공주택)" },
+          body: {
+            en: "Public housing towers where ~80% of Singaporeans live. Whole-flat rental to foreigners is legal (quota per block). Sizes: 3-room ≈ 700 sqft, 4-room ≈ 970 sqft, 5-room ≈ 1,200 sqft. No pool, gym or security, but hawker centres, shops and playgrounds at the doorstep — and 30–50% cheaper than condos. Minimum 6-month tenancy.",
+            ko: "싱가포르 국민의 약 80%가 사는 공공주택이에요. 외국인도 전체 임대가 합법이에요(동별 쿼터 있음). 크기는 3-room 약 700sqft, 4-room 약 970sqft, 5-room 약 1,200sqft. 수영장·헬스장·보안은 없지만 호커센터·상가·놀이터가 문앞이고, 콘도보다 30–50% 저렴해요. 최소 6개월 계약이에요."
+          },
+          url: "https://www.hdb.gov.sg/residential/renting-a-flat/renting-from-the-open-market/eligibility"
+        },
+        {
+          name: { en: "Condominium", ko: "콘도미니엄" },
+          body: {
+            en: "Private development with security, pool, gym, playground and BBQ pits; management fees are the landlord's problem. What most expat families rent. Leasehold (99-yr) vs freehold matters to buyers, not tenants — what matters to a tenant is the build era: pre-2012 condos have bigger units and helper's rooms (see the rule of thumb below).",
+            ko: "보안·수영장·헬스장·놀이터·BBQ장이 딸린 민간 아파트예요. 관리비는 집주인 부담이고, 외국인 가족 대부분이 콘도를 임대해요. 99년/프리홀드 구분은 매수자 이야기고, 세입자에게 중요한 건 건축 연식이에요 — 2012년 이전 콘도가 더 넓고 헬퍼룸이 있어요(아래 공식 참고)."
+          }
+        },
+        {
+          name: { en: "Executive Condominium (EC)", ko: "EC (Executive Condominium)" },
+          body: {
+            en: "An HDB-condo hybrid in the suburbs that becomes fully private after 10 years; rents and looks like a condo. Just know the label.",
+            ko: "외곽의 HDB-콘도 하이브리드로, 10년이 지나면 완전 민간이 돼요. 임대 경험은 콘도와 똑같아요. 라벨만 알아두면 돼요."
+          }
+        },
+        {
+          name: { en: "Walk-up apartment", ko: "워크업 (엘리베이터 없는 저층)" },
+          body: {
+            en: "Older low-rise (3–4 storeys), no lift, no facilities; big square footage for the money. Common in Katong/Joo Chiat.",
+            ko: "3–4층짜리 구옥 저층으로 엘리베이터도 시설도 없지만, 같은 돈에 평수가 넓어요. Katong/Joo Chiat에 흔해요."
+          }
+        },
+        {
+          name: { en: "Landed — the ladder", ko: "단독주택 — 등급 사다리" },
+          body: {
+            en: "Houses: terrace (row house, shared side walls) → semi-detached (one shared wall) → detached/bungalow → Good Class Bungalow (GCB: plots ≥1,400 sqm — Singapore's most exclusive housing, S$16k–100k+/month to rent). The tenant usually takes on garden and pool upkeep, and older houses may lack central aircon. No shared facilities, no security.",
+            ko: "테라스(연립, 양옆 벽 공유) → 세미디(한쪽 벽 공유) → 단독/방갈로 → GCB(부지 1,400㎡ 이상 — 싱가포르 최상급 주거, 임대 월 S$16k–100k+) 순이에요. 정원·수영장 관리는 보통 세입자 몫이고, 오래된 집은 중앙 에어컨이 없을 수 있어요. 공용 시설과 보안은 없어요."
+          }
+        },
+        {
+          name: { en: "Cluster house", ko: "클러스터 하우스" },
+          body: {
+            en: "Strata landed: a landed-style house (often 3–4 storeys) inside a gated development that shares condo-style facilities (pool, security). Best-of-both for families wanting space plus a pool — but supply is thin and concentrated in pockets (Toh Tuck/Eng Kong near Beauty World; Chestnut/Hillview — e.g. Chestnut Residences).",
+            ko: "게이트 단지 안의 3–4층 단독주택 형태로, 수영장·보안 같은 콘도식 시설을 공유하는 '스트라타 랜디드'예요. 공간과 수영장을 다 원하는 가족에게 최고의 절충안인데, 공급이 적고 특정 포켓에 몰려 있어요(Beauty World 근처 Toh Tuck/Eng Kong, Chestnut/Hillview — 예: Chestnut Residences)."
+          },
+          url: "https://www.singaporeexpats.com/condo/cluster-house/2555/CHESTNUT-RESIDENCES"
+        },
+        {
+          name: { en: "Conservation shophouse", ko: "보존 숍하우스" },
+          body: {
+            en: "Heritage two/three-storey buildings with shops below and homes above; character living in Katong/Joo Chiat and Emerald Hill.",
+            ko: "1층은 상가, 위층은 주거인 2–3층 헤리티지 건물이에요. Katong/Joo Chiat과 Emerald Hill의 감성 주거예요."
+          }
+        },
+        {
+          name: { en: "Serviced apartment", ko: "서비스드 아파트" },
+          body: {
+            en: "Furnished, minimum 7-day stays — the standard landing pad for the first 1–2 months while house-hunting.",
+            ko: "가구 완비에 최소 7일 단위 — 집을 구하는 첫 1–2개월의 표준 베이스캠프예요."
+          }
+        }
+      ]
+    },
+
+    /* §3.2 — market context */
     market: {
       title: { en: "Market context (2026)", ko: "시장 분위기 (2026)" },
       paras: [
         {
-          en: "The rental market is roughly flat: the 2025 index rose 1.9%, and 2026 quarterly moves are small and mixed (Q2 2026: prime central +1.2%, city fringe 0.0%, suburbs −0.3%; vacancy 6.4%; ~61k units in the pipeline). The practical line: tenant-friendly in supply-heavy suburbs, firm in prime central — and transacted rents typically land 3–5% below asking.",
-          ko: "임대 시장은 대체로 보합세예요. 2025년 지수는 +1.9%였고, 2026년 분기 변동은 작고 엇갈려요(2026년 2분기: 핵심 중심부 +1.2%, 시티 프린지 0.0%, 외곽 −0.3%; 공실률 6.4%, 공급 대기 약 6만 1천 세대). 실전 감각으로는: 공급 많은 외곽은 세입자 우위, 핵심 중심부는 집주인 우위 — 실제 계약 임대료는 보통 호가보다 3–5% 낮게 성사돼요."
+          en: "The rental market is roughly flat: the 2025 index rose 1.9%, and 2026 quarterly moves are small and mixed (Q2 2026: prime central +1.2%, city fringe 0.0%, suburbs −0.3%; vacancy 6.4%; ~61k units in the pipeline). The practical line: tenant-friendly in supply-heavy suburbs, firm in prime central — landlords of a ~S$6k 3BR are typically accepting ~S$500 below asking in 2026, and transacted rents land ~3–8% below asking.",
+          ko: "임대 시장은 대체로 보합세예요. 2025년 지수는 +1.9%였고, 2026년 분기 변동은 작고 엇갈려요(2026년 2분기: 핵심 중심부 +1.2%, 시티 프린지 0.0%, 외곽 −0.3%; 공실률 6.4%, 공급 대기 약 6만 1천 세대). 실전 감각으로는: 공급 많은 외곽은 세입자 우위, 핵심 중심부는 집주인 우위 — 2026년 기준 월 S$6k쯤 되는 3BR이면 집주인이 호가보다 약 S$500 낮춰 받는 게 보통이고, 실제 계약가는 호가보다 3–8% 낮게 성사돼요."
         },
         {
-          en: "EP holders CAN rent whole HDB flats (pass valid ≥6 months; 6-month minimum tenancy; non-citizen quota per block — check the HDB quota tool). The condo trade-off: pool, playground, security and helper-room layouts vs HDB's 30–50% lower rent and bigger floorplates.",
-          ko: "EP 소지자도 HDB(공공주택) 전체를 임대할 수 있어요(패스 잔여기간 6개월 이상, 최소 6개월 계약, 동별 외국인 쿼터 있음 — HDB 쿼터 조회 도구로 확인). 콘도와의 트레이드오프는: 수영장·놀이터·보안·헬퍼룸 구조 vs HDB의 30–50% 저렴한 임대료와 더 넓은 실평수예요."
+          en: "Family-unit scarcity: new-launch 3BRs have shrunk to ~893–1,300 sqft (vs 1,700+ sqft pre-2000s) and increasingly drop the helper's room and yard — genuinely large 3BR-plus-utility units concentrate in pre-2012 condos, and that segment holds its price better.",
+          ko: "가족형 평형은 귀해지고 있어요: 신축 3BR은 약 893–1,300sqft로 줄었고(2000년대 이전엔 1,700sqft 이상), 헬퍼룸과 야드도 점점 사라져요. 넉넉한 '3BR+유틸리티' 유닛은 2012년 이전 콘도에 몰려 있고, 그래서 이 구간은 가격도 잘 버텨요."
+        },
+        {
+          en: "EP holders CAN rent whole HDB flats (pass valid ≥6 months; 6-month minimum tenancy; non-citizen quota per block — check the HDB quota tool).",
+          ko: "EP 소지자도 HDB 전체를 임대할 수 있어요(패스 잔여기간 6개월 이상, 최소 6개월 계약, 동별 외국인 쿼터 있음 — HDB 쿼터 조회 도구로 확인하세요)."
         }
       ],
       srcUrl: "https://propertynet.sg/private-rents-rise-suburban-condo-prices-dip-q2-2026-landlords-tenants/",
+      scarcityUrl: "https://stackedhomes.com/editorial/shrinking-3-bedroom-new-condo-sizes-how-much-smaller-can-it-go/",
       hdbUrl: "https://services2.hdb.gov.sg/webapp/BR12AWNCQuota/BR12PEnquire.jsp"
+    },
+
+    /* §3.3 — the office anchor */
+    office: {
+      title: { en: "The office anchor — Marina One, West Tower", ko: "회사 기준점 — Marina One 웨스트 타워" },
+      paras: [
+        {
+          en: "Marina One (7 Straits View, Marina Bay) connects to four MRT lines. Best access: Shenton Way (TE19, Thomson–East Coast Line) — station Exit 5 opens directly into Marina One Basement 2, no street crossing. Also Downtown (DT17, ~3–5 min walk), Marina Bay (NS27/CC33/TE20, ~5–8 min) and Raffles Place (NS26/EW14, ~10–12 min via the underground Marina Bay Link network).",
+          ko: "Marina One(7 Straits View, Marina Bay)은 MRT 4개 노선과 연결돼요. 가장 편한 길은 Shenton Way(TE19, 톰슨-이스트코스트선) — 역 5번 출구가 Marina One 지하 2층으로 바로 이어져서 길을 건널 필요가 없어요. 그 외에 Downtown(DT17, 도보 3–5분), Marina Bay(NS27/CC33/TE20, 5–8분), Raffles Place(NS26/EW14, 지하 Marina Bay Link 통로로 10–12분)가 있어요."
+        },
+        {
+          en: "The big 2026 change: Circle Line Stage 6 opened on 12 July 2026 (Keppel, Cantonment, Prince Edward Road), closing the full loop — Holland Village is now a one-seat Circle Line ride to Marina Bay.",
+          ko: "2026년의 큰 변화: 7월 12일에 서클선 6단계(Keppel, Cantonment, Prince Edward Road)가 개통해 순환선이 완성됐어요 — 이제 Holland Village에서 Marina Bay까지 환승 없이 한 번에 가요."
+        }
+      ],
+      srcUrl: "https://landtransportguru.net/shenton-way-station/",
+      cclUrl: "https://www.lta.gov.sg/content/ltagov/en/newsroom/2026/5/news-releases/circle-line-stage-6-to-open-for-public-preview-on-4-july-2026.html"
     },
     criteria: {
       title: { en: "What this family is optimising for", ko: "우리 가족의 우선순위" },
@@ -505,23 +633,107 @@ var CONTENT = {
         high: { en: "top priority", ko: "최우선" },
         med: { en: "important", ko: "중요" },
         low: { en: "lower priority", ko: "후순위" }
-      },
-      commuteTodo: {
-        en: "TODO: add a commute column once the office location is confirmed.",
-        ko: "TODO: 사무실 위치가 확정되면 통근 시간 정보를 추가하세요."
       }
     },
+
+    /* §3.4 — comparison table (7 rows; commutes are estimates) */
     comparison: {
-      title: { en: "The five areas at a glance", ko: "후보 다섯 지역 한눈에 보기" },
-      note: { en: "3BR condo asking rents, Aug 2026 listing snapshots.", ko: "3BR 콘도 호가 기준, 2026년 8월 매물 스냅샷이에요." },
+      title: { en: "The sub-areas at a glance", ko: "후보 동네 한눈에 보기" },
+      note: { en: "Aug 2026 asking rents; commute times are door-to-door estimates.", ko: "2026년 8월 호가 기준이고, 통근 시간은 문앞 기준 추정치예요." },
       cols: {
-        area: { en: "Area", ko: "지역" },
-        mrt: { en: "MRT walkability", ko: "MRT 접근성" },
-        community: { en: "Community", ko: "커뮤니티" },
-        kids: { en: "Preschool / enrichment", ko: "유치원·학원 밀도" },
-        rent: { en: "3BR condo rent", ko: "3BR 콘도 임대료" },
+        area: { en: "Area (district)", ko: "지역 (구역)" },
+        br3: { en: "3BR condo", ko: "3BR 콘도" },
+        br4: { en: "4BR condo", ko: "4BR 콘도" },
+        commute: { en: "MRT to Marina One (est.)", ko: "Marina One 통근 (추정)" },
+        skis: { en: "Drive to SKIS", ko: "SKIS 등하교 (차량)" },
+        hdb: { en: "HDB 4-rm proxy", ko: "HDB 4룸 참고가" },
         vibe: { en: "Vibe", ko: "분위기" }
-      }
+      },
+      rows: [
+        {
+          target: "bukit-timah",
+          area: { en: "Bukit Timah — Beauty World / Upper BT (D21)", ko: "Bukit Timah — Beauty World · Upper BT (D21)" },
+          br3: { en: "S$5,000–6,700 (new); S$4,500–5,000 (older 999-yr)", ko: "S$5,000–6,700 (신축); S$4,500–5,000 (999년 구축)" },
+          br4: "S$6,200–11,000",
+          commute: { en: "DTL direct → Downtown, ~23-min ride; 35–45 min", ko: "DTL 직행 → Downtown, 승차 약 23분; 35–45분" },
+          skis: { en: "walkable–5 min", ko: "도보권–5분" },
+          hdb: { en: "n/a (Bt Batok S$3,250)", ko: "없음 (Bt Batok S$3,250)" },
+          vibe: { en: "Leafy", ko: "숲세권" }
+        },
+        {
+          target: "bukit-timah",
+          area: { en: "Bukit Timah — KAP / Sixth Ave (D10/D21)", ko: "Bukit Timah — KAP · Sixth Ave (D10/D21)" },
+          br3: "S$6,000–7,500",
+          br4: "S$9,000–11,000",
+          commute: { en: "DTL direct, ~20-min ride; 30–40 min", ko: "DTL 직행, 승차 약 20분; 30–40분" },
+          skis: { en: "5 min", ko: "5분" },
+          hdb: { en: "n/a", ko: "없음" },
+          vibe: { en: "Prestige", ko: "명문가" }
+        },
+        {
+          target: "bukit-timah",
+          area: { en: "Bukit Timah — Hillview (D23)", ko: "Bukit Timah — Hillview (D23)" },
+          br3: { en: "S$3,900–4,900", ko: "S$3,900–4,900" },
+          br4: { en: "thin supply", ko: "매물 적음" },
+          commute: { en: "DTL direct, ~27-min ride; 40–50 min", ko: "DTL 직행, 승차 약 27분; 40–50분" },
+          skis: { en: "5–10 min", ko: "5–10분" },
+          hdb: { en: "Bt Panjang (cheap)", ko: "Bt Panjang (저렴)" },
+          vibe: { en: "Tucked-away", ko: "아늑" }
+        },
+        {
+          target: "clementi",
+          area: { en: "Clementi – Buona Vista – West Coast (D5)", ko: "Clementi · Buona Vista · West Coast (D5)" },
+          br3: "S$5,500–6,500",
+          br4: "S$8,000–11,000",
+          commute: { en: "EWL → Raffles Place + 10-min walk; 40–50 min", ko: "EWL → Raffles Place + 도보 10분; 40–50분" },
+          skis: { en: "15–20 min (shuttle from Clementi MRT ⚠)", ko: "15–20분 (Clementi MRT 셔틀 ⚠)" },
+          hdb: "Clementi S$3,900",
+          vibe: { en: "Practical", ko: "실속" }
+        },
+        {
+          target: "east-coast",
+          area: { en: "East Coast / Katong (D15)", ko: "East Coast · Katong (D15)" },
+          br3: "S$4,500–8,500",
+          br4: "S$7,500–12,000",
+          commute: { en: "TEL direct → Shenton Way, into the office basement; 20–30 min — best commute", ko: "TEL 직행 → Shenton Way, 회사 지하 직결; 20–30분 — 통근 최강" },
+          skis: { en: "35–45 min — worst school run", ko: "35–45분 — 등하교 최악" },
+          hdb: "Marine Parade S$3,500",
+          vibe: { en: "Breezy", ko: "여유" }
+        },
+        {
+          target: "holland-village",
+          area: { en: "Holland V / Farrer (D10)", ko: "Holland V · Farrer (D10)" },
+          br3: "S$5,500–10,000",
+          br4: "S$10,000–15,000",
+          commute: { en: "CCL one-seat → Marina Bay (since Jul 2026); 35–45 min", ko: "CCL 한 번에 → Marina Bay (2026년 7월부터); 35–45분" },
+          skis: { en: "12–18 min", ko: "12–18분" },
+          hdb: "Queenstown S$4,000",
+          vibe: { en: "Sociable", ko: "사교" }
+        },
+        {
+          target: "newton",
+          area: { en: "Newton / Novena (D11)", ko: "Newton · Novena (D11)" },
+          br3: "S$6,400–7,900",
+          br4: "S$6,800–12,000",
+          commute: { en: "NSL direct → Marina Bay, ~16-min ride; 25–35 min", ko: "NSL 직행 → Marina Bay, 승차 약 16분; 25–35분" },
+          skis: { en: "20–25 min (shuttle from Newton MRT ⚠)", ko: "20–25분 (Newton MRT 셔틀 ⚠)" },
+          hdb: "Whampoa/T.Payoh S$3,600",
+          vibe: { en: "Central", ko: "도심" }
+        }
+      ],
+      footNotes: [
+        {
+          en: "Commute figures are Rome2rio station-pair estimates plus walk allowances — treat them as estimates. Peak drives run roughly double off-peak, and a peak CBD car commute crosses 2–4 ERP gantries: S$6–12/day one-way (CTE is worst — the Chin Swee gantry is S$5–6).",
+          ko: "통근 시간은 Rome2rio 역간 추정치에 도보 시간을 더한 값이라 '추정'으로 보세요. 러시아워 운전은 한산할 때의 약 2배이고, 출근길 CBD 진입은 ERP 게이트를 2–4개 지나 편도 하루 S$6–12예요(최악은 CTE — Chin Swee 게이트가 S$5–6)."
+        },
+        {
+          en: "SKIS reportedly runs free school-day shuttles to Newton MRT and Clementi MRT — verify routes and eligibility with admission@skis.kr before relying on this.",
+          ko: "SKIS가 등교일마다 Newton MRT·Clementi MRT까지 무료 셔틀을 운행한다고 알려져 있어요 — 계획에 반영하기 전에 admission@skis.kr로 노선과 이용 자격을 꼭 확인하세요.",
+          verify: true
+        }
+      ],
+      erpUrl: "https://www.smartcalculator.sg/articles/erp-timings-rates-2026",
+      skisBusUrl: "https://www.doris.school/schools/singapore/singapore-korean-international-school"
     },
     map: {
       title: { en: "Map — a visual table of contents", ko: "지도 — 한눈에 보는 목차" },
@@ -562,7 +774,7 @@ var CONTENT = {
         landmarks: [
           { id: "skis", lat: 1.3446, lng: 103.7780, star: true, dir: "top", label: { en: "Korean School (SKIS)", ko: "한국국제학교 (SKIS)" } },
           { id: "ktown", lat: 1.2785, lng: 103.8435, dir: "left", label: { en: "K-town · Tanjong Pagar", ko: "코리아타운 · 탄종파가" } },
-          { id: "cbd", lat: 1.2840, lng: 103.8510, dir: "right", label: { en: "CBD", ko: "시내 (CBD)" } },
+          { id: "office", lat: 1.2764, lng: 103.8540, dir: "right", label: { en: "Marina One (office)", ko: "마리나 원 (회사)" } },
           { id: "changi", lat: 1.3644, lng: 103.9915, dir: "top", label: { en: "Changi Airport", ko: "창이공항" } }
         ]
       },
@@ -590,8 +802,8 @@ var CONTENT = {
   <g class="lm">
     <circle cx="413.7" cy="133.3" r="3.5"/>
     <text class="tiny lang-en" x="422.7" y="137.3" text-anchor="start">Woodlands · causeway to Malaysia</text><text class="tiny lang-ko" x="422.7" y="137.3" text-anchor="start">우드랜즈 · 말레이시아 육로</text>
-    <circle cx="542.2" cy="432.4" r="3.5"/>
-    <text class="tiny lang-en" x="554.2" y="448.4" text-anchor="start">CBD</text><text class="tiny lang-ko" x="554.2" y="448.4" text-anchor="start">시내 (CBD)</text>
+    <rect x="543.5" y="443.5" width="8" height="8" rx="1.5" class="office"/>
+    <text class="lm-lbl lang-en" x="557" y="453" text-anchor="start">Marina One (office)</text><text class="lm-lbl lang-ko" x="557" y="453" text-anchor="start">마리나 원 (회사)</text>
     <circle cx="527.5" cy="446.1" r="4.5" class="dot-k"/>
     <line x1="527.5" y1="452.1" x2="501.5" y2="480.1" class="leader"/>
     <text class="lm-lbl lang-en" x="497.5" y="494.1" text-anchor="end">K-town · Tanjong Pagar</text><text class="lm-lbl lang-ko" x="497.5" y="494.1" text-anchor="end">코리아타운 · 탄종파가</text>
@@ -605,10 +817,10 @@ var CONTENT = {
 
   <g class="area" data-target="bukit-timah" tabindex="0" role="link"
      aria-label="Bukit Timah — jump to section">
-    <ellipse cx="403.9" cy="319.6" rx="81.0" ry="45.8" transform="rotate(-35 403.9 319.6)"/>
-    <text class="area-name lang-en" x="403.9" y="299.6" text-anchor="middle">Bukit Timah</text><text class="area-name lang-ko" x="403.9" y="299.6" text-anchor="middle">부킷 티마</text>
+    <ellipse cx="400" cy="312" rx="90" ry="52" transform="rotate(-35 400 312)"/>
+    <text class="area-name lang-en" x="400" y="288" text-anchor="middle">Bukit Timah</text><text class="area-name lang-ko" x="400" y="288" text-anchor="middle">부킷 티마</text>
 
-    <text class="area-vibe lang-en" x="403.9" y="314.6" text-anchor="middle">Leafy</text><text class="area-vibe lang-ko" x="403.9" y="314.6" text-anchor="middle">녹음</text>
+    <text class="area-vibe lang-en" x="400" y="303" text-anchor="middle">Leafy</text><text class="area-vibe lang-ko" x="400" y="303" text-anchor="middle">녹음</text>
   </g>
   <g class="area" data-target="clementi" tabindex="0" role="link"
      aria-label="Clementi — jump to section">
@@ -651,37 +863,63 @@ var CONTENT = {
     areas: [
       {
         id: "bukit-timah",
-        name: { en: "Bukit Timah / Upper Bukit Timah", ko: "Bukit Timah · Upper Bukit Timah (부킷 티마)" },
+        name: { en: "Bukit Timah corridor (D21/D10/D23)", ko: "Bukit Timah 코리도 (D21/D10/D23) — 부킷 티마" },
         short: { en: "Bukit Timah", ko: "부킷 티마" },
         vibe: { en: "Leafy", ko: "숲세권" },
         gmapsQuery: "Bukit Timah, Singapore",
-        cmp: {
-          mrt: { en: "Downtown Line: Beauty World, KAP, Sixth Ave, Tan Kah Kee; Hillview/Cashew for Upper BT", ko: "다운타운선: Beauty World, KAP, Sixth Ave, Tan Kah Kee; 어퍼 부킷 티마는 Hillview/Cashew" },
-          community: { en: "Expats + well-heeled locals; the main Korean cluster", ko: "외국인 + 여유 있는 로컬; 한인 가족 최대 밀집지" },
-          kids: { en: "Very high — preschools + the elite school belt", ko: "매우 높음 — 유치원 + 명문 학군 벨트" },
-          rent: { en: "S$4,800–6,500 (prime D10 S$7k+)", ko: "S$4,800–6,500 (D10 핵심부는 S$7k+)" }
-        },
         pitch: {
-          en: "Green, quiet and school-obsessed — and the doorstep of the Korean school. Upper Bukit Timah (Beauty World–Hillview) is the value end of the prestige belt: the same leafy calm at a friendlier rent.",
-          ko: "푸르고 조용하고, 온 동네가 교육에 진심이에요 — 그리고 한국학교가 바로 문앞이에요. 어퍼 부킷 티마(Beauty World–Hillview)는 명문 벨트의 '가성비 구간'으로, 같은 숲세권 분위기를 더 합리적인 임대료로 누릴 수 있어요."
+          en: "One corridor, three personalities: the Downtown Line spine, the elite school belt, and the Korean family cluster. Condo and landed territory — almost no HDB. Pick your sub-area below.",
+          ko: "하나의 축에 세 가지 얼굴이 있어요: 다운타운선 라인, 명문 학군 벨트, 그리고 한인 가족 클러스터. 콘도와 단독주택 지역이라 HDB는 거의 없어요. 아래에서 동네를 골라 보세요."
         },
-        walk: {
-          en: "Downtown Line stations: Beauty World, King Albert Park, Sixth Avenue, Tan Kah Kee (Hillview/Cashew for Upper BT). Beauty World Centre + Bukit Timah Food Centre for hawker food; Cold Storage/FairPrice at Beauty World and KAP; The Grandstand for family dining and toddler soft-play. Korean food & groceries: Koryo Mart (Beauty World), Sol Mart (Bukit Timah Plaza), Seoul Butchery, Mom's Table.",
-          ko: "다운타운선 역: Beauty World, King Albert Park, Sixth Avenue, Tan Kah Kee (어퍼 부킷 티마는 Hillview/Cashew). 호커 음식은 Beauty World Centre + Bukit Timah Food Centre, 장보기는 Beauty World와 KAP의 Cold Storage/FairPrice, 가족 외식과 유아 실내놀이터는 The Grandstand. 한국 음식·식료품: Koryo Mart(Beauty World), Sol Mart(Bukit Timah Plaza), Seoul Butchery, Mom's Table."
-        },
+        subAreas: [
+          {
+            name: { en: "1a — Beauty World / Upper Bukit Timah (D21)", ko: "1a — Beauty World · Upper Bukit Timah (D21)" },
+            body: {
+              en: "The Korean node: SKIS is walkable (71 Bukit Tinggi Rd), Bukit Timah Plaza houses Sol Mart (B1-66) plus several Korean restaurants and a tuition-centre cluster, and Koryo Mart sits at 17 Lorong Kilat. Malls on three corners of the MRT (Beauty World Centre with its Level-4 hawker centre, Beauty World Plaza, Bukit Timah Plaza with FairPrice Finest); an interim hawker centre sits beside the station (rebuilt hub ~2029), and The Reserve Residences integrated mall + bus interchange opens on top of the MRT (~2028). 3BR: new stock S$5,000–6,700 (Forett ~S$5,800–6,700 at an 11-min walk; Linq's compact 3BRs ~S$5,000–5,500 right above the MRT); the older 999-yr Southaven II runs ~S$4,500–5,000 by the Nature Reserve. Cluster-house pocket in Toh Tuck/Eng Kong.",
+              ko: "한인 거점이에요: SKIS(71 Bukit Tinggi Rd)가 도보권이고, Bukit Timah Plaza에는 Sol Mart(B1-66)와 한식당 여러 곳, 학원 클러스터가 들어와 있어요. Koryo Mart는 17 Lorong Kilat에 있어요. MRT 세 모퉁이마다 몰이 하나씩 있고(4층에 호커센터가 있는 Beauty World Centre, Beauty World Plaza, FairPrice Finest가 있는 Bukit Timah Plaza), 역 옆에 임시 호커센터(재건축 허브는 2029년경), 역 바로 위에는 The Reserve Residences 복합몰+버스 인터체인지가 2028년경 열려요. 3BR: 신축 S$5,000–6,700(도보 11분 Forett 약 S$5,800–6,700, 역 위 Linq 콤팩트 3BR 약 S$5,000–5,500), 자연보호구역 쪽 999년 구축 Southaven II는 약 S$4,500–5,000이에요. Toh Tuck/Eng Kong에 클러스터하우스 포켓이 있어요."
+            },
+            take: {
+              en: "Likely the highest Korean concentration, but the shops are older-strata-mall grade rather than upscale, and it can feel remote — travel in and out drags at peak (the DTL ride itself is ~23 min to Downtown; the \"remote\" feeling is mostly a car thing).",
+              ko: "한인 밀도는 아마 싱가포르에서 가장 높아요. 다만 상권은 고급이라기보단 오래된 상가 수준이고, 러시아워엔 드나들기가 답답할 수 있어요 — DTL 승차 자체는 Downtown까지 약 23분이라, '외지다'는 느낌은 주로 차로 다닐 때 이야기예요."
+            }
+          },
+          {
+            name: { en: "1b — King Albert Park / Sixth Avenue / Tan Kah Kee (D10/D21 border)", ko: "1b — King Albert Park · Sixth Avenue · Tan Kah Kee (D10/D21 경계)" },
+            body: {
+              en: "The prestige end. Sixth Avenue is a landed/GCB enclave where condos are the exception — a small newer cluster at Sixth Ave MRT (RoyalGreen ~S$7,000–8,500 est., Fourth Avenue Residences) and older freeholds near KAP (Maplewoods 3BR ~S$6,200; The Cascadia S$6,000–7,500; Signature Park's big, cheap older units ~S$5,800–6,500 for 4BR-scale space). Cold Storage at Guthrie House; KAP Mall is cinema-and-cafes with no supermarket (verify). On the doorstep of Nanyang, Hwa Chong, MGS and NJC; SKIS is a ~5-minute drive.",
+              ko: "명문가 구간이에요. Sixth Avenue는 단독주택·GCB 동네라 콘도가 오히려 예외예요 — Sixth Ave역 옆의 작은 신축 클러스터(RoyalGreen 약 S$7,000–8,500 추정, Fourth Avenue Residences)와 KAP 근처 구축 프리홀드(Maplewoods 3BR 약 S$6,200, The Cascadia S$6,000–7,500, 4BR급 공간이 크고 저렴한 구축 Signature Park 약 S$5,800–6,500)가 있어요. Guthrie House에 Cold Storage가 있고, KAP Mall은 영화관·카페 위주라 슈퍼마켓은 없어요(확인 필요). Nanyang, Hwa Chong, MGS, NJC가 문앞이고 SKIS는 차로 약 5분이에요."
+            },
+            verify: true,
+            take: {
+              en: "Sixth Avenue itself has very few condos — it's really a landed neighbourhood with an MRT station.",
+              ko: "Sixth Avenue 자체엔 콘도가 정말 몇 없어요 — 사실상 MRT역이 딸린 단독주택 동네예요."
+            }
+          },
+          {
+            name: { en: "1c — Hillview (D23)", ko: "1c — Hillview (D23)" },
+            body: {
+              en: "The corridor's value play: 3BR from S$3,900–5,300 (Glendale Park, 2-min walk to the MRT) to S$4,600–4,850 (Midwood, next to HillV2) — S$1,500–2,000/month below Beauty World's new stock. The stock is a condo strip along Hillview Avenue plus landed estates and a thin cluster-house pocket on the Chestnut side (Chestnut Residences, Chestnut Ville). HillV2 anchors the lifestyle: CS Fresh (Cold Storage's premium format) plus a restaurant strip (iO Italian Osteria, Wine Connection, Joyden Canton); Rail Mall Cold Storage nearby; the Rail Corridor and Bukit Timah Nature Reserve on the doorstep; GESS one stop up at Dairy Farm Lane. Two DTL stations (Hillview DT3; the new Hume DT4, 2025). Caveats: parts of the estate are a long uphill walk from the MRT (Hazel Park is really Cashew-side), Hillhaven isn't rentable until 2027, and it's ~27 min by DTL to Downtown. SKIS is a 5–10 min drive.",
+              ko: "이 축의 가성비 카드예요: 3BR이 S$3,900–5,300(MRT 도보 2분 Glendale Park)에서 S$4,600–4,850(HillV2 옆 Midwood)까지 — Beauty World 신축보다 월 S$1,500–2,000 저렴해요. Hillview Avenue를 따라 콘도가 줄지어 있고, 단독주택 단지와 Chestnut 쪽의 얇은 클러스터하우스 포켓(Chestnut Residences, Chestnut Ville)도 있어요. 생활은 HillV2가 책임져요: CS Fresh(Cold Storage 프리미엄 매장) + 레스토랑 스트립(iO Italian Osteria, Wine Connection, Joyden Canton). 근처에 Rail Mall Cold Storage, 문앞에 Rail Corridor와 Bukit Timah 자연보호구역, 한 정거장 위 Dairy Farm Lane에 GESS가 있어요. DTL 역이 두 개예요(Hillview DT3, 2025년 신설 Hume DT4). 주의: 단지에 따라 MRT까지 오르막을 한참 걸어야 하고(Hazel Park는 사실상 Cashew 생활권), Hillhaven은 2027년까지 임대가 안 되고, Downtown까지 DTL로 약 27분이에요. SKIS는 차로 5–10분."
+            },
+            take: {
+              en: "Feels like a walkable upscale suburb — the CS Fresh + restaurant strip does a lot of work — but check the specific condo's MRT walk before committing.",
+              ko: "걸어 다닐 수 있는 고급 교외 같은 느낌이에요 — CS Fresh와 레스토랑 스트립이 큰 몫을 해요. 다만 계약 전에 그 콘도의 MRT 도보 거리를 꼭 확인하세요."
+            }
+          }
+        ],
         kids: {
-          en: "EtonHouse Upper Bukit Timah + Vanda + Zhong Hua campuses; White Lodge Upper Bukit Timah; Blue House at The Grandstand. Long term, this is the elite local school belt (Nanyang, Hwa Chong, MGS, Pei Hwa Presbyterian) — mostly relevant if PR happens.",
-          ko: "EtonHouse 어퍼 부킷 티마·Vanda·Zhong Hua 캠퍼스, White Lodge 어퍼 부킷 티마, The Grandstand의 Blue House가 있어요. 장기적으로는 명문 로컬 학군 벨트(Nanyang, Hwa Chong, MGS, Pei Hwa Presbyterian)인데, 이건 영주권을 받으면 의미가 생기는 이야기예요."
+          en: "Across the corridor: EtonHouse Upper Bukit Timah + Vanda; White Lodge Upper Bukit Timah; Blue House at The Grandstand. Long term, this is the elite local school belt (Nanyang, Hwa Chong, MGS, NJC) — mostly relevant if PR happens.",
+          ko: "코리도 전체 기준: EtonHouse 어퍼 부킷 티마·Vanda, White Lodge 어퍼 부킷 티마, The Grandstand의 Blue House가 있어요. 장기적으로는 명문 로컬 학군 벨트(Nanyang, Hwa Chong, MGS, NJC)인데, 이건 영주권을 받으면 의미가 생기는 이야기예요."
         },
         community: {
-          en: "Expats and well-heeled Singaporeans side by side. German/Swiss/Dutch school families (GESS legacy, Swiss School, Hollandse School) — and the main Korean family cluster, anchored by SKIS at 71 Bukit Tinggi Road. High family density.",
-          ko: "외국인과 여유 있는 싱가포르 가정이 섞여 살아요. 독일·스위스·네덜란드 학교 가족들(GESS, Swiss School, Hollandse School)이 있고 — 무엇보다 71 Bukit Tinggi Road의 SKIS를 중심으로 한 싱가포르 최대 한인 가족 클러스터예요. 아이 있는 가정 밀도가 높아요."
+          en: "Expats and well-heeled Singaporeans side by side; German/Swiss/Dutch school families — and the main Korean family cluster, centred on Beauty World–Bukit Timah Plaza. High family density.",
+          ko: "외국인과 여유 있는 싱가포르 가정이 섞여 살고, 독일·스위스·네덜란드 학교 가족들도 있어요 — 무엇보다 Beauty World–Bukit Timah Plaza를 중심으로 한 싱가포르 최대 한인 가족 클러스터예요. 아이 있는 가정 밀도가 높아요."
         },
         property: {
-          en: "Condo and landed territory — almost no HDB. 3BR S$4,800–6,500: The Cascadia (3BR S$4,800–6,500), plus Maplewoods and Signature Park — the older, larger stock tends to have helper rooms. The prime D10 stretch runs S$7k+.",
-          ko: "콘도와 단독주택 지역이라 HDB는 거의 없어요. 3BR S$4,800–6,500: The Cascadia(3BR S$4,800–6,500), 그리고 Maplewoods, Signature Park — 오래되고 넓은 단지일수록 헬퍼룸이 있는 편이에요. D10 핵심 구간은 S$7k 이상이에요."
+          en: "Landed reality (D21): terrace S$7,500–22,000, semi-detached S$8,000–9,300, cluster house S$9,000–18,500; the D10 side runs roughly double (terraces from ~S$14,500).",
+          ko: "단독주택 시세(D21): 테라스 S$7,500–22,000, 세미디 S$8,000–9,300, 클러스터하우스 S$9,000–18,500. D10 쪽은 대략 두 배예요(테라스 약 S$14,500부터)."
         },
-        srcUrl: "https://www.99.co/singapore/rent/condos-apartments/the-cascadia"
+        srcUrl: "https://property.singaporeexpats.com/district/landed-property/rent/21"
       },
       {
         id: "clementi",
@@ -689,33 +927,28 @@ var CONTENT = {
         short: { en: "Clementi", ko: "클레멘티" },
         vibe: { en: "Practical", ko: "실속" },
         gmapsQuery: "Clementi, Singapore",
-        cmp: {
-          mrt: { en: "Buona Vista (EWL+CCL interchange), Clementi, Dover; one-north/Kent Ridge on CCL", ko: "Buona Vista(동서선+서클선 환승), Clementi, Dover; 서클선 one-north/Kent Ridge" },
-          community: { en: "Most local of the five; quiet Japanese undercurrent", ko: "다섯 곳 중 가장 로컬; 일본인 가족이 조용히 많아요" },
-          kids: { en: "Dense anchor-operator coverage; fewer boutique preschools", ko: "앵커 오퍼레이터 촘촘; 부티크 유치원은 적음" },
-          rent: { en: "S$5,000–6,500", ko: "S$5,000–6,500" }
-        },
         pitch: {
-          en: "The best value-for-commute if work is at one-north, NUS, or the CBD via the East–West Line. Authentically local — hawker food and heartland malls — trading expat polish for space and savings.",
-          ko: "직장이 one-north, NUS이거나 동서선으로 CBD에 다닌다면 통근 대비 가성비가 가장 좋아요. 호커 음식과 동네 몰이 있는 진짜 로컬 동네 — 외국인 동네의 세련됨 대신 넓은 공간과 절약을 얻는 선택이에요."
+          en: "The best value-for-commute if work is at one-north or NUS; to Marina One it's the East–West Line to Raffles Place plus a 10-minute underground walk (~40–50 min door-to-door). Authentically local — hawker food and heartland malls — trading expat polish for space and savings.",
+          ko: "직장이 one-north나 NUS라면 통근 대비 가성비 최고예요. Marina One까지는 동서선으로 Raffles Place까지 간 뒤 지하 통로로 10분 걸어요(문앞부터 약 40–50분). 호커 음식과 동네 몰이 있는 진짜 로컬 동네 — 세련됨 대신 넓은 공간과 절약을 얻는 선택이에요."
         },
         walk: {
           en: "Buona Vista (EWL+CCL interchange), Clementi and Dover on the East–West Line; one-north/Kent Ridge on the Circle Line. Clementi Mall + the Clementi 448 hawker centre; The Star Vista; West Coast Park has some of the island's best playgrounds.",
           ko: "동서선의 Buona Vista(서클선 환승), Clementi, Dover역과 서클선의 one-north/Kent Ridge역이 있어요. Clementi Mall과 Clementi 448 호커센터, The Star Vista가 가깝고, West Coast Park에는 싱가포르에서 손꼽히는 놀이터가 있어요."
         },
         kids: {
-          en: "Dense anchor-operator coverage (My First Skool, PCF) — plenty of affordable places; weaker on boutique international preschools.",
-          ko: "앵커 오퍼레이터(My First Skool, PCF)가 촘촘해서 합리적인 선택지가 많아요. 대신 부티크·국제 유치원은 적은 편이에요."
+          en: "Dense anchor-operator coverage (My First Skool, PCF) — plenty of affordable places; weaker on boutique international preschools. SKIS reportedly shuttles from Clementi MRT (verify).",
+          ko: "앵커 오퍼레이터(My First Skool, PCF)가 촘촘해서 합리적인 선택지가 많아요. 대신 부티크·국제 유치원은 적은 편이에요. SKIS는 Clementi MRT에서 셔틀을 운행한다고 알려져 있어요(확인 필요)."
         },
+        kidsVerify: true,
         community: {
           en: "The most local-majority of the five. A quiet Japanese family undercurrent (the Japanese School has Clementi and West Coast campuses) and an academic/tech expat crowd around NUS and one-north. Korean presence: modest.",
           ko: "다섯 곳 중 로컬 비중이 가장 높아요. 일본인 학교(클레멘티·웨스트코스트 캠퍼스) 덕에 일본 가족이 조용히 많고, NUS·one-north 주변에는 학계·테크 외국인들이 살아요. 한인은 많지 않은 편이에요."
         },
         property: {
-          en: "3BR S$5,000–6,500: Clement Canopy (~S$6,200), Normanton Park (S$6,000–6,500); older Trilinq and Parc Clematis run cheaper. Best HDB play of the five: Clementi 4-room median S$3,900, Queenstown S$4,000 — saving S$2,000+/month.",
-          ko: "3BR S$5,000–6,500: Clement Canopy(약 S$6,200), Normanton Park(S$6,000–6,500), 조금 오래된 Trilinq·Parc Clematis는 더 저렴해요. 다섯 지역 중 HDB 활용도가 최고: Clementi 방4개 중위 임대료 S$3,900, Queenstown S$4,000 — 콘도 대비 월 S$2,000 이상 아껴요."
+          en: "3BR S$5,500–6,500: Whistler Grand S$6,000–6,500 (958 sqft), Hundred Trees S$6,200–6,400 (1,163–1,302 sqft), the older Westcove S$5,500 (1,259 sqft), Clement Canopy ~S$5,800–6,400. 4BR S$8,000–11,000: Clavon S$8,000 (1,281 sqft), Parc Clematis ~S$8,500–9,500. Stock mix: an HDB-heavy heartland ringed by mega new 99-yr condos and 1990s West Coast condos; landed only in pockets (the Pasir Panjang hillside). Best HDB play of the group: Clementi 4-room median S$3,900, Queenstown S$4,000 — saving S$2,000+/month.",
+          ko: "3BR S$5,500–6,500: Whistler Grand S$6,000–6,500(958sqft), Hundred Trees S$6,200–6,400(1,163–1,302sqft), 구축 Westcove S$5,500(1,259sqft), Clement Canopy 약 S$5,800–6,400. 4BR S$8,000–11,000: Clavon S$8,000(1,281sqft), Parc Clematis 약 S$8,500–9,500. 매물 구성은 HDB 중심의 서민 지역을 신축 대단지 99년 콘도와 1990년대 West Coast 콘도가 둘러싼 형태이고, 단독주택은 Pasir Panjang 언덕 쪽 일부뿐이에요. HDB 활용도는 후보 중 최고: Clementi 방4개 중위 S$3,900, Queenstown S$4,000 — 월 S$2,000 이상 아껴요."
         },
-        srcUrl: "https://www.propertyguru.com.sg/property-for-rent/at-the-clement-canopy-22866"
+        srcUrl: "https://property.singaporeexpats.com/district/apartment-condo/rent/05"
       },
       {
         id: "east-coast",
@@ -723,16 +956,33 @@ var CONTENT = {
         short: { en: "East Coast", ko: "이스트코스트" },
         vibe: { en: "Breezy", ko: "여유" },
         gmapsQuery: "Katong, Singapore",
-        cmp: {
-          mrt: { en: "Thomson–East Coast Line: Katong Park, Tanjong Katong, Marine Parade, Marine Terrace", ko: "톰슨-이스트코스트선: Katong Park, Tanjong Katong, Marine Parade, Marine Terrace" },
-          community: { en: "Established Western expat pocket in a heritage-local area", ko: "전통 로컬 지역 속 오래된 서양 외국인 커뮤니티" },
-          kids: { en: "Strong boutique preschool scene", ko: "부티크 유치원이 강세" },
-          rent: { en: "S$6,000–7,800", ko: "S$6,000–7,800" }
-        },
         pitch: {
-          en: "Beach-park weekends, stroller-flat terrain, and Singapore's best casual food. Freehold 3BRs here buy noticeably more square footage per dollar than District 10, and the TEL finally connects it properly to town.",
-          ko: "주말마다 바닷가 공원, 유모차 끌기 좋은 평지, 그리고 싱가포르 최고의 캐주얼 맛집 동네예요. 같은 돈으로 D10보다 눈에 띄게 넓은 프리홀드 3BR을 구할 수 있고, TEL 개통으로 도심 연결도 좋아졌어요."
+          en: "Beach-park weekends, stroller-flat terrain, Singapore's best casual food — and since the TEL opened, the best office commute of any area: Marine Parade → Shenton Way direct, exiting into Marina One's basement (~20–30 min door-to-door). The trade-off is the school run: SKIS is cross-island (35–45 min at peak), so this area fits best if the twins attend preschool locally.",
+          ko: "주말마다 바닷가 공원, 유모차 끌기 좋은 평지, 싱가포르 최고의 캐주얼 맛집 — 그리고 TEL 개통 이후로는 모든 후보 중 통근이 가장 좋아요: Marine Parade에서 Shenton Way까지 직행해서 Marina One 지하로 바로 나와요(문앞부터 약 20–30분). 대신 등하교가 트레이드오프예요: SKIS까지 섬을 가로질러야 해서(러시아워 35–45분), 아이들이 동네 유치원에 다닐 때 가장 잘 맞는 동네예요."
         },
+        subAreas: [
+          {
+            name: { en: "Katong / Joo Chiat", ko: "Katong · Joo Chiat" },
+            body: {
+              en: "Heritage shophouses, walk-ups and boutique freeholds — the most character.",
+              ko: "헤리티지 숍하우스, 워크업, 부티크 프리홀드 — 감성은 여기가 최고예요."
+            }
+          },
+          {
+            name: { en: "Amber / Meyer", ko: "Amber · Meyer" },
+            body: {
+              en: "Condo towers near Katong Park TEL — the newest stock (Amber Park ~S$7,800–8,800 for a 3BR).",
+              ko: "Katong Park TEL역 근처의 콘도 타워들 — 가장 새 매물이에요(Amber Park 3BR 약 S$7,800–8,800)."
+            }
+          },
+          {
+            name: { en: "Marine Parade / Siglap", ko: "Marine Parade · Siglap" },
+            body: {
+              en: "Older big-unit estates and HDB by the sea — the most space per dollar.",
+              ko: "바닷가의 구축 대형 평형과 HDB — 돈 대비 공간은 여기가 최고예요."
+            }
+          }
+        ],
         walk: {
           en: "Thomson–East Coast Line: Katong Park, Tanjong Katong, Marine Parade, Marine Terrace (opened 2024). i12 Katong, Parkway Parade and Katong V malls; the Katong/Joo Chiat shophouse food scene; East Coast Park as your backyard.",
           ko: "톰슨-이스트코스트선: Katong Park, Tanjong Katong, Marine Parade, Marine Terrace(2024년 개통). 몰은 i12 Katong, Parkway Parade, Katong V가 있고, Katong/Joo Chiat 숍하우스 거리는 맛집 천국이에요. East Coast Park가 뒷마당이 돼요."
@@ -746,10 +996,10 @@ var CONTENT = {
           ko: "호주·영국계 서양 가족과 인도계 외국인 가족이 많은(대략적인 경향이에요) 오래된 외국인 포켓이, 페라나칸 전통이 살아있는 로컬 동네와 섞여 있어요. 느긋한 가족 라이프스타일이 특징이에요. 한인은 거의 없고, SKIS까지는 섬을 가로질러야 해요."
         },
         property: {
-          en: "3BR S$6,000–7,800: The Esta (1,300–1,700 sqft, many units with helper rooms, S$6,000–7,800); One Amber and Amber Park sit above the band. HDB: Marine Parade 4-room median S$3,500, right by the TEL and Parkway Parade.",
-          ko: "3BR S$6,000–7,800: The Esta(1,300–1,700sqft, 헬퍼룸 있는 유닛 다수, S$6,000–7,800), One Amber와 Amber Park는 이 범위보다 위예요. HDB는 Marine Parade 방4개 중위 S$3,500 — TEL역과 Parkway Parade 바로 옆이에요."
+          en: "3BR S$4,500–8,500: The Esta ~S$6,000–6,800 (1,346 sqft, helper rooms common), Seaside Residences ~S$6,400–7,200, Villa Marina S$5,800 (1,281 sqft). 4BR S$7,500–12,000: One Amber ~S$8,500 (1,700 sqft); Mandarin Gardens' huge older units S$7,000–7,700 (1,787–2,034 sqft — the cheapest big space around). Landed: terraces from S$6,500–15,500 — roughly half Bukit Timah's D10 prices. HDB: Marine Parade 4-room median S$3,500 (live asks ~S$4,100), right by the TEL and Parkway Parade.",
+          ko: "3BR S$4,500–8,500: The Esta 약 S$6,000–6,800(1,346sqft, 헬퍼룸 흔함), Seaside Residences 약 S$6,400–7,200, Villa Marina S$5,800(1,281sqft). 4BR S$7,500–12,000: One Amber 약 S$8,500(1,700sqft), Mandarin Gardens의 초대형 구축 S$7,000–7,700(1,787–2,034sqft — 넓은 집 기준 최저가). 단독주택: 테라스 S$6,500–15,500부터 — 부킷 티마 D10의 대략 절반 가격이에요. HDB: Marine Parade 방4개 중위 S$3,500(실제 호가는 약 S$4,100) — TEL역과 Parkway Parade 바로 옆이에요."
         },
-        srcUrl: "https://www.99.co/singapore/condos-apartments/the-esta"
+        srcUrl: "https://www.edgeprop.sg/condo-apartment/the-esta"
       },
       {
         id: "holland-village",
@@ -757,34 +1007,27 @@ var CONTENT = {
         short: { en: "Holland V", ko: "홀랜드 빌리지" },
         vibe: { en: "Sociable", ko: "사교" },
         gmapsQuery: "Holland Village, Singapore",
-        cmp: {
-          mrt: { en: "Holland Village + Farrer Road (CCL); Buona Vista interchange one stop away", ko: "서클선 Holland Village + Farrer Road; 환승역 Buona Vista가 한 정거장" },
-          community: { en: "The traditional Western-expat heartland", ko: "전통적인 서양 외국인 중심지" },
-          kids: { en: "High — Odyssey, EtonHouse Vanda within reach", ko: "높음 — Odyssey, EtonHouse Vanda 근접" },
-          rent: { en: "S$7,000–10,000+", ko: "S$7,000–10,000+" }
-        },
         pitch: {
-          en: "The default answer when expats ask \"where does everyone live\" — unmatched brunch-and-playdate density with the Botanic Gardens on the doorstep. You pay a S$1,500–3,000/month premium for the network effect.",
-          ko: "외국인들이 '다들 어디 살아요?'라고 물으면 나오는 기본 답이에요 — 브런치와 플레이데이트 밀도가 압도적이고 보타닉 가든이 문앞이에요. 이 네트워크 효과에 월 S$1,500–3,000의 프리미엄을 내는 셈이에요."
+          en: "The default answer when expats ask \"where does everyone live\" — unmatched brunch-and-playdate density with the Botanic Gardens on the doorstep. You pay a S$1,500–3,000/month premium for the network effect. Commute upgrade, July 2026: the Circle Line now runs one-seat Holland Village → Marina Bay (~35–45 min door-to-door).",
+          ko: "외국인들이 '다들 어디 살아요?'라고 물으면 나오는 기본 답이에요 — 브런치와 플레이데이트 밀도가 압도적이고 보타닉 가든이 문앞이에요. 이 네트워크 효과에 월 S$1,500–3,000의 프리미엄을 내는 셈이에요. 그리고 2026년 7월부터 통근이 업그레이드됐어요: 서클선이 Holland Village → Marina Bay를 환승 없이 이어줘요(문앞부터 약 35–45분)."
         },
         walk: {
           en: "Holland Village and Farrer Road on the Circle Line; the Buona Vista interchange is one stop away. The Holland V enclave (Cold Storage, wet market, restaurants), One Holland Village mall, Empress Market.",
           ko: "서클선 Holland Village역과 Farrer Road역이 있고, 환승역 Buona Vista가 한 정거장이에요. Holland V 중심가(Cold Storage, 재래시장, 레스토랑), One Holland Village 몰, Empress Market이 걸어서 닿아요."
         },
         kids: {
-          en: "Odyssey (Kay Siang Road), EtonHouse Vanda nearby, Blue House at The Grandstand — and SKIS is within reach.",
-          ko: "Odyssey(Kay Siang Road), EtonHouse Vanda가 가깝고, The Grandstand의 Blue House도 있어요. SKIS도 다닐 만한 거리예요."
+          en: "Odyssey (Kay Siang Road), EtonHouse Vanda nearby, Blue House at The Grandstand — and SKIS is a 12–18 minute drive.",
+          ko: "Odyssey(Kay Siang Road), EtonHouse Vanda가 가깝고, The Grandstand의 Blue House도 있어요. SKIS는 차로 12–18분이에요."
         },
         community: {
           en: "The traditional Western-expat heartland: high expat and family density, and hiring a helper is the near-universal norm. Korean families are present at the fringe of the Bukit Timah cluster.",
           ko: "전통적인 서양 외국인 중심지예요. 외국인·가족 밀도가 높고, 입주 헬퍼 고용이 거의 기본값인 동네예요. 부킷 티마 한인 클러스터의 가장자리라 한인 가족도 어느 정도 있어요."
         },
         property: {
-          en: "The priciest of the five — 3BR S$7,000–10,000+: d'Leedon (S$7,000–8,500, at Farrer Road MRT), One Holland Village Residences (~S$10,000); older Sommerville Park and Spanish Village have utility rooms (verify at listing level). Prime central = the least negotiating room. The HDB hack: Holland Close/Ghim Moh blocks (Queenstown 4-room median S$4,000) give the Holland Village lifestyle at half price, quota permitting. If you'd trade space for location: One Holland Village 2BR runs S$6,200–7,000.",
-          ko: "다섯 곳 중 가장 비싸요 — 3BR S$7,000–10,000+: d'Leedon(S$7,000–8,500, Farrer Road역 바로 앞), One Holland Village Residences(약 S$10,000). 오래된 Sommerville Park·Spanish Village에는 유틸리티룸이 있어요(매물별 확인 필요). 핵심 중심부라 협상 여지가 가장 적어요. HDB 꿀팁: Holland Close/Ghim Moh 단지(Queenstown 방4개 중위 S$4,000)는 '홀랜드 빌리지 라이프를 반값에' — 외국인 쿼터가 허용된다면요. 공간을 줄이고 위치를 택한다면 One Holland Village 2BR이 S$6,200–7,000이에요."
+          en: "3BR S$5,500–10,000: The Serenade @ Holland S$5,500 (1,152 sqft), d'Leedon ~S$6,500–8,100 (compact Zaha layouts, mostly no utility room), the older freehold Sommerville Park S$7,000–8,500 (1,600–2,000 sqft, utility rooms standard), One Holland Village Residences ~S$10,000. 4BR S$10,000–15,000: Leedon Green ~S$10,000 (1,490 sqft), d'Leedon ~S$12,900 (2,300 sqft); the Orchard-side luxury tail runs S$15,000–39,000. Stock mix: a prestige condo belt plus GCB/landed enclaves and the low-rise Chip Bee Gardens terraces; no walk-ups to speak of. Prime central = the least negotiating room. The HDB hack: Holland Close/Ghim Moh blocks (Queenstown 4-room median S$4,000) give the Holland Village lifestyle at half price, quota permitting. If you'd trade space for location: One Holland Village 2BR runs S$6,200–7,000.",
+          ko: "3BR S$5,500–10,000: The Serenade @ Holland S$5,500(1,152sqft), d'Leedon 약 S$6,500–8,100(자하 하디드 설계의 콤팩트 구조, 유틸리티룸 없는 유닛이 대부분), 구축 프리홀드 Sommerville Park S$7,000–8,500(1,600–2,000sqft, 유틸리티룸 기본), One Holland Village Residences 약 S$10,000. 4BR S$10,000–15,000: Leedon Green 약 S$10,000(1,490sqft), d'Leedon 약 S$12,900(2,300sqft); 오차드 쪽 럭셔리 구간은 S$15,000–39,000까지 가요. 매물 구성은 명품 콘도 벨트 + GCB·단독주택 단지 + 저층 Chip Bee Gardens 테라스이고, 워크업은 거의 없어요. 핵심 중심부라 협상 여지가 가장 적어요. HDB 꿀팁: Holland Close/Ghim Moh 단지(Queenstown 방4개 중위 S$4,000)는 '홀랜드 빌리지 라이프를 반값에' — 외국인 쿼터가 허용된다면요. 공간을 줄이고 위치를 택한다면 One Holland Village 2BR이 S$6,200–7,000이에요."
         },
-        verify: true,
-        srcUrl: "https://www.propertyguru.com.sg/condo-for-rent/at-d-leedon-former-farrer-court-20575"
+        srcUrl: "https://www.edgeprop.sg/condo-apartment/dleedon"
       },
       {
         id: "newton",
@@ -792,23 +1035,17 @@ var CONTENT = {
         short: { en: "Newton", ko: "뉴턴" },
         vibe: { en: "Central", ko: "도심" },
         gmapsQuery: "Novena, Singapore",
-        cmp: {
-          mrt: { en: "Newton (NSL+DTL interchange), Novena (NSL)", ko: "Newton(남북선+다운타운선 환승), Novena(남북선)" },
-          community: { en: "Young professionals, mixed nationalities; local affluent families", ko: "젊은 직장인 + 다국적; 로컬 부유층 가족" },
-          kids: { en: "United Square — an entire mall of toddler enrichment", ko: "United Square — 몰 전체가 유아 학원가" },
-          rent: { en: "S$6,500–12,000 (wide band)", ko: "S$6,500–12,000 (범위 넓음)" }
-        },
         pitch: {
-          en: "Maximum convenience: two MRT lines, Orchard next door, Singapore's biggest medical hub, and an entire mall of toddler enrichment at United Square. City-condo living rather than village feel — ideal if one parent commutes hard.",
-          ko: "편의성의 끝판왕이에요. MRT 두 개 노선, 옆동네가 오차드, 싱가포르 최대 의료 허브, 그리고 몰 전체가 유아 학원가인 United Square까지. 동네 감성보다는 도심 콘도 라이프에 가까워서, 한 명이 통근을 많이 해야 한다면 최적이에요."
+          en: "Maximum convenience: NSL direct to Marina Bay (~16-min ride, 25–35 min door-to-door), Orchard next door, Singapore's biggest medical hub, and an entire mall of toddler enrichment at United Square. City-condo living rather than village feel — ideal if one parent commutes hard.",
+          ko: "편의성의 끝판왕이에요. 남북선으로 Marina Bay까지 직행(승차 약 16분, 문앞부터 25–35분), 옆동네가 오차드, 싱가포르 최대 의료 허브, 그리고 몰 전체가 유아 학원가인 United Square까지. 동네 감성보다는 도심 콘도 라이프에 가까워서, 한 명이 통근을 많이 해야 한다면 최적이에요."
         },
         walk: {
           en: "Newton (North–South + Downtown Line interchange) and Novena (North–South Line). Newton Food Centre; United Square, Velocity and Square 2 malls; Cold Storage and FairPrice Finest; Sol Mart Korean grocery at Square 2.",
           ko: "Newton역(남북선+다운타운선 환승)과 Novena역(남북선)이 있어요. Newton Food Centre, 몰은 United Square·Velocity·Square 2, 마트는 Cold Storage와 FairPrice Finest. Square 2에는 한국 마트 Sol Mart가 있어요."
         },
         kids: {
-          en: "EtonHouse Newton (39 Newton Road); the United Square enrichment cluster (Julia Gabriel and others — verify current tenants); paediatric-medical convenience with Mount Elizabeth Novena and Thomson Medical nearby.",
-          ko: "EtonHouse Newton(39 Newton Road), United Square 학원 클러스터(Julia Gabriel 등 — 현재 입점은 확인 필요), 그리고 Mount Elizabeth Novena·Thomson Medical이 가까워 소아과 접근성이 뛰어나요."
+          en: "EtonHouse Newton (39 Newton Road); the United Square enrichment cluster (Julia Gabriel and others — verify current tenants); paediatric-medical convenience with Mount Elizabeth Novena and Thomson Medical nearby. SKIS reportedly shuttles from Newton MRT (verify) — the drive is 20–25 min at peak.",
+          ko: "EtonHouse Newton(39 Newton Road), United Square 학원 클러스터(Julia Gabriel 등 — 현재 입점은 확인 필요), 그리고 Mount Elizabeth Novena·Thomson Medical이 가까워 소아과 접근성이 뛰어나요. SKIS는 Newton MRT에서 셔틀을 운행한다고 알려져 있고(확인 필요), 차로는 러시아워 기준 20–25분이에요."
         },
         kidsVerify: true,
         community: {
@@ -816,12 +1053,75 @@ var CONTENT = {
           ko: "젊은 외국인 직장인과 전문직 커플이 많고, 특정 국적 클러스터 없이 다국적이에요. 로컬 부유층 가족도 많아요(ACS/SJI/CHIJ 학군 벨트). 외국인 가족 밀도는 부킷 티마나 홀랜드 빌리지보다 낮아요."
         },
         property: {
-          en: "A wide band. Mainstream 3BR S$6,500–9,000 (Amaryllis Ville ~S$7–8k); newer/larger stock S$9,000–12,000 (Soleil @ Sinaran S$11,800; enchanté S$8,800). HDB: basically none in-district — Whampoa/Toa Payoh nearby at S$3,600.",
-          ko: "가격 범위가 넓어요. 일반적인 3BR은 S$6,500–9,000(Amaryllis Ville 약 S$7–8k), 신축·대형은 S$9,000–12,000(Soleil @ Sinaran S$11,800, enchanté S$8,800). HDB는 이 지역 안에는 거의 없고, 인근 Whampoa/Toa Payoh가 S$3,600이에요."
+          en: "3BR S$6,400–7,900: Amaryllis Ville ~S$7,200 (1,300 sqft), Park Infinia ~S$7,400, Chancery Court S$6,400–7,600 (huge 2,034–2,271 sqft older units); newer/larger stock runs S$9,000–12,000 (Soleil @ Sinaran S$11,800). 4BR S$6,800–12,000: Hillcrest Arcadia S$6,900–8,500 (1,970 sqft — bargain space), Chancery Court S$7,600 (2,271 sqft), Sky@Eleven ~S$11,000–12,000 (2,700 sqft). Stock mix: essentially all high-rise condo — but the abundant older large stock means families can get a helper's room here without jumping to a 4BR. HDB: basically none in-district (Whampoa/Toa Payoh S$3,600 nearby).",
+          ko: "3BR S$6,400–7,900: Amaryllis Ville 약 S$7,200(1,300sqft), Park Infinia 약 S$7,400, Chancery Court S$6,400–7,600(2,034–2,271sqft의 초대형 구축). 신축·대형은 S$9,000–12,000(Soleil @ Sinaran S$11,800). 4BR S$6,800–12,000: Hillcrest Arcadia S$6,900–8,500(1,970sqft — 공간 가성비 갑), Chancery Court S$7,600(2,271sqft), Sky@Eleven 약 S$11,000–12,000(2,700sqft). 매물 구성은 사실상 전부 고층 콘도인데, 구축 대형 평형이 많아서 4BR로 올라가지 않아도 헬퍼룸을 구할 수 있는 동네예요. HDB는 구역 안에는 거의 없어요(인근 Whampoa/Toa Payoh S$3,600)."
         },
         srcUrl: "https://www.edgeprop.sg/condo-apartment/amaryllis-ville"
       }
     ],
+    /* §3.6 — helper's-room rule of thumb */
+    helperRoom: {
+      title: { en: "The helper's-room rule of thumb", ko: "헬퍼룸 공식" },
+      body: {
+        en: "New-launch 3BRs (post-~2012) are compact (900–1,100 sqft) and usually have no helper's room. A live-in helper means hunting for \"3BR + utility/yard\" in pre-2012 condos (the Maplewoods, Signature Park, Sommerville Park, The Esta, One Amber, Park Infinia, Chancery Court era) — or paying for a 4BR in new stock. Search terms that matter on PropertyGuru/99.co: \"utility room\", \"yard\", \"+study\".",
+        ko: "2012년 이후 신축 3BR은 콤팩트(900–1,100sqft)하고 헬퍼룸이 없는 게 보통이에요. 입주 헬퍼와 함께라면 2012년 이전 콘도(Maplewoods, Signature Park, Sommerville Park, The Esta, One Amber, Park Infinia, Chancery Court 세대)에서 '3BR + 유틸리티/야드'를 찾거나, 신축이라면 4BR로 올라가야 해요. PropertyGuru/99.co에서 통하는 검색어: \"utility room\", \"yard\", \"+study\"."
+      },
+      srcUrl: "https://stackedhomes.com/editorial/shrinking-3-bedroom-new-condo-sizes-how-much-smaller-can-it-go/"
+    },
+
+    /* §3.7 — decision block (guidance, not a verdict) */
+    decision: {
+      title: { en: "Which sub-area? A starting framework", ko: "어느 동네로? 판단의 출발점" },
+      intro: {
+        en: "Guidance by priority, not a verdict — most families land on two finalists and let specific listings decide.",
+        ko: "정답이 아니라 우선순위별 가이드예요 — 대부분의 가족이 최종 후보 두 곳을 두고, 실제 매물을 보며 결정하게 돼요."
+      },
+      items: [
+        {
+          priority: { en: "Korean community + school", ko: "한인 커뮤니티 + 학교" },
+          pick: {
+            en: "Beauty World / Upper Bukit Timah — SKIS walkable, Sol Mart at Bukit Timah Plaza; accept older-mall retail and a ~40-min office commute. (The Reserve Residences mall + interchange upgrades this story from 2028.)",
+            ko: "Beauty World · Upper Bukit Timah — SKIS 도보권에 Bukit Timah Plaza의 Sol Mart까지. 대신 오래된 상가 수준의 쇼핑과 약 40분 통근을 감수해요. (2028년부터는 The Reserve Residences 몰+인터체인지가 이 스토리를 업그레이드해요.)"
+          }
+        },
+        {
+          priority: { en: "Office commute + lifestyle", ko: "통근 + 라이프스타일" },
+          pick: {
+            en: "East Coast (Marine Parade/Amber) — the TEL runs straight into the office basement, beach weekends; accept the cross-island school run, so plan on local preschool.",
+            ko: "East Coast(Marine Parade/Amber) — TEL이 회사 지하까지 바로 이어지고 주말엔 바다가 있어요. 대신 등하교가 크로스아일랜드라, 동네 유치원을 전제로 하세요."
+          }
+        },
+        {
+          priority: { en: "Balance on one line", ko: "한 줄로 밸런스" },
+          pick: {
+            en: "KAP / Sixth Avenue — 5 min to SKIS, ~30–40 min DTL to the office, the elite-school belt for the local-primary long shot; pay D10 prices for thin condo supply.",
+            ko: "KAP · Sixth Avenue — SKIS까지 5분, DTL로 회사까지 30–40분, 로컬 초등 장기 베팅용 명문 학군까지. 대신 콘도 매물이 적은데 D10 가격을 내야 해요."
+          }
+        },
+        {
+          priority: { en: "Space per dollar in the school orbit", ko: "학교 생활권 안에서 공간 가성비" },
+          pick: {
+            en: "Hillview — S$1,500–2,000/month cheaper with the HillV2/CS Fresh lifestyle; accept the longer DTL ride and check each condo's MRT walk.",
+            ko: "Hillview — 월 S$1,500–2,000 아끼면서 HillV2·CS Fresh 라이프스타일을 누려요. 대신 DTL이 좀 길고, 콘도별 MRT 도보 거리를 확인해야 해요."
+          }
+        },
+        {
+          priority: { en: "Expat network for the spouse", ko: "배우자의 네트워크" },
+          pick: {
+            en: "Holland Village — the deepest expat-family bench, now one-seat to Marina Bay; the highest rents of the realistic options.",
+            ko: "Holland Village — 외국인 가족 네트워크가 가장 두텁고, 이제 Marina Bay까지 한 번에 가요. 대신 현실적인 옵션 중 임대료가 가장 높아요."
+          }
+        },
+        {
+          priority: { en: "Urban convenience", ko: "도심 편의성" },
+          pick: {
+            en: "Newton / Novena — the shortest MRT ride, the enrichment mall, and big older units with helper's rooms; the least neighbourhood feel, and the car route (CTE) carries Singapore's priciest ERP.",
+            ko: "Newton · Novena — MRT가 가장 짧고, 학원 몰과 헬퍼룸 있는 구축 대형 평형까지. 대신 동네 감성이 가장 옅고, 차로 다니면 싱가포르에서 가장 비싼 CTE ERP를 내요."
+          }
+        }
+      ]
+    },
+
     renting: {
       title: { en: "How renting works here", ko: "싱가포르 임대, 이렇게 돌아가요" },
       items: [
@@ -1103,7 +1403,7 @@ var CONTENT = {
       note: { en: "Note", ko: "메모" }
     },
     rows: [
-      { item: { en: "Rent (3BR)", ko: "월세 (3BR)" }, low: "S$5,000", high: "S$8,000+", note: { en: "By area choice; the HDB route is S$3,300–4,400", ko: "지역에 따라 달라요; HDB 노선이면 S$3,300–4,400" } },
+      { item: { en: "Rent (3BR)", ko: "월세 (3BR)" }, low: "S$4,000", high: "S$8,000+", note: { en: "By sub-area (see Where to live): Hillview from ~S$3,900, Holland V/Newton up to S$8,000+; the HDB route is S$3,300–4,400", ko: "동네에 따라 달라요(어디에 살까 참고): Hillview는 약 S$3,900부터, Holland V·Newton은 S$8,000+까지; HDB 노선이면 S$3,300–4,400" } },
       { item: { en: "Preschool ×2", ko: "유치원 ×2" }, low: "S$2,400", high: "S$5,200", note: { en: "Anchor vs mid-tier; the SKIS route is ~S$2,240", ko: "앵커 vs 중가 사립; SKIS 노선이면 약 S$2,240" } },
       { item: { en: "Helper, all-in", ko: "헬퍼 총비용" }, low: "S$1,150", high: "S$1,550", note: { en: "Salary + levy + insurance + food/lodging", ko: "급여+부담금+보험+생활비 포함" } },
       { item: { en: "Groceries", ko: "장보기" }, low: "S$500", high: "S$700", note: { en: "+10–20% if buying Korean imports", ko: "한국 수입품 위주면 +10–20%" } },
@@ -1145,8 +1445,8 @@ var CONTENT = {
     ],
     openTitle: { en: "Open questions for the family", ko: "가족이 확인할 것들" },
     openItems: [
-      { en: "Office location → adds a commute column to the area comparison.", ko: "사무실 위치 → 지역 비교에 통근 시간을 더할 수 있어요." },
-      { en: "Rent budget → narrows the area shortlist.", ko: "월세 예산 → 후보 지역을 좁힐 수 있어요." },
+      { en: "SKIS school-bus coverage — free shuttles to Newton MRT and Clementi MRT are reported; confirm routes and eligibility at admission@skis.kr.", ko: "SKIS 스쿨버스 — Newton MRT·Clementi MRT 무료 셔틀이 있다고 알려져 있어요. 노선과 이용 자격을 admission@skis.kr로 확인하세요." },
+      { en: "Rent budget → narrows the sub-area shortlist.", ko: "월세 예산 → 후보 동네를 좁힐 수 있어요." },
       { en: "Church tradition (Protestant denomination vs Catholic) → reorders the church list.", ko: "교회 전통(개신교 교단 또는 천주교) → 교회 목록의 우선순위가 달라져요." },
       { en: "Move date → anchors the waitlist and helper timelines.", ko: "이사 날짜 → 유치원 대기와 헬퍼 채용 일정의 기준이 돼요." },
       { en: "SKIS current fees + Saturday school intake age → email admission@skis.kr.", ko: "SKIS 최신 학비와 토요한글학교 입학 연령 → admission@skis.kr로 문의하세요." },
