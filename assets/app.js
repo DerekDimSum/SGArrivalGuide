@@ -809,7 +809,7 @@
     var geo = CONTENT.living.map.geo;
     var accent = getComputedStyle(document.documentElement).getPropertyValue("--accent").trim() || "#b4552d";
 
-    leafletMap = L.map(host, { scrollWheelZoom: false, attributionControl: true });
+    leafletMap = L.map(host, { scrollWheelZoom: false, attributionControl: true, zoomSnap: 0.5 });
     leafletMap.attributionControl.setPrefix(false);
     tileLayer = L.tileLayer(tileUrl(), {
       maxZoom: 19,
@@ -854,6 +854,27 @@
           offset: lm.dir === "left" ? [-8, 0] : lm.dir === "right" ? [8, 0] : [0, -8],
           className: "map-real-lm"
         });
+    });
+    // atlas spots — the rest of the neighbourhood atlas as smaller pins
+    (geo.spots || []).forEach(function (sp) {
+      var entry = (CONTENT.living.atlas.entries || []).find(function (e) { return e.id === sp.id; });
+      if (!entry) return;
+      var m = L.circleMarker([sp.lat, sp.lng], {
+        radius: sp.sub ? 3.5 : 4.5, color: accent, weight: 1.5,
+        fillColor: "#ffffff", fillOpacity: sp.sub ? 0.7 : 0.9
+      }).addTo(leafletMap);
+      m.bindTooltip(biLabel(entry.name), {
+        permanent: !sp.sub, direction: sp.dir || "top",
+        offset: sp.dir === "left" ? [-8, 0] : sp.dir === "right" ? [8, 0] : sp.dir === "bottom" ? [0, 8] : [0, -8],
+        className: "map-real-lm map-real-lm-minor"
+      });
+      m.on("click", function () {
+        var el = document.getElementById("atlas-" + sp.id);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "center" });
+          el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash");
+        }
+      });
     });
   }
 
@@ -1704,6 +1725,57 @@
     printSnapshot.forEach(function (pair) { if (!pair[1]) pair[0].removeAttribute("open"); });
     printSnapshot = null;
   });
+
+
+  /* ---------- user-resizable table columns ---------- */
+
+  function makeResizableTables() {
+    document.querySelectorAll(".table-wrap table").forEach(function (table) {
+      table.querySelectorAll("thead th").forEach(function (th) {
+        if (th.querySelector(".col-grip")) return; // idempotent across re-renders
+        var grip = document.createElement("span");
+        grip.className = "col-grip";
+        grip.setAttribute("aria-hidden", "true");
+        th.appendChild(grip);
+        grip.addEventListener("pointerdown", function (e) {
+          e.preventDefault(); e.stopPropagation();
+          grip.classList.add("active");
+          if (!table.dataset.frozen) { // freeze current widths once, then fixed layout
+            table.querySelectorAll("thead th").forEach(function (hh) { hh.style.width = hh.offsetWidth + "px"; });
+            table.style.tableLayout = "fixed"; table.dataset.frozen = "1";
+          }
+          var startX = e.clientX, startW = th.offsetWidth;
+          function move(ev) { th.style.width = Math.max(64, startW + ev.clientX - startX) + "px"; }
+          function up() {
+            grip.classList.remove("active");
+            document.removeEventListener("pointermove", move);
+            document.removeEventListener("pointerup", up);
+          }
+          document.addEventListener("pointermove", move);
+          document.addEventListener("pointerup", up);
+        });
+      });
+    });
+  }
+  function syncDataViewChrome() {
+    // expose the sticky header's height so table headers can stick right below it
+    var hd = document.getElementById("site-header");
+    if (hd) document.documentElement.style.setProperty("--header-h", hd.offsetHeight + "px");
+    // let each data table's toolbar/filter bar span the same full-bleed width as its table
+    document.querySelectorAll(".table-wrap.schools-scroll").forEach(function (wrap) {
+      var sec = wrap.parentElement;
+      if (!sec) return;
+      ["filter-bar", "table-toolbar"].forEach(function (cls) {
+        var el = sec.querySelector("." + cls);
+        if (el) el.classList.add("data-view-bleed");
+      });
+    });
+  }
+  window.addEventListener("resize", syncDataViewChrome);
+  syncDataViewChrome();
+  new MutationObserver(function () { makeResizableTables(); syncDataViewChrome(); })
+    .observe(document.getElementById("main"), { childList: true, subtree: true });
+  makeResizableTables();
 
   /* ---------- go ---------- */
 

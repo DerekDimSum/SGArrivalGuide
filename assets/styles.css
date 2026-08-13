@@ -13,6 +13,7 @@
   --focus: #b4552d;
   --shadow: 0 1px 3px rgba(60, 45, 30, 0.08);
   --radius: 12px;
+  --content-w: 1200px;
   --font-head: "Fraunces", "Noto Serif KR", "Noto Sans KR", serif;
   --font-body: "Noto Sans KR", -apple-system, "Segoe UI", sans-serif;
 
@@ -109,7 +110,7 @@ li { margin: 0.45em 0; }
 .header-row {
   display: flex; align-items: center; justify-content: space-between;
   padding: 0.6rem 1rem 0.35rem;
-  max-width: 880px; margin: 0 auto;
+  max-width: var(--content-w); margin: 0 auto;
 }
 
 .site-title {
@@ -139,7 +140,7 @@ li { margin: 0.45em 0; }
   display: flex; gap: 0.25rem;
   overflow-x: auto;
   padding: 0.2rem 1rem 0.55rem;
-  max-width: 880px; margin: 0 auto;
+  max-width: var(--content-w); margin: 0 auto;
   scrollbar-width: none;
 }
 .site-nav::-webkit-scrollbar { display: none; }
@@ -157,7 +158,7 @@ li { margin: 0.45em 0; }
 .sub-nav {
   display: flex; gap: 0.2rem;
   overflow-x: auto; scrollbar-width: none;
-  max-width: 880px; margin: 0 auto;
+  max-width: var(--content-w); margin: 0 auto;
   padding: 0 1rem 0.5rem;
   border-top: 1px dashed var(--line);
   padding-top: 0.35rem;
@@ -175,7 +176,7 @@ html.has-subnav { scroll-padding-top: 148px; }
 
 /* ---------- layout ---------- */
 
-main { max-width: 880px; margin: 0 auto; padding: 0 1rem 3rem; }
+main { max-width: var(--content-w); margin: 0 auto; padding: 0 1rem 3rem; }
 
 .hero { padding: 2.6rem 0 1.4rem; }
 .hero-kicker {
@@ -430,6 +431,11 @@ tbody tr:last-child th, tbody tr:last-child td { border-bottom: none; }
 }
 .filter-bar [role="status"] { margin: 0.3em 0 0.1em; }
 .schools-scroll { max-height: 68vh; overflow: auto; }
+@media (min-width: 1024px) {
+  /* app-style data view: no inner scroll box — the page scrolls, the header row sticks */
+  .schools-scroll { max-height: none; overflow: visible; }
+  .schools-scroll thead th { top: var(--header-h, 0px); }
+}
 .schools-scroll thead th {
   position: sticky; top: 0; z-index: 2;
   background: var(--bg-accent);
@@ -662,7 +668,7 @@ a.atlas-badge.researched:hover { background: var(--accent); color: var(--bg); }
   padding: 2rem 1rem 3rem;
   font-size: 0.88rem; color: var(--ink-soft);
 }
-#site-footer > * { max-width: 880px; margin-left: auto; margin-right: auto; }
+#site-footer > * { max-width: var(--content-w); margin-left: auto; margin-right: auto; }
 #site-footer h3 { font-size: 1rem; color: var(--ink); margin-top: 1.6em; }
 .footer-updated { font-weight: 700; color: var(--ink); }
 .footer-fx-note { color: var(--accent); font-weight: 700; font-size: 0.85rem; }
@@ -694,3 +700,83 @@ a.atlas-badge.researched:hover { background: var(--accent); color: var(--bg); }
   .src-link::after { content: ""; }
   details > .sub-body { display: block; }
 }
+
+/* ---------- wide layout & real tables (2026-08 pass) ---------- */
+.data-table tbody tr:nth-child(even) { background: rgba(127, 127, 127, 0.05); }
+.data-table tbody tr:hover { background: var(--bg-accent); }
+thead th { position: relative; }
+.col-grip {
+  position: absolute; top: 0; right: -5px; width: 10px; height: 100%;
+  cursor: col-resize; user-select: none; z-index: 3;
+}
+.col-grip::after {
+  content: ""; position: absolute; left: 4px; top: 20%; height: 60%;
+  width: 2px; background: transparent;
+}
+.col-grip:hover::after, .col-grip.active::after { background: var(--accent); }
+
+
+/* ---------- app-style data views (Schools directory + Area table) ---------- */
+@media (min-width: 1024px) {
+  .table-wrap.schools-scroll,
+  .data-view-bleed {
+    width: calc(100vw - 64px);
+    margin-left: calc((100% - (100vw - 64px)) / 2);
+  }
+  /* denser, data-app row rhythm in the big tables */
+  .schools-table th, .schools-table td,
+  .area-table th, .area-table td {
+    padding: 0.45rem 0.65rem;
+    font-size: 0.85rem;
+    line-height: 1.4;
+  }
+  .schools-scroll .th-btn { font-size: 0.78rem; padding: 0.5rem 0.65rem; }
+  /* stick the column headers just below the sticky site header (must out-cascade the top:0 rule) */
+  .schools-scroll thead th { top: var(--header-h, 0px); }
+}
+
+/* smaller, dimmer pills for atlas spots on the real map */
+.map-real-lm-minor { font-size: 0.72rem; padding: 1px 7px; opacity: 0.92; font-weight: 600; }
+.leaflet-interactive { cursor: pointer; }
+
+/* ---------- professional table pass ---------- */
+/* numerals line up, cells sit on one line, price/time columns right-aligned */
+.data-table { font-variant-numeric: tabular-nums; }
+.data-table td { vertical-align: middle; }
+.schools-scroll th, .schools-scroll td { white-space: nowrap; }
+/* long-text columns may wrap: schools admissions(6) + area-table nothing (all short) */
+.schools-table td:nth-child(6) { white-space: normal; min-width: 16em; }
+
+/* right-align the numeric columns of the area table (3BR, 4BR) and its headers */
+.area-table td:nth-child(3), .area-table td:nth-child(4) { text-align: right; }
+.area-table th:nth-child(3) .th-btn, .area-table th:nth-child(4) .th-btn { justify-content: flex-end; text-align: right; }
+/* commute estimates right-aligned too — they're comparable quantities */
+.area-table td:nth-child(5), .area-table td:nth-child(6) { text-align: right; }
+.area-table th:nth-child(5) .th-btn, .area-table th:nth-child(6) .th-btn { justify-content: flex-end; text-align: right; }
+/* stock-density dot columns centred */
+.area-table td:nth-child(7), .area-table td:nth-child(8), .area-table td:nth-child(9) { text-align: center; }
+.area-table th:nth-child(7) .th-btn, .area-table th:nth-child(8) .th-btn, .area-table th:nth-child(9) .th-btn { justify-content: center; }
+
+/* calmer grid: hairline row rules, no heavy outer border on the bleed tables */
+.schools-scroll { border: none; border-radius: 0; }
+.schools-scroll table { border-top: 1px solid var(--line); }
+.schools-scroll th, .schools-scroll td { border-bottom: 1px solid color-mix(in srgb, var(--line) 55%, transparent); }
+.schools-scroll thead th { border-bottom: 1px solid var(--line); }
+
+/* header row: quieter chrome, clear sort affordance */
+.schools-scroll thead th { letter-spacing: 0.06em; }
+.schools-scroll .th-btn:hover .th-caret { color: var(--accent); }
+
+/* under horizontal scroll, row identity stays pinned (first column) */
+@media (min-width: 1024px) {
+  .schools-scroll th:first-child, .schools-scroll td:first-child {
+    position: sticky; left: 0; z-index: 1; background: var(--bg-raised);
+  }
+  .schools-scroll tbody tr:nth-child(even) th:first-child,
+  .schools-scroll tbody tr:nth-child(even) td:first-child {
+    background: color-mix(in srgb, var(--bg-raised) 95%, #7f7f7f);
+  }
+  .schools-scroll thead th:first-child { z-index: 4; background: var(--bg-accent); }
+}
+/* area names may wrap rather than force a few px of horizontal scroll */
+.area-table td:nth-child(2) { white-space: normal; }

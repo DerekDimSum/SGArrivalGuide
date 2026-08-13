@@ -1,5 +1,6 @@
-.DS_Store
-Thumbs.db
 *.log
+.DS_Store
 .vercel
+Thumbs.db
+node_modules
 node_modules/

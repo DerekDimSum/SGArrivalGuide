@@ -41,15 +41,61 @@ Render order becomes: district decoder → housing-types decoder → market cont
 - **Footer/TODO surface**: office TODO is resolved; keep visible ⚠️VERIFY items (SKIS school-bus shuttle claim — Newton MRT + Clementi MRT, confirm with admission@skis.kr; SKIS fees; Shichida fees; anchor-operator foreigner tiers).
 - Checklist/community/church/helper/car/apps sections: no content changes this round — leave untouched. (Education changes are exactly the calculator in §3 — nothing else in that section.)
 
-## 5. Korean copy
+## 5. Layout & real tables (whole-app pass)
+
+**Widen the app.** The content column is currently `max-width: 880px` in four places (header inner, nav inner, `main`, footer inner) — too narrow relative to the viewport. Introduce `--content-w: 1120px` in `:root` and use it in all four places. Keep prose readable by capping paragraphs, intros and list text at `max-width: 72ch` *within* the wider column — but let tables, area cards, comparison table, maps, and the calculator use the full content width. On screens ≥1400px, let wide tables (`.cmp-table`, costs table, districts table) break out slightly: `width: min(1280px, calc(100vw - 48px)); margin-inline: calc((100% - min(1280px, 100vw - 48px)) / 2);` — or an equivalent negative-margin breakout — so big tables feel like real data tables, not squeezed sidebars.
+
+**Make tables feel like real tables.** Apply to all `.table-wrap table`:
+- Subtle zebra striping (`tbody tr:nth-child(even)` one step above the panel bg) + row hover highlight.
+- Sticky header row when a table scrolls vertically (give tall tables a `max-height` on `.table-wrap` + `thead th { position: sticky; top: 0; }`).
+- On horizontal scroll (mobile), make the first column sticky (`th[scope="row"], td:first-child { position: sticky; left: 0; background: inherit; }`) so row identity never scrolls away — apply at least to the comparison table.
+- **User-resizable columns** — this exact snippet is tested and working; add it to `app.js`, call `makeResizableTables()` after each render, and add the CSS below to `styles.css` (adapt colors to existing tokens):
+
+```js
+function makeResizableTables(root){
+  (root||document).querySelectorAll(".table-wrap table").forEach(function(table){
+    table.querySelectorAll("thead th").forEach(function(th){
+      var grip=document.createElement("span"); grip.className="col-grip";
+      th.appendChild(grip);
+      grip.addEventListener("pointerdown",function(e){
+        e.preventDefault(); grip.classList.add("active");
+        if(!table.dataset.frozen){ // freeze current widths once, then switch to fixed layout
+          table.querySelectorAll("thead th").forEach(function(h){h.style.width=h.offsetWidth+"px";});
+          table.style.tableLayout="fixed"; table.dataset.frozen="1";
+        }
+        var startX=e.clientX,startW=th.offsetWidth;
+        function move(ev){ th.style.width=Math.max(64,startW+ev.clientX-startX)+"px"; }
+        function up(){ grip.classList.remove("active");
+          document.removeEventListener("pointermove",move); document.removeEventListener("pointerup",up); }
+        document.addEventListener("pointermove",move); document.addEventListener("pointerup",up);
+      });
+    });
+  });
+}
+```
+
+```css
+thead th { position: relative; }
+.col-grip { position: absolute; top: 0; right: -5px; width: 10px; height: 100%;
+  cursor: col-resize; user-select: none; z-index: 2; }
+.col-grip::after { content: ""; position: absolute; left: 4px; top: 20%; height: 60%;
+  width: 2px; background: transparent; }
+.col-grip:hover::after, .col-grip.active::after { background: var(--accent); }
+```
+
+Requirement: `thead th` needs `position: relative` (added above) and grips must not break the sticky header. On touch devices the grips are inert — that's fine; don't build a touch fallback.
+
+## 6. Korean copy
 
 All new strings need natural written Korean (해요체, consistent with the existing copy — mirror its tone). Keep proper nouns in English with Korean gloss where the existing copy does. Do not machine-translate literally; match register.
 
-## 6. Definition of done
+## 7. Definition of done
 
 - No visible "TODO" text remains for the office/commute anywhere, in either language.
 - Language toggle flips every new string (district table, housing cards, sub-area cards, local takes, office block, map labels).
 - Comparison table fits mobile (360px) — horizontal scroll or stacked cards, consistent with current approach.
 - Both maps show the office marker; schematic ellipse covers Hillview; clicking areas still scrolls to cards.
 - Every new figure traces to CONTENT.md; list any figure you could not place.
+- Content column is ~1120px; prose stays ≤72ch; tables/cards/maps use the full width; wide tables break out on large screens.
+- Every table has zebra rows, hover highlight, and draggable column-resize grips; comparison table keeps its first column visible under horizontal scroll.
 - `git commit` the update and deploy (`npx vercel --prod`).

@@ -1291,7 +1291,7 @@ var CONTENT = {
       /* Real-map overlay data (Leaflet). Approximate neighbourhood outlines + landmark pins,
          WGS84 lat/lng. These are deliberately fuzzy — neighbourhoods, not boundaries. */
       geo: {
-        bounds: [[1.245, 103.700], [1.385, 103.995]],
+        bounds: [[1.240, 103.690], [1.455, 103.995]],
         areas: {
           "bukit-timah": [
             [1.3690, 103.7620], [1.3760, 103.7730], [1.3620, 103.7830], [1.3450, 103.7900],
@@ -1320,6 +1320,27 @@ var CONTENT = {
           { id: "ktown", lat: 1.2785, lng: 103.8435, dir: "left", label: { en: "K-town · Tanjong Pagar", ko: "코리아타운 · 탄종파가" } },
           { id: "office", lat: 1.2764, lng: 103.8540, dir: "right", label: { en: "Marina One (office)", ko: "마리나 원 (회사)" } },
           { id: "changi", lat: 1.3644, lng: 103.9915, dir: "top", label: { en: "Changi Airport", ko: "창이공항" } }
+        ],
+        /* Atlas spots — every atlas neighbourhood without a polygon above.
+           Labels come from living.atlas.entries by id (single source of truth).
+           sub:true = Bukit Timah corridor sub-areas: small dots, label on hover only
+           (they sit inside the corridor polygon, permanent pills would pile up). */
+        spots: [
+          { id: "beauty-world",   lat: 1.3410, lng: 103.7757, sub: true },
+          { id: "kap-sixth",      lat: 1.3328, lng: 103.7896, sub: true },
+          { id: "hillview",       lat: 1.3625, lng: 103.7645, sub: true },
+          { id: "river-valley",   lat: 1.2934, lng: 103.8360, dir: "left" },
+          { id: "orchard-tanglin",lat: 1.3048, lng: 103.8255, dir: "right" },
+          { id: "tiong-bahru",    lat: 1.2865, lng: 103.8140, dir: "left" },
+          { id: "tanjong-rhu",    lat: 1.2965, lng: 103.8735, dir: "right" },
+          { id: "thomson",        lat: 1.3545, lng: 103.8330, dir: "top" },
+          { id: "serangoon",      lat: 1.3620, lng: 103.8790, dir: "top" },
+          { id: "pasir-panjang",  lat: 1.2762, lng: 103.7915, dir: "bottom" },
+          { id: "bishan-amk",     lat: 1.3690, lng: 103.8480, dir: "top" },
+          { id: "tampines",       lat: 1.3530, lng: 103.9440, dir: "right" },
+          { id: "woodlands",      lat: 1.4370, lng: 103.7880, dir: "top" },
+          { id: "sentosa",        lat: 1.2530, lng: 103.8320, dir: "bottom" },
+          { id: "bukit-batok",    lat: 1.3520, lng: 103.7455, dir: "bottom" }
         ]
       },
       /* Hand-drawn schematic (map.svg) — coordinates and paths are verbatim; do not edit them.
