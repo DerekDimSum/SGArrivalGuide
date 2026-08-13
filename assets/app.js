@@ -345,6 +345,16 @@
     if (a === 5) return "Kindergarten";
     return "Grade " + (a - 5);
   }
+  // Korean system (SKIS): birth-year cohorts, March–February school year.
+  // Class = the age the cohort turns during the AY-start calendar year.
+  function levelKorean(a) {
+    if (a < 4) return { en: "too young (유치부 from 만3)", ko: "아직 어려요 (유치부는 만 3세부터)" };
+    if (a === 4) return { en: "유치부 만3세반", ko: "유치부 만3세반" };
+    if (a === 5) return { en: "유치부 만4세반", ko: "유치부 만4세반" };
+    if (a === 6) return { en: "유치부 만5세반", ko: "유치부 만5세반" };
+    if (a <= 12) return { en: "초등 " + (a - 6) + " (Elementary " + (a - 6) + ")", ko: "초등 " + (a - 6) + "학년" };
+    return { en: "중등 이상 (secondary)", ko: "중등 과정 이상" };
+  }
 
   function calcLevels(m, y) {
     var now = new Date();
@@ -354,11 +364,15 @@
     // Sep-cutoff systems: current academic year started last September if we're before it
     var ayStart = (now.getMonth() + 1 >= 9) ? cy : cy - 1;
     var aSep = (ayStart - y) - (m >= 9 ? 1 : 0);
+    // Korean system: March school year, birth-year cohorts
+    var ayKo = (now.getMonth() + 1 >= 3) ? cy : cy - 1;
+    var aKo = ayKo - y;
     function ayLabel(s) { return s + "/" + String(s + 1).slice(2); }
     return [
       { sys: "local", now: levelLocal(aLocal), next: levelLocal(aLocal + 1), nowAy: String(cy), nextAy: String(cy + 1) },
       { sys: "british", now: levelBritish(aSep), next: levelBritish(aSep + 1), nowAy: ayLabel(ayStart), nextAy: ayLabel(ayStart + 1) },
-      { sys: "american", now: levelAmerican(aSep), next: levelAmerican(aSep + 1), nowAy: ayLabel(ayStart), nextAy: ayLabel(ayStart + 1) }
+      { sys: "american", now: levelAmerican(aSep), next: levelAmerican(aSep + 1), nowAy: ayLabel(ayStart), nextAy: ayLabel(ayStart + 1) },
+      { sys: "korean", now: levelKorean(aKo), next: levelKorean(aKo + 1), nowAy: ayKo + " (Mar–)", nextAy: (ayKo + 1) + " (Mar–)" }
     ];
   }
 
@@ -422,12 +436,93 @@
     return box;
   }
 
+  /* ---------- school directory (filterable) ---------- */
+
+  var schoolFilters = { stage: "all", type: "all", system: "all" };
+
+  function renderSchools() {
+    var sc = CONTENT.education.schools;
+
+    var tbody = h("tbody");
+    var count = h("p", { class: "table-note", role: "status" });
+
+    function rebuild() {
+      tbody.innerHTML = "";
+      var shown = 0;
+      sc.rows.forEach(function (r) {
+        if (schoolFilters.stage !== "all" && r.stage !== schoolFilters.stage) return;
+        if (schoolFilters.type !== "all" && r.type !== schoolFilters.type) return;
+        if (schoolFilters.system !== "all" && r.system !== schoolFilters.system) return;
+        shown++;
+        tbody.appendChild(h("tr", {},
+          h("th", { scope: "row", text: t(r.name) }),
+          h("td", { text: t(sc.stages[r.stage]) }),
+          h("td", { text: t(sc.types[r.type]) }),
+          h("td", {}, h("span", { text: t(sc.systemNames[r.system]) + " " }), r.systemVerify ? verifyBadge() : null),
+          h("td", {}, h("span", { text: t(r.fees) + " " }), r.verify ? verifyBadge() : null),
+          h("td", { text: t(r.waitlist) }),
+          h("td", { text: t(r.location) })
+        ));
+      });
+      count.textContent = shown + " / " + sc.rows.length + " " + t(sc.countLabel);
+    }
+
+    function filterRow(groupKey, options) {
+      var row = h("div", { class: "filter-row" },
+        h("span", { class: "filter-label", text: t(sc.filterGroups[groupKey]) }));
+      var group = h("div", { class: "chips filter-chips" });
+      var opts = [{ id: "all", label: sc.all }].concat(options);
+      opts.forEach(function (o) {
+        var chip = h("button", {
+          type: "button",
+          class: "chip filter-chip" + (schoolFilters[groupKey] === o.id ? " nice" : ""),
+          "aria-pressed": schoolFilters[groupKey] === o.id ? "true" : "false",
+          text: t(o.label),
+          onclick: function () {
+            schoolFilters[groupKey] = o.id;
+            group.querySelectorAll(".chip").forEach(function (c) { c.classList.remove("nice"); c.setAttribute("aria-pressed", "false"); });
+            chip.classList.add("nice");
+            chip.setAttribute("aria-pressed", "true");
+            rebuild();
+          }
+        });
+        group.appendChild(chip);
+      });
+      row.appendChild(group);
+      return row;
+    }
+
+    function toOptions(obj) {
+      return Object.keys(obj).map(function (k) { return { id: k, label: obj[k] }; });
+    }
+
+    rebuild();
+    var body = h("div", {},
+      h("p", { class: "section-intro", text: t(sc.intro) }),
+      filterRow("stage", toOptions(sc.stages)),
+      filterRow("type", toOptions(sc.types)),
+      filterRow("system", toOptions(sc.systemNames)),
+      count,
+      h("div", { class: "table-wrap" }, h("table", { class: "data-table schools-table" },
+        h("thead", {}, h("tr", {},
+          h("th", { text: t(sc.cols.name) }), h("th", { text: t(sc.cols.stage) }),
+          h("th", { text: t(sc.cols.type) }), h("th", { text: t(sc.cols.system) }),
+          h("th", { text: t(sc.cols.fees) }), h("th", { text: t(sc.cols.waitlist) }),
+          h("th", { text: t(sc.cols.location) })
+        )),
+        tbody
+      ))
+    );
+    return sub("edu-schools", sc.title, body);
+  }
+
   function renderEducation(main) {
     var ed = CONTENT.education;
     var section = h("section", { id: "education", class: "section", "aria-labelledby": "education-title" },
       sectionHeader("education", ed.title, "✎"));
 
     section.appendChild(renderCalculator());
+    section.appendChild(renderSchools());
 
     /* preschool */
     var ps = ed.preschool;
