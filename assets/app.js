@@ -192,9 +192,16 @@
       nav.appendChild(navEntry(item.id, t(item.label), item.subs, item.target));
     });
 
+    var searchBtn = h("button", {
+      type: "button", class: "search-btn",
+      "aria-label": t(CONTENT.ui.searchLabel), title: t(CONTENT.ui.searchLabel),
+      text: "⌕",
+      onclick: function () { openSearch(); }
+    });
+
     header.appendChild(h("div", { class: "header-row" },
       h("a", { class: "site-title", href: "#top", text: t(CONTENT.ui.siteTitle) }),
-      h("div", { class: "header-controls" }, langSeg, curSeg)
+      h("div", { class: "header-controls" }, searchBtn, langSeg, curSeg)
     ));
     header.appendChild(nav);
     header.appendChild(h("div", { class: "sub-nav", id: "sub-nav", hidden: true }));
@@ -264,7 +271,12 @@
     var progress = h("p", { class: "check-progress", role: "status" },
       h("strong", { text: done + " / " + c.items.length }), " " + t(CONTENT.ui.checklistProgress));
 
-    var list = h("ol", { class: "checklist" });
+    var list = h("div", { class: "checklist-phases" });
+    var phaseLists = {};
+    Object.keys(c.phases).forEach(function (ph) {
+      list.appendChild(h("h3", { class: "phase-head", text: t(c.phases[ph]) }));
+      phaseLists[ph] = list.appendChild(h("ol", { class: "checklist" }));
+    });
     c.items.forEach(function (item) {
       var input = h("input", {
         type: "checkbox", id: "chk-" + item.id, checked: !!checks[item.id],
@@ -292,7 +304,7 @@
         h("p", { class: "check-body", text: t(item.body) }),
         links
       );
-      list.appendChild(li);
+      (phaseLists[item.phase] || phaseLists.month1).appendChild(li);
     });
 
     var reset = h("button", {
@@ -817,9 +829,29 @@
            "<span class='" + (cls || "") + " lang-ko'>" + leaf.ko + "</span>";
   }
 
+  // Leaflet (147KB) loads only when a map is actually shown
+  var leafletLoading = null;
+  function ensureLeaflet() {
+    if (typeof L !== "undefined") return Promise.resolve();
+    if (leafletLoading) return leafletLoading;
+    leafletLoading = new Promise(function (resolve, reject) {
+      document.head.appendChild(h("link", { rel: "stylesheet", href: "assets/leaflet/leaflet.css" }));
+      var s = document.createElement("script");
+      s.src = "assets/leaflet/leaflet.js";
+      s.onload = resolve;
+      s.onerror = reject;
+      document.head.appendChild(s);
+    });
+    return leafletLoading;
+  }
+
   function initRealMap() {
     var host = document.getElementById("real-map");
-    if (!host || typeof L === "undefined") return;
+    if (!host) return;
+    if (typeof L === "undefined") {
+      ensureLeaflet().then(function () { initRealMap(); }).catch(function () {});
+      return;
+    }
     if (leafletMap) { leafletMap.invalidateSize(); return; }
 
     var geo = CONTENT.living.map.geo;
@@ -1575,6 +1607,87 @@
     main.appendChild(section);
   }
 
+  /* ---------- budget builder ---------- */
+
+  var BUDGET_KEY = "sgguide:budget";
+
+  function renderBudget() {
+    var b = CONTENT.costs.builder;
+    var picks = { housing: "condoValue", kids: "k2", preschool: "anchor", helper: "yes", insurance: "employer", lifestyle: "mid", enrich: "none" };
+    try {
+      var saved = JSON.parse(localStorage.getItem(BUDGET_KEY));
+      if (saved) Object.keys(picks).forEach(function (k) { if (saved[k]) picks[k] = saved[k]; });
+    } catch (e) {}
+
+    function opt(group, id) {
+      var found = b.groups[group].options[0];
+      b.groups[group].options.forEach(function (o) { if (o.id === id) found = o; });
+      return found;
+    }
+
+    var breakdown = h("ul", { class: "budget-breakdown" });
+    var totalEl = h("div", { class: "budget-total" });
+
+    function money(v) { return t("S$" + Math.round(v).toLocaleString("en-US")); }
+
+    function recompute() {
+      var kids = opt("kids", picks.kids).v;
+      var lines = [
+        { label: b.groups.housing.label, v: opt("housing", picks.housing).v },
+        { label: b.groups.preschool.label, v: opt("preschool", picks.preschool).v * kids, per: opt("preschool", picks.preschool).v, n: kids },
+        { label: b.groups.helper.label, v: opt("helper", picks.helper).v },
+        { label: b.groups.insurance.label, v: opt("insurance", picks.insurance).v },
+        { label: b.groups.lifestyle.label, v: opt("lifestyle", picks.lifestyle).v },
+        { label: b.groups.enrich.label, v: opt("enrich", picks.enrich).v * kids, per: opt("enrich", picks.enrich).v, n: kids }
+      ];
+      breakdown.innerHTML = "";
+      var total = 0;
+      lines.forEach(function (l) {
+        total += l.v;
+        if (!l.v) return;
+        breakdown.appendChild(h("li", {},
+          h("span", { text: t(l.label) + (l.n > 1 && l.per ? " (" + money(l.per) + " × " + l.n + ")" : "") }),
+          h("strong", { text: money(l.v) })
+        ));
+      });
+      totalEl.innerHTML = "";
+      totalEl.appendChild(h("span", { text: t(b.totalLabel) }));
+      totalEl.appendChild(h("strong", { text: money(total) + (lang === "ko" ? " / 월" : " / mo") }));
+    }
+
+    var controls = h("div", { class: "budget-controls" });
+    Object.keys(b.groups).forEach(function (gk) {
+      var group = b.groups[gk];
+      var chips = h("div", { class: "chips filter-chips" });
+      group.options.forEach(function (o) {
+        var chip = h("button", {
+          type: "button",
+          class: "chip filter-chip" + (picks[gk] === o.id ? " nice" : ""),
+          "aria-pressed": picks[gk] === o.id ? "true" : "false",
+          text: t(o.label),
+          onclick: function () {
+            picks[gk] = o.id;
+            try { localStorage.setItem(BUDGET_KEY, JSON.stringify(picks)); } catch (e) {}
+            chips.querySelectorAll(".chip").forEach(function (ch) { ch.classList.remove("nice"); ch.setAttribute("aria-pressed", "false"); });
+            chip.classList.add("nice");
+            chip.setAttribute("aria-pressed", "true");
+            recompute();
+          }
+        });
+        chips.appendChild(chip);
+      });
+      controls.appendChild(h("div", { class: "filter-row" },
+        h("span", { class: "filter-label", text: t(group.label) }), chips));
+    });
+
+    recompute();
+    return h("div", { id: "budget-builder", class: "calc-box" },
+      h("h3", { text: t(b.title) }),
+      h("p", { class: "section-intro", text: t(b.intro) }),
+      controls, breakdown, totalEl
+    );
+  }
+
   function renderCosts(main) {
     var c = CONTENT.costs;
     var section = h("section", { id: "costs", class: "section", "aria-labelledby": "costs-title" },
@@ -1583,6 +1696,9 @@
     if (currency !== CONTENT.currencies.base) {
       section.appendChild(h("p", { class: "table-note", text: t(CONTENT.currencies.note) }));
     }
+
+    /* interactive budget builder */
+    section.appendChild(renderBudget());
 
     /* rent, by housing type — outside the snapshot */
     section.appendChild(h("h3", { text: t(c.rent.title) }));
@@ -1650,6 +1766,15 @@
     })));
     footer.appendChild(h("h3", { text: t(f.openTitle) }));
     footer.appendChild(h("ul", {}, f.openItems.map(function (i) { return h("li", { text: t(i) }); })));
+    footer.appendChild(h("details", { class: "footer-glossary" },
+      h("summary", { text: t(CONTENT.ui.glossaryTitle) }),
+      h("dl", {}, CONTENT.glossary.map(function (g) {
+        return h("div", { class: "gloss-row" },
+          h("dt", { text: g.k }),
+          h("dd", { text: t(g.d) })
+        );
+      }))
+    ));
     footer.appendChild(h("p", { class: "footer-emergency" },
       h("strong", { text: t(CONTENT.health.numbersTitle) + ": " }),
       h("span", {
@@ -1660,6 +1785,132 @@
       h("a", { href: "#health", text: lang === "ko" ? "의료 섹션 →" : "Healthcare section →" })
     ));
   }
+
+  /* ---------- glossary tooltips ----------
+     Wrap the first occurrence of each acronym per section in a tooltip <abbr>.
+     Runs once per render; only inside <p>/<li> so tables and headers stay clean. */
+
+  var glossRegex = null;
+  var glossMap = null;
+
+  function glossify() {
+    if (!CONTENT.glossary) return;
+    if (!glossRegex) {
+      glossMap = {};
+      var keys = CONTENT.glossary.map(function (g) { glossMap[g.k] = g.d; return g.k; });
+      keys.sort(function (a, b) { return b.length - a.length; });
+      glossRegex = new RegExp("\\b(" + keys.join("|") + ")\\b");
+    }
+    document.querySelectorAll("main section.section").forEach(function (sec) {
+      var used = {};
+      var walker = document.createTreeWalker(sec, NodeFilter.SHOW_TEXT, {
+        acceptNode: function (node) {
+          var p = node.parentElement;
+          if (!p) return NodeFilter.FILTER_REJECT;
+          var tag = p.tagName;
+          if (tag !== "P" && tag !== "LI" && tag !== "SPAN") return NodeFilter.FILTER_REJECT;
+          if (p.closest(".gloss, a, button, .th-btn, .chips, h1, h2, h3, h4, summary")) return NodeFilter.FILTER_REJECT;
+          return NodeFilter.FILTER_ACCEPT;
+        }
+      });
+      var nodes = [];
+      while (walker.nextNode()) nodes.push(walker.currentNode);
+      nodes.forEach(function (node) {
+        var text = node.nodeValue;
+        var m = text.match(glossRegex);
+        if (!m || used[m[1]]) return;
+        var term = m[1];
+        used[term] = true;
+        var abbr = h("abbr", { class: "gloss", tabindex: "0", "data-tip": t(glossMap[term]), text: term });
+        var after = document.createTextNode(text.slice(m.index + term.length));
+        node.nodeValue = text.slice(0, m.index);
+        node.parentNode.insertBefore(abbr, node.nextSibling);
+        node.parentNode.insertBefore(after, abbr.nextSibling);
+      });
+    });
+  }
+
+  /* ---------- quick search ---------- */
+
+  var searchOverlay = null;
+
+  function closeSearch() {
+    if (searchOverlay) { searchOverlay.remove(); searchOverlay = null; }
+  }
+
+  function openSearch() {
+    if (searchOverlay) { searchOverlay.querySelector("input").focus(); return; }
+
+    // index the current-language DOM: heading + body items with their nearest anchors
+    var index = [];
+    document.querySelectorAll("main section.section").forEach(function (sec) {
+      var secTitle = sec.querySelector("h2") ? sec.querySelector("h2").textContent : sec.id;
+      sec.querySelectorAll("h3, h4, p, li").forEach(function (el) {
+        var text = (el.innerText || "").replace(/\s+/g, " ").trim();
+        if (text.length < 12) return;
+        var anchorEl = el.closest("[id]");
+        index.push({
+          section: sec.id, secTitle: secTitle,
+          anchor: anchorEl && anchorEl.id !== sec.id ? anchorEl.id : sec.id,
+          heading: /^H[34]$/.test(el.tagName),
+          text: text, lower: text.toLowerCase()
+        });
+      });
+    });
+
+    var input = h("input", {
+      type: "search",
+      placeholder: t(CONTENT.ui.searchPlaceholder),
+      "aria-label": t(CONTENT.ui.searchLabel)
+    });
+    var results = h("div", { class: "search-results" });
+
+    function run() {
+      var q = input.value.trim().toLowerCase();
+      results.innerHTML = "";
+      if (q.length < 2) return;
+      var tokens = q.split(/\s+/);
+      var hits = index.filter(function (it) {
+        return tokens.every(function (tk) { return it.lower.indexOf(tk) !== -1; });
+      });
+      hits.sort(function (a, b) { return (b.heading ? 1 : 0) - (a.heading ? 1 : 0); });
+      if (!hits.length) {
+        results.appendChild(h("p", { class: "table-note", text: t(CONTENT.ui.searchEmpty) }));
+        return;
+      }
+      hits.slice(0, 12).forEach(function (hit) {
+        results.appendChild(h("a", {
+          class: "search-hit", href: "#" + hit.anchor,
+          onclick: function () { closeSearch(); }
+        },
+          h("span", { class: "search-sec", text: hit.secTitle }),
+          h("span", { class: "search-text", text: hit.text.slice(0, 140) + (hit.text.length > 140 ? "…" : "") })
+        ));
+      });
+    }
+    input.addEventListener("input", run);
+    input.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") {
+        var first = results.querySelector("a");
+        if (first) { e.preventDefault(); first.click(); }
+      }
+    });
+
+    searchOverlay = h("div", {
+      class: "search-overlay",
+      onclick: function (e) { if (e.target === searchOverlay) closeSearch(); }
+    }, h("div", { class: "search-panel", role: "dialog", "aria-label": t(CONTENT.ui.searchLabel) }, input, results));
+    document.body.appendChild(searchOverlay);
+    input.focus();
+  }
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") closeSearch();
+    if ((e.metaKey || e.ctrlKey) && e.key === "k") { e.preventDefault(); openSearch(); }
+    if (e.key === "/" && !/^(INPUT|TEXTAREA|SELECT)$/.test((document.activeElement || {}).tagName || "")) {
+      e.preventDefault(); openSearch();
+    }
+  });
 
   /* ---------- render orchestration ---------- */
 
@@ -1702,6 +1953,7 @@
     addPagers();
     renderFooter();
     renderBackToTop();
+    glossify();
     applyView(currentView, null, noScroll);
   }
 

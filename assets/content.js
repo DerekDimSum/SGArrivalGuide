@@ -36,6 +36,10 @@ var CONTENT = {
     source: { en: "Source ↗", ko: "출처 ↗" },
     verify: { en: "⚠ verify directly", ko: "⚠ 직접 확인 필요" },
     localTake: { en: "Local take", ko: "로컬 팁" },
+    searchLabel: { en: "Search", ko: "검색" },
+    searchPlaceholder: { en: "Search the guide… (fees, areas, visas)", ko: "가이드 검색… (학비, 동네, 비자)" },
+    searchEmpty: { en: "No matches", ko: "결과가 없어요" },
+    glossaryTitle: { en: "Glossary", ko: "용어 사전" },
     sortAsc: { en: "Sort ↑ low to high", ko: "정렬 ↑ 낮은순" },
     sortDesc: { en: "Sort ↓ high to low", ko: "정렬 ↓ 높은순" },
     sortAZ: { en: "Sort A → Z", ko: "정렬 가나다순" },
@@ -121,12 +125,71 @@ var CONTENT = {
   checklist: {
     title: { en: "First 30 days checklist", ko: "첫 30일 체크리스트" },
     intro: {
-      en: "In rough order. Tap items to check them off — your progress is saved on this device.",
-      ko: "대략적인 순서예요. 항목을 누르면 완료 표시가 되고, 이 기기에 자동 저장돼요."
+      en: "Grouped into a timeline — some of this has to happen before you fly. Tap items to check them off; progress is saved on this device.",
+      ko: "타임라인으로 묶었어요 — 출국 전에 해둬야 하는 것들이 있어요. 항목을 누르면 완료 표시가 되고, 이 기기에 자동 저장돼요."
+    },
+    phases: {
+      pre: { en: "Before departure", ko: "출국 전" },
+      week1: { en: "First week", ko: "첫 주" },
+      month1: { en: "First month", ko: "첫 달" }
     },
     items: [
       {
+        id: "docs-english",
+        phase: "pre",
+        title: { en: "English documents from 정부24", ko: "정부24에서 영문 서류 발급" },
+        body: {
+          en: "가족관계증명서, 혼인관계증명서 and 기본증명서 can all be issued in English via 정부24 — they're needed for DP applications; the English 예방접종증명서 (정부24 or 보건소) is needed for the DP immunisation check and preschool enrolment. Print spares.",
+          ko: "가족관계증명서·혼인관계증명서·기본증명서는 정부24에서 영문으로 발급돼요 — DP 신청에 필요해요. 영문 예방접종증명서(정부24 또는 보건소)는 DP 예방접종 검증과 유치원 등록에 쓰여요. 여유분까지 출력해 두세요."
+        },
+        url: "https://www.gov.kr"
+      },
+      {
+        id: "immunisation-precheck",
+        phase: "pre",
+        title: { en: "Kids' immunisation pre-check (CDA/NIR)", ko: "자녀 예방접종 사전 검증 (CDA/NIR)" },
+        body: {
+          en: "Diphtheria + measles proof is verified via CDA/NIR before the DP application — allow ~10 working days. Korean records are accepted if they show vaccine types and dates.",
+          ko: "디프테리아·홍역 접종 증빙은 DP 신청 전에 CDA/NIR에서 검증받아야 해요 — 약 10영업일 잡으세요. 백신 종류와 접종일이 나오면 한국 기록도 인정돼요."
+        },
+        url: "https://www.nir.cda.gov.sg/eservices/submitNewVaccMyChildWithoutLoginPage"
+      },
+      {
+        id: "helper-search",
+        phase: "pre",
+        title: { en: "Start the helper search", ko: "헬퍼 구인 시작" },
+        body: {
+          en: "A fresh overseas hire takes 6–8+ weeks — if you'll want live-in help, start agencies talking before you land. A transfer helper already in Singapore takes ~2 weeks.",
+          ko: "해외 신규 채용은 6–8주 이상 걸려요 — 입주 헬퍼를 쓸 계획이면 도착 전부터 에이전시와 이야기를 시작하세요. 싱가포르에 있는 트랜스퍼 헬퍼는 약 2주면 돼요."
+        },
+        anchor: "helper",
+        anchorLabel: { en: "Helper section ↓", ko: "헬퍼 섹션으로 ↓" }
+      },
+      {
+        id: "tax-consult",
+        phase: "pre",
+        title: { en: "One session with a 세무사", ko: "세무사 상담 한 번" },
+        body: {
+          en: "Korean tax duties don't end at the airport — residency status (거주자/비거주자) and Korean-source income need a plan before you leave. Details in the money box under Monthly costs.",
+          ko: "한국 세금 의무는 공항에서 끝나지 않아요 — 거주자/비거주자 판정과 한국 원천 소득은 출국 전에 정리해 두는 게 좋아요. 자세한 건 월 생활비의 '돈 관리' 박스에 있어요."
+        },
+        anchor: "costs",
+        anchorLabel: { en: "Money box ↓", ko: "돈 관리 박스로 ↓" }
+      },
+      {
+        id: "meds-supply",
+        phase: "pre",
+        title: { en: "Pack meds + prescriptions", ko: "상비약·처방약 챙기기" },
+        body: {
+          en: "Bring a supply of regular prescription meds with the prescription or 소견서, plus familiar fever meds for the kids — Korean over-the-counter combos go by different names here.",
+          ko: "상시 복용하는 처방약은 처방전이나 소견서와 함께 넉넉히, 아이들 해열제 같은 익숙한 상비약도 챙기세요 — 한국 상비약은 여기서 이름이 달라요."
+        },
+        anchor: "health",
+        anchorLabel: { en: "Healthcare section ↓", ko: "의료 섹션으로 ↓" }
+      },
+      {
         id: "arrival-card",
+        phase: "pre",
         title: { en: "SG Arrival Card", ko: "SG 입국 카드 (SG Arrival Card)" },
         body: {
           en: "Every traveller submits this within 3 days before arrival (arrival day included). Free via the official ICA e-service or MyICA app — beware look-alike third-party sites that charge a fee.",
@@ -136,6 +199,7 @@ var CONTENT = {
       },
       {
         id: "ep-dp-cards",
+        phase: "week1",
         title: { en: "EP / DP card appointments", ko: "EP·DP 카드 발급 예약" },
         body: {
           en: "Sequence: employer applies → IPA letter (single-entry visa, valid 6 months) → enter Singapore → medical exam if the IPA requires it (chest X-ray + HIV test, S$30–80 at clinics) → pass issuance → notification letter (1 month validity; you can work and travel) → fingerprints & photo at the Employment Pass Services Centre within 2 weeks of issuance, by appointment → card delivered within 5 working days. Fees per pass: S$105 application + S$225 issuance. DP processing takes about 3 weeks and can be filed together with the EP.",
@@ -145,6 +209,7 @@ var CONTENT = {
       },
       {
         id: "singpass",
+        phase: "week1",
         title: { en: "Singpass registration", ko: "싱패스 (Singpass) 등록" },
         body: {
           en: "Register at singpass.gov.sg once your passes are issued. EP and DP holders aged 15+ are eligible. It is the single digital ID for all government services, tax, clinics and bank verification — every adult in the household should register.",
@@ -154,6 +219,7 @@ var CONTENT = {
       },
       {
         id: "sim",
+        phase: "week1",
         title: { en: "SIM / eSIM", ko: "유심 · eSIM 개통" },
         body: {
           en: "Needs a passport or FIN. 2026 SIM-only prices: Circles.Life S$8/mo (500GB), Maxx S$7.90/mo, Simba from S$10/mo, GOMO S$19.99/mo, Singtel/StarHub S$24.50–38/mo. Budget S$10–25 per adult per month.",
@@ -163,6 +229,7 @@ var CONTENT = {
       },
       {
         id: "bank",
+        phase: "week1",
         title: { en: "Bank account", ko: "은행 계좌 개설" },
         body: {
           en: "DBS explicitly opens accounts with just the IPA letter (before the EP card arrives); OCBC/UOB vary by branch and often want the EP card + Singpass. Documents: passport, EP card or IPA, proof of Singapore address, Korean TIN. Salary accounts — DBS Multiplier, OCBC 360, UOB One — pay bonus interest for salary crediting plus card spend.",
@@ -172,6 +239,7 @@ var CONTENT = {
       },
       {
         id: "paynow",
+        phase: "week1",
         title: { en: "PayNow setup", ko: "PayNow 설정" },
         body: {
           en: "Link your mobile number and/or FIN in the bank app. Free instant transfers — it is how everyone pays rent deposits, school fees, and hawker-stall QR codes.",
@@ -181,6 +249,7 @@ var CONTENT = {
       },
       {
         id: "simplygo",
+        phase: "week1",
         title: { en: "Transport — SimplyGo", ko: "교통 — SimplyGo" },
         body: {
           en: "Contactless Visa/Mastercard works directly on MRT and buses; fares S$1.20–2.80 per ride. Kids: under 7 and up to 0.9m ride free; under 7 but taller than 0.9m still ride free with a free Child Concession Card (any SimplyGo Ticket Office, passport accepted, foreign kids eligible) — get one per child once they pass 0.9m.",
@@ -190,6 +259,7 @@ var CONTENT = {
       },
       {
         id: "rental",
+        phase: "week1",
         title: { en: "Rental search & lease signing", ko: "집 구하기 · 임대 계약" },
         body: {
           en: "Start on PropertyGuru and 99.co, then view in person — good units go in days. The full playbook (deposits, diplomatic clause, agent fees) is in the \"How renting works here\" box below.",
@@ -201,6 +271,7 @@ var CONTENT = {
       },
       {
         id: "preschool-visits",
+        phase: "week1",
         title: { en: "Preschool visits & waitlists", ko: "유치원 투어 · 대기 등록" },
         body: {
           en: "If you're bringing young kids, start immediately — popular centres have 12–18 month waitlists. Details in the Education section.",
@@ -210,6 +281,7 @@ var CONTENT = {
       },
       {
         id: "licence",
+        phase: "month1",
         title: { en: "Korean driving licence conversion", ko: "한국 운전면허 전환" },
         body: {
           en: "You can drive on your Korean licence + IDP/official translation for the first 12 months of residence; convert before that ends. Pass the Basic Theory Test (50 MCQs, 45 to pass, S$10.14 per attempt at BBDC/CDC/SSDC), then convert at Traffic Police HQ (10 Ubi Ave 3), S$50 fee. The Korean licence needs an official English translation from a Singapore-registered translation company (or embassy certification). Total ~S$70–80; card in ~2 weeks.",
@@ -219,6 +291,7 @@ var CONTENT = {
       },
       {
         id: "overseas-registration",
+        phase: "month1",
         title: { en: "재외국민등록 (Overseas Korean Registration)", ko: "재외국민등록" },
         body: {
           en: "Korean citizens staying abroad 90+ days must register with the embassy — online via 영사민원24 (G4K) or at the consulate. Embassy of the Republic of Korea: 47 Scotts Road, Goldbell Towers, S228233 (verify the unit number).",
@@ -2086,6 +2159,58 @@ var CONTENT = {
       en: "A realistic monthly budget, modelled on a family of four with two preschoolers — scale it to your situation. Low = anchor preschool + value area; High = mid-tier preschool + pricier area.",
       ko: "미취학 아이 둘이 있는 4인 가족을 모델로 한 현실적인 월 예산이에요 — 각자 상황에 맞게 조정하세요. Low는 앵커 유치원 + 실속 지역, High는 중가 사립 유치원 + 비싼 지역 기준이에요."
     },
+    /* Budget builder — figures are the midpoints of this page's tables */
+    builder: {
+      title: { en: "Build your monthly estimate", ko: "내 월 예산 만들어 보기" },
+      intro: {
+        en: "Pick your situation — the total updates live in your chosen currency and is saved on this device. Figures are midpoints from the tables on this page; treat the result as a planning number.",
+        ko: "상황을 고르면 합계가 선택한 통화로 바로 계산되고, 이 기기에 저장돼요. 수치는 이 페이지 표들의 중간값이라, 결과는 계획용 숫자로 보세요."
+      },
+      totalLabel: { en: "Estimated monthly total", ko: "예상 월 합계" },
+      perKid: { en: "per child", ko: "아이당" },
+      groups: {
+        housing: { label: { en: "Housing", ko: "주거" }, options: [
+          { id: "hdb4", v: 3800, label: { en: "HDB 4/5-room", ko: "HDB 4·5룸" } },
+          { id: "condoValue", v: 5000, label: { en: "Condo 3BR — value area", ko: "콘도 3BR — 실속 지역" } },
+          { id: "condoMid", v: 7000, label: { en: "Condo 3BR — central", ko: "콘도 3BR — 중심부" } },
+          { id: "condo4", v: 10000, label: { en: "Condo 4BR+", ko: "콘도 4BR+" } },
+          { id: "landed", v: 12000, label: { en: "Landed / cluster", ko: "단독·클러스터" } }
+        ] },
+        kids: { label: { en: "Children", ko: "아이" }, options: [
+          { id: "k0", v: 0, label: "0" },
+          { id: "k1", v: 1, label: "1" },
+          { id: "k2", v: 2, label: "2" },
+          { id: "k3", v: 3, label: "3" }
+        ] },
+        preschool: { label: { en: "Preschool (per child)", ko: "유치원 (아이당)" }, options: [
+          { id: "none", v: 0, label: { en: "Not yet / school-age", ko: "아직 안 다녀요·학령기" } },
+          { id: "anchor", v: 1277, label: { en: "Anchor operator", ko: "앵커 오퍼레이터" } },
+          { id: "mid", v: 1900, label: { en: "Mid-range private", ko: "중가 사립" } },
+          { id: "premium", v: 2900, label: { en: "Premium", ko: "프리미엄" } },
+          { id: "skis", v: 1120, label: "SKIS" },
+          { id: "intl", v: 2570, label: { en: "International early years", ko: "국제학교 유아부" } }
+        ] },
+        helper: { label: { en: "Live-in helper", ko: "입주 헬퍼" }, options: [
+          { id: "no", v: 0, label: { en: "No", ko: "없음" } },
+          { id: "yes", v: 1350, label: { en: "Yes (all-in)", ko: "있음 (총비용)" } }
+        ] },
+        insurance: { label: { en: "Health insurance", ko: "건강보험" }, options: [
+          { id: "employer", v: 0, label: { en: "Employer covers family", ko: "회사가 가족까지 보장" } },
+          { id: "intl", v: 2125, label: { en: "International family plan", ko: "국제 가족보험" } }
+        ] },
+        lifestyle: { label: { en: "Daily life (food, utilities, transport)", ko: "생활비 (식비·공과금·교통)" }, options: [
+          { id: "lean", v: 1470, label: { en: "Lean", ko: "알뜰" } },
+          { id: "mid", v: 2100, label: { en: "Typical", ko: "보통" } },
+          { id: "comfy", v: 2730, label: { en: "Comfortable", ko: "여유" } }
+        ] },
+        enrich: { label: { en: "Enrichment (per child)", ko: "사교육 (아이당)" }, options: [
+          { id: "none", v: 0, label: { en: "None", ko: "없음" } },
+          { id: "light", v: 300, label: { en: "1 activity", ko: "1개" } },
+          { id: "full", v: 700, label: { en: "2+ activities", ko: "2개 이상" } }
+        ] }
+      }
+    },
+
     rent: {
       title: { en: "Rent — budget by housing type", ko: "월세 — 주거 형태별 예산" },
       intro: {
@@ -2159,6 +2284,37 @@ var CONTENT = {
       }
     }
   },
+
+  /* Glossary — the acronym soup, one line each. Terms get dotted-underline
+     tooltips wherever they appear in body text; full list renders in the footer. */
+  glossary: [
+    { k: "EP", d: { en: "Employment Pass — the main skilled-work visa", ko: "Employment Pass — 전문직 취업비자" } },
+    { k: "DP", d: { en: "Dependant's Pass — for an EP holder's spouse/children", ko: "Dependant's Pass — EP 소지자의 배우자·자녀 동반비자" } },
+    { k: "IPA", d: { en: "In-Principle Approval — the pre-arrival approval letter for a pass", ko: "In-Principle Approval — 입국 전 패스 승인 레터" } },
+    { k: "LOC", d: { en: "Letter of Consent — old DP work permission, now business-owners only", ko: "Letter of Consent — 과거 DP 취업 허가, 지금은 사업자만" } },
+    { k: "FIN", d: { en: "Foreign Identification Number — your ID number on any pass", ko: "Foreign Identification Number — 패스에 붙는 외국인 신분번호" } },
+    { k: "PR", d: { en: "Permanent Resident(-cy) — Singapore's green-card equivalent", ko: "영주권(자) — 싱가포르의 영주 자격" } },
+    { k: "CPF", d: { en: "Central Provident Fund — the citizens'/PR pension; foreigners don't contribute", ko: "Central Provident Fund — 시민·영주권자 연금; 외국인은 미가입" } },
+    { k: "COE", d: { en: "Certificate of Entitlement — the S$100k+ licence to own a car for 10 years", ko: "Certificate of Entitlement — 차량 10년 보유권, S$100k+ 증서" } },
+    { k: "ERP", d: { en: "Electronic Road Pricing — per-gantry road tolls", ko: "Electronic Road Pricing — 도로 통행료 시스템" } },
+    { k: "HDB", d: { en: "Housing & Development Board flats — public housing ~80% live in", ko: "HDB — 국민 약 80%가 사는 공공주택" } },
+    { k: "EC", d: { en: "Executive Condominium — HDB-condo hybrid, private after 10 years", ko: "Executive Condominium — 10년 뒤 민간이 되는 HDB·콘도 하이브리드" } },
+    { k: "GCB", d: { en: "Good Class Bungalow — the top tier of landed housing", ko: "Good Class Bungalow — 최상급 단독주택" } },
+    { k: "CCR", d: { en: "Core Central Region — the priciest districts (D9/10/11 + CBD)", ko: "Core Central Region — 가장 비싼 핵심 중심부 (D9/10/11 + CBD)" } },
+    { k: "RCR", d: { en: "Rest of Central Region — the city fringe", ko: "Rest of Central Region — 시티 프린지" } },
+    { k: "OCR", d: { en: "Outside Central Region — the suburbs", ko: "Outside Central Region — 외곽" } },
+    { k: "MOM", d: { en: "Ministry of Manpower — issues work passes", ko: "노동부 — 취업 패스 발급 부처" } },
+    { k: "ICA", d: { en: "Immigration & Checkpoints Authority", ko: "이민국" } },
+    { k: "MOE", d: { en: "Ministry of Education — runs local schools", ko: "교육부 — 로컬 학교 관할" } },
+    { k: "ECDA", d: { en: "Early Childhood Development Agency — licenses preschools", ko: "유아교육청 — 유치원 인가 기관" } },
+    { k: "NIR", d: { en: "National Immunisation Registry — official vaccination records", ko: "국가 예방접종 등록부" } },
+    { k: "MDW", d: { en: "Migrant Domestic Worker — the official term for a live-in helper", ko: "Migrant Domestic Worker — 입주 헬퍼의 공식 명칭" } },
+    { k: "GP", d: { en: "General Practitioner — the walk-in neighbourhood doctor", ko: "일반의 — 동네 1차 진료 의사" } },
+    { k: "PD", d: { en: "Paediatrician", ko: "소아과 전문의" } },
+    { k: "EAL", d: { en: "English as an Additional Language — school English support", ko: "English as an Additional Language — 학교의 영어 지원 과정" } },
+    { k: "IB", d: { en: "International Baccalaureate — the international curriculum", ko: "International Baccalaureate — 국제 공통 커리큘럼" } },
+    { k: "SCDF", d: { en: "Singapore Civil Defence Force — runs the 995 ambulance/fire service", ko: "싱가포르 민방위대 — 995 구급·소방 담당" } }
+  ],
 
   footer: {
     updated: {
