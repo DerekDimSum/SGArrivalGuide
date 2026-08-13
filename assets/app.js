@@ -709,7 +709,7 @@
       )),
       h("tbody", {}, pr.intl.rows.map(function (r) {
         return h("tr", {},
-          h("td", { class: "tier-cell", text: r.tier }),
+          h("td", { class: "tier-cell", text: t(r.tier) }),
           h("td", { text: t(r.schools) }),
           h("td", { text: t(r.fees) }),
           h("td", { text: t(r.waitlist) }),
@@ -1204,6 +1204,7 @@
     rebuild();
     main.appendChild(h("section", { id: "areas", class: "section", "aria-labelledby": "areas-title" },
       sectionHeader("areas", at.title, "▦"),
+      renderPicker(),
       h("p", { class: "section-intro", text: t(at.intro) }),
       h("div", { class: "anchor-fields" },
         anchorField("work", at.workLabel),
@@ -1301,39 +1302,42 @@
     ov.appendChild(office);
     section.appendChild(ov);
 
-    /* priorities picker */
-    section.appendChild(renderPicker());
     section.appendChild(h("p", {}, h("a", { class: "btn-link", href: "#areas", text: t(lv.tableLink) })));
 
-    /* §3.4 comparison table */
-    section.appendChild(h("h3", { id: "living-compare", text: t(lv.comparison.title) }));
-    section.appendChild(h("p", { class: "table-note", text: t(lv.comparison.note) }));
+    /* §3.4 comparison table — demoted to a collapsed reference (superseded by the
+       area table for browsing, kept for its researched commutes and HDB proxies) */
     var cols = lv.comparison.cols;
-    section.appendChild(h("div", { class: "table-wrap" }, h("table", { class: "data-table cmp-table" },
-      h("thead", {}, h("tr", {},
-        h("th", { text: t(cols.area) }), h("th", { text: t(cols.br3) }), h("th", { text: t(cols.br4) }),
-        h("th", { text: t(cols.commute) }), h("th", { text: t(cols.skis) }),
-        h("th", { text: t(cols.hdb) }), h("th", { text: t(cols.vibe) })
-      )),
-      h("tbody", {}, lv.comparison.rows.map(function (r) {
-        return h("tr", {},
-          h("th", { scope: "row" }, h("a", { href: "#area-" + r.target, text: t(r.area) })),
-          h("td", { text: t(r.br3) }),
-          h("td", { text: t(r.br4) }),
-          h("td", { text: t(r.commute) }),
-          h("td", { text: t(r.skis) }),
-          h("td", { text: t(r.hdb) }),
-          h("td", { text: t(r.vibe) })
-        );
-      }))
-    )));
+    var cmpBody = h("div", {},
+      h("p", { class: "table-note", text: t(lv.comparison.note) }),
+      h("div", { class: "table-wrap" }, h("table", { class: "data-table cmp-table" },
+        h("thead", {}, h("tr", {},
+          h("th", { text: t(cols.area) }), h("th", { text: t(cols.br3) }), h("th", { text: t(cols.br4) }),
+          h("th", { text: t(cols.commute) }), h("th", { text: t(cols.skis) }),
+          h("th", { text: t(cols.hdb) }), h("th", { text: t(cols.vibe) })
+        )),
+        h("tbody", {}, lv.comparison.rows.map(function (r) {
+          return h("tr", {},
+            h("th", { scope: "row" }, h("a", { href: "#area-" + r.target, text: t(r.area) })),
+            h("td", { text: t(r.br3) }),
+            h("td", { text: t(r.br4) }),
+            h("td", { text: t(r.commute) }),
+            h("td", { text: t(r.skis) }),
+            h("td", { text: t(r.hdb) }),
+            h("td", { text: t(r.vibe) })
+          );
+        }))
+      ))
+    );
     lv.comparison.footNotes.forEach(function (n, i) {
-      section.appendChild(h("p", { class: "table-note" },
+      cmpBody.appendChild(h("p", { class: "table-note" },
         h("span", { text: t(n) + " " }),
         n.verify ? verifyBadge() : null, " ",
         srcLink(i === 0 ? lv.comparison.erpUrl : lv.comparison.skisBusUrl)
       ));
     });
+    var cmpDetails = sub("living-compare", lv.comparison.title, cmpBody);
+    if (!openState.hasOwnProperty("living-compare")) cmpDetails.removeAttribute("open");
+    section.appendChild(cmpDetails);
 
     /* map */
     var mapHost = h("div", { class: "map-host" });
@@ -1504,6 +1508,31 @@
     main.appendChild(section);
   }
 
+  function renderHealth(main) {
+    var hl = CONTENT.health;
+    var section = h("section", { id: "health", class: "section", "aria-labelledby": "health-title" },
+      sectionHeader("health", hl.title, "✚"),
+      h("p", { class: "section-intro", text: t(hl.intro) }));
+    hl.items.forEach(function (i) {
+      section.appendChild(h("div", { class: "entry" },
+        h("h3", {}, h("span", { text: t(i.title) + " " }), i.verify ? verifyBadge() : null),
+        h("p", {}, h("span", { text: t(i.body) + " " }), i.url ? srcLink(i.url) : null)
+      ));
+    });
+    section.appendChild(h("aside", { class: "info-box" },
+      h("h3", { text: t(hl.numbersTitle) }),
+      h("ul", { class: "emergency-list" }, hl.numbers.map(function (n) {
+        return h("li", {},
+          h("strong", { text: n.num }),
+          h("span", { text: " — " + t(n.desc) + " " }),
+          n.verify ? verifyBadge() : null
+        );
+      }))
+    ));
+    section.appendChild(h("p", { class: "table-note", text: t(hl.feeNote) }));
+    main.appendChild(section);
+  }
+
   function renderCar(main) {
     var car = CONTENT.car;
     var section = h("section", { id: "car", class: "section", "aria-labelledby": "car-title" },
@@ -1515,6 +1544,12 @@
       h("p", {}, srcLink(car.reality.srcUrl)),
       h("div", { id: "car-alternatives" },
         h("h3", { text: t(car.altTitle) }),
+        h("div", {}, car.alternatives.map(function (a) {
+          return h("div", { class: "entry" },
+            h("h4", {}, h("span", { text: t(a.title) + " " }), a.verify ? verifyBadge() : null),
+            h("p", { text: t(a.body) })
+          );
+        })),
         h("div", { class: "info-box" },
           h("h4", { text: t(car.childSeats.title) }),
           h("p", {}, h("span", { text: t(car.childSeats.body) + " " }), srcLink(car.childSeats.url))
@@ -1548,6 +1583,27 @@
     if (currency !== CONTENT.currencies.base) {
       section.appendChild(h("p", { class: "table-note", text: t(CONTENT.currencies.note) }));
     }
+
+    /* rent, by housing type — outside the snapshot */
+    section.appendChild(h("h3", { text: t(c.rent.title) }));
+    section.appendChild(h("p", { class: "section-intro", text: t(c.rent.intro) }));
+    section.appendChild(h("div", { class: "table-wrap" }, h("table", { class: "data-table" },
+      h("thead", {}, h("tr", {},
+        h("th", { text: t(c.rent.cols.type) }),
+        h("th", { text: t(c.rent.cols.range) }),
+        h("th", { text: t(c.rent.cols.note) })
+      )),
+      h("tbody", {}, c.rent.rows.map(function (r) {
+        return h("tr", { class: r.rough ? "row-rough" : null },
+          h("th", { scope: "row", text: t(r.type) }),
+          h("td", { text: t(r.range) }),
+          h("td", { class: "note-cell", text: t(r.note) })
+        );
+      }))
+    )));
+    section.appendChild(h("p", { class: "table-note", text: t(c.rent.note) }));
+
+    section.appendChild(h("h3", { text: t(c.snapshotTitle) }));
     section.appendChild(h("div", { class: "table-wrap" }, h("table", { class: "data-table costs-table" },
       h("thead", {}, h("tr", {},
         h("th", { text: t(c.cols.item) }), h("th", { text: t(c.cols.low) }),
@@ -1569,6 +1625,13 @@
       )
     )));
     section.appendChild(h("p", {}, srcLink(c.insuranceUrl, { en: "Insurance cost source ↗", ko: "보험 비용 출처 ↗" })));
+
+    /* money between Korea and Singapore */
+    section.appendChild(h("aside", { class: "info-box" },
+      h("h3", { text: t(c.moneyBox.title) }),
+      h("ul", {}, c.moneyBox.items.map(function (i) { return h("li", { text: t(i) }); })),
+      h("p", { class: "table-note", text: t(c.moneyBox.note) })
+    ));
     main.appendChild(section);
   }
 
@@ -1587,6 +1650,15 @@
     })));
     footer.appendChild(h("h3", { text: t(f.openTitle) }));
     footer.appendChild(h("ul", {}, f.openItems.map(function (i) { return h("li", { text: t(i) }); })));
+    footer.appendChild(h("p", { class: "footer-emergency" },
+      h("strong", { text: t(CONTENT.health.numbersTitle) + ": " }),
+      h("span", {
+        text: CONTENT.health.numbers.slice(0, 4).map(function (n) {
+          return n.num + " " + t(n.desc).split(" — ")[0].split(" (")[0];
+        }).join(" · ") + " · "
+      }),
+      h("a", { href: "#health", text: lang === "ko" ? "의료 섹션 →" : "Healthcare section →" })
+    ));
   }
 
   /* ---------- render orchestration ---------- */
@@ -1622,6 +1694,7 @@
     renderCommunity(main);
     renderChurch(main);
     renderHelper(main);
+    renderHealth(main);
     renderCar(main);
     renderCosts(main);
     renderApps(main);
@@ -1654,7 +1727,7 @@
 
   // every section view, in page order (nav items may be groups pointing at these)
   var SECTION_VIEWS = ["home", "education", "schools", "living", "areas",
-    "community", "church", "helper", "car", "costs", "apps", "checklist"];
+    "community", "church", "helper", "health", "car", "costs", "apps", "checklist"];
   function viewIds() { return SECTION_VIEWS; }
 
   // which top-level nav item owns a view (self, or the group whose subs include it)
@@ -1749,6 +1822,7 @@
       { id: "community", label: CONTENT.community.title },
       { id: "church", label: CONTENT.church.title },
       { id: "helper", label: CONTENT.helper.title },
+      { id: "health", label: CONTENT.health.title },
       { id: "car", label: CONTENT.car.title },
       { id: "costs", label: CONTENT.costs.title },
       { id: "apps", label: CONTENT.apps.title },

@@ -83,7 +83,7 @@ var CONTENT = {
         { id: "living-atlas", label: { en: "Neighbourhoods", ko: "동네별" } },
         { id: "renting-box", label: { en: "Renting", ko: "임대 절차" } }
       ] },
-    { id: "social", target: "community", label: { en: "Social", ko: "커뮤니티" },
+    { id: "social", target: "community", label: { en: "Social", ko: "한인 생활" },
       desc: { en: "The Korean community network and Korean churches — the fastest ways in.", ko: "한인 커뮤니티 네트워크와 한인 교회 — 가장 빠른 정착 지름길이에요." },
       subs: [
         { id: "community", label: { en: "Korean community", ko: "한인 커뮤니티" } },
@@ -91,11 +91,13 @@ var CONTENT = {
       ] },
     { id: "helper", label: { en: "Helper", ko: "입주 헬퍼" },
       desc: { en: "Costs, process and timeline for hiring live-in help.", ko: "입주 헬퍼 고용의 비용, 절차, 소요 기간." } },
+    { id: "health", label: { en: "Healthcare", ko: "의료" },
+      desc: { en: "GPs, paediatricians, kids' emergencies, Korean-speaking care — and 995.", ko: "동네 GP부터 소아과, 아이 응급실, 한국어 진료, 그리고 995까지." } },
     { id: "transport", target: "car", label: { en: "Transport", ko: "교통" },
       desc: { en: "The car question — and life on Grab, taxis and the MRT.", ko: "자동차 고민 — 그리고 Grab·택시·MRT로 사는 법." },
       subs: [
         { id: "car", label: { en: "The car question", ko: "자동차, 살까 말까" } },
-        { id: "car-alternatives", label: { en: "Grab · taxi · MRT", ko: "Grab · 택시 · MRT" } }
+        { id: "car-alternatives", label: { en: "MRT · bus · taxi", ko: "MRT · 버스 · 택시" } }
       ] },
     { id: "costs", label: { en: "Monthly costs", ko: "월 생활비" },
       desc: { en: "A realistic monthly budget, low and high.", ko: "현실적인 월 예산, 최소·최대." } },
@@ -318,12 +320,6 @@ var CONTENT = {
     schools: {
       title: { en: "School directory", ko: "학교 디렉토리" },
       countLabel: { en: "schools shown", ko: "개 학교 표시 중" },
-      filterGroups: {
-        stage: { en: "Stage", ko: "과정" },
-        kind: { en: "Type", ko: "구분" },
-        tier: { en: "Tier", ko: "티어" },
-        fee: { en: "Fees", ko: "학비" }
-      },
       stages: {
         pre: { en: "Preschool", ko: "유치원" },
         pri: { en: "Primary & up", ko: "초등 이상" }
@@ -337,17 +333,17 @@ var CONTENT = {
         other: { en: "Int'l — Other", ko: "국제 — 기타" }
       },
       tiers: {
-        anchor: { en: "Anchor", ko: "앵커" },
-        mid: { en: "Mid-tier", ko: "중가" },
-        premium: { en: "Premium", ko: "프리미엄" },
-        t1: { en: "Tier 1", ko: "Tier 1" },
-        t15: { en: "Tier 1.5", ko: "Tier 1.5" },
-        t2: { en: "Tier 2", ko: "Tier 2" },
-        t3: { en: "Tier 3", ko: "Tier 3" }
+        anchor: { en: "Anchor (gov-supported)", ko: "앵커 (준공영)" },
+        mid: { en: "Mid-range private", ko: "중가 사립" },
+        premium: { en: "Premium preschool", ko: "프리미엄 유치원" },
+        t1: { en: "Legacy flagship", ko: "전통 플래그십" },
+        t15: { en: "Premium", ko: "프리미엄" },
+        t2: { en: "Established", ko: "안정형" },
+        t3: { en: "Value-focused", ko: "실속형" }
       },
       tierNote: {
-        en: "Tiers are the informal expat/parent convention explained in Education — Singapore has no official school ranking. Preschools use the Anchor / Mid-tier / Premium bands.",
-        ko: "티어는 교육 섹션에서 설명한 학부모들의 비공식 관행이에요 — 싱가포르에 공식 학교 순위는 없어요. 유치원은 앵커/중가/프리미엄 구분을 써요."
+        en: "Segments describe fee level and admissions demand, not quality — Singapore has no official school ranking, and strong outcomes happen in every band. (The \"Tier 1/2/3\" shorthand you'll hear from other parents maps onto these segments.)",
+        ko: "학교군은 학비 수준과 입학 수요를 나타낼 뿐, 교육의 질 순위가 아니에요 — 싱가포르에 공식 학교 랭킹은 없고, 어느 그룹에서든 좋은 결과는 나와요. (학부모들 사이에서 들리는 'Tier 1/2/3'이라는 표현이 이 구분과 대략 겹쳐요.)"
       },
       feeBands: {
         b1: { label: { en: "≤S$20k/yr", ko: "연 S$20k 이하" }, max: 20000 },
@@ -365,7 +361,7 @@ var CONTENT = {
         name: { en: "School", ko: "학교" },
         stage: { en: "Stage", ko: "과정" },
         kind: { en: "Type", ko: "구분" },
-        tier: { en: "Tier (informal)", ko: "티어 (비공식)" },
+        tier: { en: "Segment", ko: "학교군" },
         fees: { en: "Fees", ko: "학비" },
         waitlist: { en: "Admissions", ko: "입학·대기" },
         location: { en: "Location", ko: "위치" }
@@ -420,7 +416,7 @@ var CONTENT = {
           waitlist: { en: "Phase 3 — school assigned, no choice", ko: "Phase 3 — 학교 지정 배정, 선택 불가" },
           location: { en: "Island-wide", ko: "전국" } },
         { name: "Singapore American School (SAS)", stage: "pri", kind: "american", tier: "t1", feeYr: 49000, site: "https://www.sas.edu.sg",
-          fees: { en: "S$38–60k/yr (Tier 1 band)", ko: "연 S$38–60k (Tier 1 범위)" },
+          fees: { en: "S$38–60k/yr (flagship band)", ko: "연 S$38–60k (플래그십 범위)" },
           waitlist: { en: "Multi-year, selective", ko: "수년 대기, 선발형" },
           location: "Woodlands" },
         { name: "Tanglin Trust", stage: "pri", kind: "british", tier: "t1", feeYr: 45375, site: "https://www.tts.edu.sg",
@@ -436,55 +432,55 @@ var CONTENT = {
           waitlist: { en: "Multi-year, selective", ko: "수년 대기, 선발형" },
           location: "Bukit Batok" },
         { name: "SJII (St Joseph's Institution International)", stage: "pri", kind: "ib", tier: "t15", feeYr: 45500, site: "https://www.sji-international.com.sg",
-          fees: { en: "S$35–56k/yr (Tier 1.5 band)", ko: "연 S$35–56k (Tier 1.5 범위)" },
+          fees: { en: "S$35–56k/yr (premium band)", ko: "연 S$35–56k (프리미엄 범위)" },
           waitlist: { en: "Selective; 50% local cohort", ko: "선발형; 학생 50%가 로컬" },
           location: "Thomson" },
         { name: "NLCS Singapore", stage: "pri", kind: "british", tier: "t15", feeYr: 45500, site: "https://www.nlcssingapore.sg",
-          fees: { en: "S$35–56k/yr (Tier 1.5 band)", ko: "연 S$35–56k (Tier 1.5 범위)" },
+          fees: { en: "S$35–56k/yr (premium band)", ko: "연 S$35–56k (프리미엄 범위)" },
           waitlist: { en: "Selective", ko: "선발형" },
           location: { en: "Depot Road", ko: "Depot Road" } },
         { name: "Canadian International School (CIS)", stage: "pri", kind: "ib", tier: "t15", feeYr: 45500, site: "https://www.cis.edu.sg",
-          fees: { en: "S$35–56k/yr (Tier 1.5 band)", ko: "연 S$35–56k (Tier 1.5 범위)" },
+          fees: { en: "S$35–56k/yr (premium band)", ko: "연 S$35–56k (프리미엄 범위)" },
           waitlist: { en: "Varies; strong EAL", ko: "학교별 상이; EAL 강함" },
           location: "Lakeside" },
         { name: "Stamford American (SAIS)", stage: "pri", kind: "american", tier: "t15", feeYr: 45500, site: "https://www.sais.edu.sg",
-          fees: { en: "S$35–56k/yr (Tier 1.5 band)", ko: "연 S$35–56k (Tier 1.5 범위)" },
+          fees: { en: "S$35–56k/yr (premium band)", ko: "연 S$35–56k (프리미엄 범위)" },
           waitlist: { en: "Rolling admissions", ko: "수시 입학" },
           location: "Woodleigh" },
         { name: "Australian International School (AIS)", stage: "pri", kind: "other", tier: "t15", feeYr: 45500, site: "https://www.ais.com.sg",
-          fees: { en: "S$35–56k/yr (Tier 1.5 band)", ko: "연 S$35–56k (Tier 1.5 범위)" },
+          fees: { en: "S$35–56k/yr (premium band)", ko: "연 S$35–56k (프리미엄 범위)" },
           waitlist: { en: "Varies", ko: "학교별 상이" },
           location: "Serangoon" },
         { name: "Dover Court (Nord Anglia)", stage: "pri", kind: "british", tier: "t2", feeYr: 36500, site: "https://www.nordangliaeducation.com/dover-court-singapore",
-          fees: { en: "S$28–45k/yr (Tier 2 band)", ko: "연 S$28–45k (Tier 2 범위)" },
+          fees: { en: "S$28–45k/yr (established band)", ko: "연 S$28–45k (안정형 범위)" },
           waitlist: { en: "Moderate; strong EAL", ko: "보통; EAL 강함" },
           location: "Dover" },
         { name: "GESS (German European School)", stage: "pri", kind: "other", tier: "t2", feeYr: 36500, site: "https://www.gess.sg",
-          fees: { en: "S$28–45k/yr (Tier 2 band)", ko: "연 S$28–45k (Tier 2 범위)" },
+          fees: { en: "S$28–45k/yr (established band)", ko: "연 S$28–45k (안정형 범위)" },
           waitlist: { en: "Moderate", ko: "보통" },
           location: { en: "Dairy Farm (Bukit Timah)", ko: "Dairy Farm (Bukit Timah)" } },
         { name: "Nexus International", stage: "pri", kind: "ib", tier: "t2", feeYr: 36500, site: "https://www.nexus.edu.sg",
-          fees: { en: "S$28–45k/yr (Tier 2 band)", ko: "연 S$28–45k (Tier 2 범위)" },
+          fees: { en: "S$28–45k/yr (established band)", ko: "연 S$28–45k (안정형 범위)" },
           waitlist: { en: "Moderate; strong EAL", ko: "보통; EAL 강함" },
           location: "Aljunied" },
         { name: "Overseas Family School (OFS)", stage: "pri", kind: "ib", tier: "t2", feeYr: 36500, site: "https://www.ofs.edu.sg",
-          fees: { en: "S$28–45k/yr (Tier 2 band)", ko: "연 S$28–45k (Tier 2 범위)" },
+          fees: { en: "S$28–45k/yr (established band)", ko: "연 S$28–45k (안정형 범위)" },
           waitlist: { en: "Moderate", ko: "보통" },
           location: "Pasir Ris" },
         { name: "Chatsworth International", stage: "pri", kind: "ib", tier: "t2", feeYr: 36500, site: "https://www.chatsworth.com.sg",
-          fees: { en: "S$28–45k/yr (Tier 2 band)", ko: "연 S$28–45k (Tier 2 범위)" },
+          fees: { en: "S$28–45k/yr (established band)", ko: "연 S$28–45k (안정형 범위)" },
           waitlist: { en: "Moderate", ko: "보통" },
           location: "Bukit Timah" },
         { name: "One World International (OWIS)", stage: "pri", kind: "ib", tier: "t3", feeYr: 21500, site: "https://owis.org",
-          fees: { en: "S$15–28k/yr (Tier 3 band)", ko: "연 S$15–28k (Tier 3 범위)" },
+          fees: { en: "S$15–28k/yr (value band)", ko: "연 S$15–28k (실속형 범위)" },
           waitlist: { en: "Direct entry; nationality caps", ko: "바로 입학; 국적별 정원 제한" },
           location: { en: "Jurong / Mountbatten", ko: "Jurong · Mountbatten" } },
         { name: "Invictus International", stage: "pri", kind: "other", kindVerify: true, tier: "t3", feeYr: 21500, site: "https://invictus.edu.sg",
-          fees: { en: "S$15–28k/yr (Tier 3 band)", ko: "연 S$15–28k (Tier 3 범위)" },
+          fees: { en: "S$15–28k/yr (value band)", ko: "연 S$15–28k (실속형 범위)" },
           waitlist: { en: "Direct entry", ko: "바로 입학" },
           location: { en: "Multiple campuses", ko: "여러 캠퍼스" } },
         { name: "Middleton (by EtonHouse)", stage: "pri", kind: "other", kindVerify: true, tier: "t3", feeYr: 21500, site: "https://www.middleton.edu.sg",
-          fees: { en: "S$15–28k/yr (Tier 3 band)", ko: "연 S$15–28k (Tier 3 범위)" },
+          fees: { en: "S$15–28k/yr (value band)", ko: "연 S$15–28k (실속형 범위)" },
           waitlist: { en: "Direct entry", ko: "바로 입학" },
           location: { en: "Tampines / Upper Bukit Timah", ko: "Tampines · Upper Bukit Timah" } },
         { name: { en: "Singapore Korean International School (SKIS, K–12)", ko: "싱가포르한국국제학교 (SKIS, K–12)" }, stage: "pri", kind: "korean", tier: null, feeYr: 13425, site: "https://www.skis.kr",
@@ -520,7 +516,7 @@ var CONTENT = {
       fees: {
         title: { en: "Monthly full-day fees for foreigners (per child)", ko: "외국인 종일반 월 학비 (아이 1명 기준)" },
         cols: {
-          tier: { en: "Tier", ko: "구분" },
+          tier: { en: "Group", ko: "구분" },
           example: { en: "Examples", ko: "예시" },
           fee: { en: "Foreigner monthly fee", ko: "외국인 월 학비" }
         },
@@ -569,8 +565,8 @@ var CONTENT = {
     primary: {
       title: { en: "Primary school paths", ko: "초등학교 로드맵" },
       framing: {
-        en: "Local P1 starts the year a child turns 7. But note the calendar trap: international schools start formal school much earlier — British-system Reception at 4 and Year 1 at 5, American Kindergarten at 5 — so if you're leaning international, the \"primary decision\" arrives two to three years before local P1. One honest note up front: Singapore has no official school tiers. Every \"tier\" below is informal expat/parent convention.",
-        ko: "로컬 P1(초1)은 그 해 7세가 되는 해에 시작해요. 다만 '달력 함정'을 알아두세요: 국제학교는 정규 과정을 훨씬 일찍 시작해요 — 영국계는 4세에 Reception, 5세에 Year 1, 미국계는 5세에 Kindergarten. 국제학교 쪽으로 기운다면 '초등 결정'이 로컬 P1보다 2–3년 일찍 찾아와요. 그리고 미리 솔직하게 말씀드리면, 싱가포르에 공식적인 학교 등급은 없어요. 아래의 '티어'는 모두 학부모들 사이의 비공식 관행이에요."
+        en: "Local P1 starts the year a child turns 7. But note the calendar trap: international schools start formal school much earlier — British-system Reception at 4 and Year 1 at 5, American Kindergarten at 5 — so if you're leaning international, the \"primary decision\" arrives two to three years before local P1. One honest note up front: Singapore has no official school tiers. The segments below describe fees and admissions demand — the \"Tier 1/2/3\" labels other parents use are informal shorthand, not any official ranking.",
+        ko: "로컬 P1(초1)은 그 해 7세가 되는 해에 시작해요. 다만 '달력 함정'을 알아두세요: 국제학교는 정규 과정을 훨씬 일찍 시작해요 — 영국계는 4세에 Reception, 5세에 Year 1, 미국계는 5세에 Kindergarten. 국제학교 쪽으로 기운다면 '초등 결정'이 로컬 P1보다 2–3년 일찍 찾아와요. 그리고 미리 솔직하게 말씀드리면, 싱가포르에 공식적인 학교 등급은 없어요. 아래의 구분은 학비와 입학 수요를 나타낼 뿐이고, 학부모들이 쓰는 'Tier 1/2/3'은 공식 순위가 아니라 비공식 은어예요."
       },
       local: {
         title: { en: "Path 1 — Local (MOE) schools", ko: "경로 1 — 로컬 (MOE) 학교" },
@@ -606,36 +602,36 @@ var CONTENT = {
           ko: "실제로 외국인 학부모들이 쓰는 비공식 티어 구분이에요(공식 순위는 없고, 학비는 2026/27 공시 기준이에요)."
         },
         cols: {
-          tier: { en: "Tier", ko: "티어" },
+          tier: { en: "Segment", ko: "학교군" },
           schools: { en: "Schools", ko: "학교" },
           fees: { en: "Fees / year", ko: "연간 학비" },
-          waitlist: { en: "Waitlist reality", ko: "대기 현실" },
+          waitlist: { en: "Admissions reality", ko: "입학 현실" },
           eal: { en: "EAL (English support)", ko: "EAL (영어 지원)" }
         },
         rows: [
           {
-            tier: "Tier 1",
+            tier: { en: "Legacy flagship · 'Tier 1'", ko: "전통 플래그십 · 'Tier 1'" },
             schools: { en: "Legacy non-profit flagships: Singapore American School (Woodlands, US/AP) · Tanglin Trust (One-North, British → A-Level/IB; Y1 S$45,375) · UWCSEA Dover & Tampines (IB; K1–G1 first year S$48,606 incl. levy) · Dulwich College (Bukit Batok, British → IB, ~S$35–38k early years)", ko: "전통 비영리 명문: Singapore American School (우드랜즈, 미국/AP) · Tanglin Trust (원노스, 영국식 → A-Level/IB; Y1 S$45,375) · UWCSEA Dover & Tampines (IB; K1–G1 첫해 S$48,606, 부담금 포함) · Dulwich College (부킷 바톡, 영국식 → IB, 유아부 약 S$35–38k)" },
             fees: "S$38–60k",
             waitlist: { en: "Multi-year waitlists, selective. UWCSEA applications open 1 Sep for the following year", ko: "수년 대기, 선발형. UWCSEA는 매년 9월 1일에 이듬해 지원 오픈" },
             eal: { en: "Selective entry — not the EAL-friendly route", ko: "선발형 입학 — 영어 지원 중심 경로는 아니에요" }
           },
           {
-            tier: "Tier 1.5",
+            tier: { en: "Premium · 'Tier 1.5'", ko: "프리미엄 · 'Tier 1.5'" },
             schools: { en: "Premium / local-international flagships: SJII (Thomson; 50% local cohort, strong IB) · NLCS Singapore (Depot Rd, selective) · Canadian International School (Lakeside; Chinese/English dual-language) · SAIS (Woodleigh; IB+AP, rolling admissions, Early Learning Village ages 2–6) · Australian International School (Serangoon)", ko: "프리미엄 · 로컬-국제 혼합 명문: SJII (톰슨; 학생 50%가 로컬, IB 강세) · NLCS Singapore (Depot Rd, 선발형) · Canadian International School (레이크사이드; 중국어/영어 이중언어) · SAIS (우드리; IB+AP, 수시 입학, 2–6세 Early Learning Village 운영) · Australian International School (세랑군)" },
             fees: "S$35–56k",
             waitlist: { en: "SAIS rolling admissions; others vary", ko: "SAIS는 수시 입학, 나머지는 학교별 상이" },
             eal: { en: "CIS — strong EAL", ko: "CIS — EAL 지원 강함" }
           },
           {
-            tier: "Tier 2",
+            tier: { en: "Established · 'Tier 2'", ko: "안정형 · 'Tier 2'" },
             schools: { en: "Established mid-tier: Dover Court (Nord Anglia; inclusive) · GESS (Bukit Timah; German/European + IB) · Nexus (Aljunied) · Overseas Family School (Pasir Ris) · Chatsworth (Bukit Timah)", ko: "안정적인 중상위권: Dover Court (Nord Anglia; 포용적 학풍) · GESS (부킷 티마; 독일/유럽계 + IB) · Nexus (알주니드) · Overseas Family School (파시르 리스) · Chatsworth (부킷 티마)" },
             fees: "S$28–45k",
             waitlist: { en: "Moderate waitlists", ko: "대기 보통" },
             eal: { en: "Strong EAL support (Dover Court, Nexus) — the practical route for Korean-speaking kids", ko: "EAL 지원 강함 (Dover Court, Nexus) — 한국어가 모어인 아이에게 현실적인 경로" }
           },
           {
-            tier: "Tier 3",
+            tier: { en: "Value-focused · 'Tier 3'", ko: "실속형 · 'Tier 3'" },
             schools: { en: "Value international: One World International (Jurong/Mountbatten; nationality caps) · Invictus · Middleton by EtonHouse (Tampines/Upper Bukit Timah)", ko: "실속형 국제학교: One World International (주롱/마운트배튼; 국적별 정원 제한) · Invictus · Middleton by EtonHouse (탐피니스/어퍼 부킷 티마)" },
             fees: "S$15–28k",
             waitlist: { en: "Direct entry", ko: "바로 입학 가능" },
@@ -643,8 +639,8 @@ var CONTENT = {
           }
         ],
         extras: {
-          en: "Extras at every tier: application S$290–3,500, enrolment S$2,900–5,780, first-year development levy S$3,000–10,000. Sector guidance: apply ~12 months ahead; Tier 1 waitlists are multi-year.",
-          ko: "모든 티어 공통 추가 비용: 지원비 S$290–3,500, 등록비 S$2,900–5,780, 첫해 발전기금 S$3,000–10,000. 업계 통념상 약 12개월 전에 지원하고, Tier 1은 대기가 수년이에요."
+          en: "Extras at every segment: application S$290–3,500, enrolment S$2,900–5,780, first-year development levy S$3,000–10,000. Sector guidance: apply ~12 months ahead; flagship-segment waitlists are multi-year.",
+          ko: "모든 학교군 공통 추가 비용: 지원비 S$290–3,500, 등록비 S$2,900–5,780, 첫해 발전기금 S$3,000–10,000. 업계 통념상 약 12개월 전에 지원하고, 플래그십 학교군은 대기가 수년이에요."
         },
         extrasUrl: "https://www.tutopiya.com/blog/parents-blog/international-school-fees-structure-singapore/",
         decision: {
@@ -659,8 +655,8 @@ var CONTENT = {
               ko: "장기 체류라면 → 12년 일관 과정에 현지 네트워크가 탄탄한 Tanglin, UWCSEA, SJII가 좋아요."
             },
             {
-              en: "Kids with developing English → Tier 1.5/2 with strong EAL (CIS, Nexus, Dover Court).",
-              ko: "영어가 아직 자라는 아이라면 → EAL이 강한 Tier 1.5/2 (CIS, Nexus, Dover Court)를 보세요."
+              en: "Kids with developing English → the premium/established segments with strong EAL (CIS, Nexus, Dover Court).",
+              ko: "영어가 아직 자라는 아이라면 → EAL이 강한 프리미엄·안정형 학교들(CIS, Nexus, Dover Court)을 보세요."
             }
           ]
         }
@@ -713,6 +709,14 @@ var CONTENT = {
           name: { en: "Taekwondo (from age 4)", ko: "태권도 (4세부터)" },
           detail: { en: "From age 4, not 3. S$120–260/mo (J H Kim et al.) — a natural Korean-culture anchor.", ko: "3세는 안 되고 4세부터 받아줘요. 월 S$120–260 (J H Kim 등) — 한국 문화를 이어주는 자연스러운 연결고리예요." },
           url: "https://smiletutor.sg/15-best-kids-martial-arts-classes-in-singapore-taekwondo-karate-judo-bjj-kids-mma-with-prices-trials/"
+        },
+        {
+          name: { en: "Keeping up the Korean curriculum (귀국 대비)", ko: "한국 교과 유지 (귀국 대비)" },
+          detail: {
+            en: "If a return to Korea is on the horizon: SKIS's Saturday Hangul School covers language and culture, Kumon runs centres across the island for math habits, Korean-curriculum tutors (국어·수학 진도) are found through the 한국촌 tutoring board, and EBS/인강 stream fine from here.",
+            ko: "귀국을 염두에 둔다면: 한국어·문화는 토요한글학교(SKIS)로 챙기고, 수학 습관은 싱가포르 전역에 센터가 있는 구몬(Kumon)도 방법이에요. 한국 교과 진도(국어·수학) 과외는 한국촌 과외 게시판에서 구하는 게 정석이고, EBS·인강도 여기서 잘 돌아가요."
+          },
+          url: "https://www.hankookchon.com/"
         }
       ],
       budget: {
@@ -1917,6 +1921,76 @@ var CONTENT = {
     ]
   },
 
+  /* Healthcare — qualitative guide; fee figures are unresearched ballparks (~, verify) */
+  health: {
+    title: { en: "Healthcare", ko: "의료" },
+    intro: {
+      en: "Figure out the medical system before you need it. Private care here is excellent and fast — and fee-for-service, so check what your employer's insurance covers first (DP holders have no access to the public MediShield scheme).",
+      ko: "아프기 전에 의료 시스템부터 파악해 두세요. 이곳 사립 의료는 수준 높고 빠르지만 전부 건별 유료라서, 회사 보험이 무엇을 보장하는지부터 확인하는 게 순서예요 (DP 소지자는 공공 MediShield 대상이 아니에요)."
+    },
+    items: [
+      {
+        title: { en: "Everyday illness — GP first", ko: "가벼운 병 — 동네 GP부터" },
+        body: {
+          en: "GP (general practitioner) clinics sit in every neighbourhood mall — walk in, no appointment; a private consult with simple meds runs ~S$50–80. Public polyclinics are cheaper but queue-heavy and priced for residents. Telemedicine apps (Doctor Anywhere, WhiteCoat) do video consults with meds delivered — handy with a feverish kid at home.",
+          ko: "GP(일반의) 클리닉이 동네 몰마다 있어요 — 예약 없이 바로 가면 되고, 진료+기본 약 포함 약 S$50–80이에요. 공공 폴리클리닉은 더 싸지만 대기가 길고 요금 체계가 거주자 중심이에요. 원격진료 앱(Doctor Anywhere, WhiteCoat)은 화상 진료 후 약을 배달해 줘요 — 아이가 집에서 열날 때 유용해요."
+        },
+        verify: true
+      },
+      {
+        title: { en: "Kids — paediatricians", ko: "아이 — 소아과" },
+        body: {
+          en: "Private paediatricians (PD) cluster around Novena (the medical hub), Mount Elizabeth and neighbourhood medical centres; consults run ~S$120–180. Many families use a GP for routine bugs and a PD for anything worrying. Vaccination records live in the NIR — see the First 30 days checklist.",
+          ko: "사립 소아과(PD)는 노베나(의료 허브), Mount Elizabeth, 동네 메디컬센터에 몰려 있고 진료비는 약 S$120–180이에요. 평소 잔병은 GP, 걱정되는 건 소아과로 나눠 다니는 집이 많아요. 예방접종 기록은 NIR로 관리돼요 — 첫 30일 체크리스트를 참고하세요."
+        },
+        verify: true
+      },
+      {
+        title: { en: "Emergencies — where to run", ko: "응급 — 어디로 달려갈까" },
+        body: {
+          en: "For children, KKH Children's Emergency is the 24-hour default (NUH runs one too); the attendance fee alone is roughly ~S$150+, treatment extra. Private 24-hour A&Es: Mount Elizabeth (Orchard & Novena), Gleneagles, Raffles Hospital. In a real emergency call 995 — the SCDF ambulance is free for genuine emergencies; 1777 books a private non-emergency ambulance.",
+          ko: "아이는 KKH 아동 응급실이 24시간 기본값이에요(NUH에도 있어요). 접수비만 대략 S$150+이고 치료비는 별도예요. 사립 24시간 응급실은 Mount Elizabeth(오차드·노베나), Gleneagles, Raffles Hospital. 진짜 응급이면 995 — SCDF 구급차는 실제 응급 상황이면 무료예요. 비응급 이송은 1777(민간 구급차)이에요."
+        },
+        verify: true
+      },
+      {
+        title: { en: "Korean-language care", ko: "한국어 진료" },
+        body: {
+          en: "There's no Korean hospital, but Korean-speaking GPs and clinics cluster around Tanjong Pagar and Orchard — they change over time, so check the 한국촌 business directory or the Korean Embassy's medical listings for current ones. The big private hospitals all run international patient centres where an interpreter can be arranged.",
+          ko: "한국 병원은 없지만, 한국어 가능한 GP·클리닉이 탄종 파가와 오차드 주변에 모여 있어요 — 바뀌는 곳들이라 최신 목록은 한국촌 업소록이나 대사관 의료기관 안내에서 확인하세요. 대형 사립병원에는 국제환자센터가 있어 통역을 요청할 수 있어요."
+        },
+        verify: true,
+        url: "https://www.hankookchon.com/"
+      },
+      {
+        title: { en: "Pharmacies & meds from Korea", ko: "약국 · 한국에서 가져올 약" },
+        body: {
+          en: "Guardian, Watsons and Unity are in every mall; fever meds and basics are over-the-counter. Bring a supply of any regular Korean prescription meds together with the prescription or 소견서 — and note that familiar Korean over-the-counter combos go by different names here (ask the pharmacist).",
+          ko: "Guardian, Watsons, Unity 약국이 몰마다 있어요. 해열제 같은 기본 약은 처방 없이 살 수 있어요. 상시 복용하는 한국 처방약은 처방전이나 소견서와 함께 넉넉히 챙겨 오세요. 한국에서 쓰던 상비약은 여기선 이름이 다를 수 있으니 약사에게 물어보면 돼요."
+        }
+      },
+      {
+        title: { en: "Insurance, one more time", ko: "보험, 한 번 더" },
+        body: {
+          en: "Everything above is fee-for-service. Check the employer package first — dependants aren't always included — and see Monthly costs for what international family plans run.",
+          ko: "위의 모든 게 건별 유료예요. 회사 보험 패키지부터 확인하세요(가족이 빠져 있는 경우도 있어요). 국제 가족보험 비용 감각은 월 생활비 섹션에 있어요."
+        }
+      }
+    ],
+    numbersTitle: { en: "Emergency numbers", ko: "긴급 연락처" },
+    numbers: [
+      { num: "995", desc: { en: "Ambulance & fire (SCDF)", ko: "구급차·소방 (SCDF)" } },
+      { num: "999", desc: { en: "Police", ko: "경찰" } },
+      { num: "1777", desc: { en: "Non-emergency private ambulance", ko: "비응급 민간 구급차" } },
+      { num: "+82-2-3210-0404", desc: { en: "영사콜센터 — 24h Korean consular hotline", ko: "영사콜센터 — 24시간 영사 상담" } },
+      { num: "+65-6256-1101", desc: { en: "Korean Embassy, Singapore (47 Scotts Road)", ko: "주싱가포르 대한민국대사관 (47 Scotts Road)" }, verify: true }
+    ],
+    feeNote: {
+      en: "Fee figures in this section are unresearched ballparks — confirm with the clinic or hospital.",
+      ko: "이 섹션의 진료비는 조사 전의 대략적인 감이에요 — 병원에 직접 확인하세요."
+    }
+  },
+
   car: {
     title: { en: "The car question", ko: "자동차, 살까 말까" },
     coe: {
@@ -1945,7 +2019,31 @@ var CONTENT = {
       ],
       srcUrl: "https://www.smartcalculator.sg/articles/how-much-car-cost-singapore-2026"
     },
-    altTitle: { en: "Getting around without a car — Grab, taxi, MRT", ko: "차 없이 다니기 — Grab · 택시 · MRT" },
+    altTitle: { en: "Getting around without a car — MRT, bus, taxi", ko: "차 없이 다니기 — MRT · 버스 · 택시" },
+    alternatives: [
+      {
+        title: { en: "MRT & buses — the default", ko: "MRT · 버스 — 기본값" },
+        body: {
+          en: "The MRT is fast, air-conditioned and reaches every area in this guide; fares run S$1.20–2.80 and young kids ride free (SimplyGo and child cards are in the checklist). Buses tap in with the same card, transfers price as one journey, and feeder buses cover the last stretch inside estates — slower than the train, but they go everywhere. Trains run every few minutes at peak and stop around midnight.",
+          ko: "MRT는 빠르고 시원하고, 이 가이드의 모든 동네에 닿아요. 요금은 S$1.20–2.80이고 어린 아이는 무료예요(SimplyGo와 아동 카드는 체크리스트에 있어요). 버스는 같은 카드로 타고 환승해도 한 번의 요금으로 계산돼요. 단지 안쪽 마지막 구간은 피더버스가 이어줘요 — 기차보다 느리지만 안 가는 곳이 없어요. 출퇴근 시간 배차는 몇 분 간격이고, 자정쯤 끊겨요."
+        }
+      },
+      {
+        title: { en: "Taxis & ride-hailing — the apps and the money", ko: "택시 · 호출 앱 — 앱과 비용" },
+        body: {
+          en: "Grab dominates; CDG Zig books ComfortDelGro taxis (child-seat-exempt — the go-to with small kids); Gojek, TADA and Ryde are worth installing as backups for when Grab surges. Money feel: cross-town rides run S$8–18, taxi flagdown starts around ~S$4–5 with peak, late-night and location surcharges on top, and an airport run is roughly ~S$25–40 depending on the hour. Rain and rush hour mean surge pricing and longer waits everywhere.",
+          ko: "Grab이 압도적이고, CDG Zig로는 ComfortDelGro 택시를 불러요(카시트 면제라 어린 아이 동반 이동의 정석이에요). Gojek, TADA, Ryde는 Grab이 비쌀 때를 대비해 백업으로 깔아두면 좋아요. 비용 감각: 시내 횡단은 S$8–18, 택시 기본요금은 약 S$4–5에 피크·심야·장소 할증이 붙고, 공항까지는 시간대에 따라 대략 S$25–40이에요. 비 오는 날과 러시아워엔 어디서나 요금이 오르고 대기가 길어져요."
+        },
+        verify: true
+      },
+      {
+        title: { en: "The farther out, the fewer cabs", ko: "외곽일수록 택시가 귀해요" },
+        body: {
+          en: "Ride availability tracks density. In town a car is minutes away; in Hillview, Woodlands or Sentosa at peak or late night, expect longer waits and the occasional failed booking. If you're shortlisting a quieter outer area, weight the MRT walk more heavily — the train doesn't surge.",
+          ko: "호출 성공률은 인구 밀도를 따라가요. 시내에선 몇 분이면 잡히지만, Hillview·Woodlands·Sentosa 같은 곳은 피크나 심야에 대기가 길어지고 가끔 배차가 실패하기도 해요. 조용한 외곽 동네를 고려한다면 MRT 도보 거리를 더 무겁게 보세요 — 지하철은 할증이 없어요."
+        }
+      }
+    ],
     childSeats: {
       title: { en: "Child seats — kids under 1.35m", ko: "카시트 — 키 1.35m 미만 아이들" },
       body: {
@@ -1988,6 +2086,33 @@ var CONTENT = {
       en: "A realistic monthly budget, modelled on a family of four with two preschoolers — scale it to your situation. Low = anchor preschool + value area; High = mid-tier preschool + pricier area.",
       ko: "미취학 아이 둘이 있는 4인 가족을 모델로 한 현실적인 월 예산이에요 — 각자 상황에 맞게 조정하세요. Low는 앵커 유치원 + 실속 지역, High는 중가 사립 유치원 + 비싼 지역 기준이에요."
     },
+    rent: {
+      title: { en: "Rent — budget by housing type", ko: "월세 — 주거 형태별 예산" },
+      intro: {
+        en: "Rent is the variable that dwarfs everything else, so it lives outside the snapshot. Ranges below span the whole island — the Area table shows where each neighbourhood lands within them.",
+        ko: "월세는 다른 모든 항목을 압도하는 변수라 스냅샷과 분리했어요. 아래 범위는 섬 전체 기준이고, 각 동네가 범위의 어디쯤인지는 동네 표에서 확인할 수 있어요."
+      },
+      cols: {
+        type: { en: "Housing type", ko: "주거 형태" },
+        range: { en: "Monthly range", ko: "월세 범위" },
+        note: { en: "Note", ko: "메모" }
+      },
+      rows: [
+        { type: { en: "HDB 3-room (~700 sqft)", ko: "HDB 3룸 (~700sqft)" }, range: "~S$2,600–3,400", rough: true, note: { en: "Compact, but daily life sits downstairs", ko: "작지만 생활 인프라가 아래층에 있어요" } },
+        { type: { en: "HDB 4/5-room", ko: "HDB 4·5룸" }, range: "S$3,250–4,400", note: { en: "Researched estate medians (Q2 2025)", ko: "단지별 중위값 조사치 (2025년 2분기)" } },
+        { type: { en: "Condo 3BR", ko: "콘도 3BR" }, range: "S$3,900–10,000+", note: { en: "Hillview cheapest of the researched areas; Holland V and Orchard-side top the band", ko: "조사 지역 중 Hillview가 최저, Holland V·오차드 쪽이 최고예요" } },
+        { type: { en: "Condo 4BR+", ko: "콘도 4BR+" }, range: "~S$5,500–15,000", rough: true, note: { en: "Family-sized new stock is scarce — see the helper's-room rule", ko: "가족형 신축은 귀해요 — 헬퍼룸 공식 참고" } },
+        { type: { en: "Landed — terrace / semi-D", ko: "단독 — 테라스·세미디" }, range: "S$6,500–22,000", note: { en: "The east runs roughly half of Bukit Timah D10 prices", ko: "동부가 부킷 티마 D10의 대략 절반 수준이에요" } },
+        { type: { en: "Cluster house", ko: "클러스터 하우스" }, range: "S$9,000–18,500", note: { en: "Landed space + condo facilities; thin supply", ko: "단독의 공간 + 콘도 시설; 공급이 적어요" } },
+        { type: { en: "Good Class Bungalow", ko: "GCB (최상급 단독)" }, range: "S$16,000–100,000+", note: { en: "Listed for completeness", ko: "참고용이에요" } },
+        { type: { en: "Serviced apartment", ko: "서비스드 아파트" }, range: { en: "hotel-priced", ko: "호텔급 요금" }, note: { en: "The first 1–2 months while house-hunting", ko: "집 구하는 첫 1–2개월용" } }
+      ],
+      note: {
+        en: "Whole-island asking ranges (Aug 2026); ~ marks unresearched ballparks. Deposits, agent fees and stamp duty live in the renting box.",
+        ko: "섬 전체 호가 범위(2026년 8월)예요. ~ 표시는 조사 전의 감이에요. 보증금·중개 수수료·인지세는 임대 박스에 있어요."
+      }
+    },
+    snapshotTitle: { en: "The monthly snapshot (excluding rent)", ko: "월 스냅샷 (월세 제외)" },
     cols: {
       item: { en: "Item", ko: "항목" },
       low: { en: "Low", ko: "낮게" },
@@ -1995,7 +2120,6 @@ var CONTENT = {
       note: { en: "Note", ko: "메모" }
     },
     rows: [
-      { item: { en: "Rent (3BR)", ko: "월세 (3BR)" }, low: "S$4,000", high: "S$8,000+", note: { en: "By sub-area (see Where to live): Hillview from ~S$3,900, Holland V/Newton up to S$8,000+; the HDB route is S$3,300–4,400", ko: "동네에 따라 달라요(어디에 살까 참고): Hillview는 약 S$3,900부터, Holland V·Newton은 S$8,000+까지; HDB 노선이면 S$3,300–4,400" } },
       { item: { en: "Preschool ×2", ko: "유치원 ×2" }, low: "S$2,400", high: "S$5,200", note: { en: "Anchor vs mid-tier; the SKIS route is ~S$2,240", ko: "앵커 vs 중가 사립; SKIS 노선이면 약 S$2,240" } },
       { item: { en: "Helper, all-in", ko: "헬퍼 총비용" }, low: "S$1,150", high: "S$1,550", note: { en: "Salary + levy + insurance + food/lodging", ko: "급여+부담금+보험+생활비 포함" } },
       { item: { en: "Groceries", ko: "장보기" }, low: "S$500", high: "S$700", note: { en: "+10–20% if buying Korean imports", ko: "한국 수입품 위주면 +10–20%" } },
@@ -2007,12 +2131,33 @@ var CONTENT = {
       { item: { en: "Enrichment ×2", ko: "사교육 ×2" }, low: "S$0", high: "S$1,400", note: { en: "Optional; S$300–700 per child", ko: "선택사항; 아이당 S$300–700" } }
     ],
     total: {
-      item: { en: "Total excluding rent", ko: "월세 제외 합계" },
+      item: { en: "Total", ko: "합계" },
       low: "~S$5,000",
       high: "~S$12,000",
       note: { en: "Typical mid case with employer insurance ≈ S$6,500–8,000", ko: "회사 보험이 있는 일반적인 중간 케이스는 약 S$6,500–8,000이에요" }
     },
-    insuranceUrl: "https://www.pacificprime.com/blog/health-insurance-cost-in-singapore.html"
+    insuranceUrl: "https://www.pacificprime.com/blog/health-insurance-cost-in-singapore.html",
+    moneyBox: {
+      title: { en: "Money between Korea and Singapore", ko: "한국 ↔ 싱가포르 돈 관리" },
+      items: [
+        {
+          en: "Remittance: won moves via specialist transfer services (Wise and similar) far cheaper than bank wires — compare the live exchange-rate margin, not the advertised fee. PayNow and Korean instant transfers don't interconnect.",
+          ko: "송금: 원화는 은행 전신송금보다 Wise 같은 전문 송금 서비스가 훨씬 저렴해요 — 광고 수수료가 아니라 실제 적용 환율 마진을 비교하세요. PayNow와 한국 간편이체는 서로 연결되지 않아요."
+        },
+        {
+          en: "Korean tax: leaving Korea doesn't automatically end Korean tax duties — Korean-source income (rent, business) is still reported in Korea, and the Korea–Singapore double-tax treaty prevents paying twice. Residency status (거주자/비거주자) drives everything, so book one session with a 세무사 before departure.",
+          ko: "한국 세금: 출국해도 한국 세금 의무가 자동으로 끝나지 않아요 — 한국 원천 소득(임대·사업 등)은 계속 한국에 신고하고, 한·싱 이중과세방지협정이 이중 납부를 막아줘요. 모든 건 거주자/비거주자 판정에 달려 있으니, 출국 전에 세무사 상담을 한 번 받아두세요."
+        },
+        {
+          en: "Banking hygiene: keep one Korean account and card alive (공동인증서/OTP included) — Korean apps, banks and 정부24 still matter from abroad.",
+          ko: "은행 정리: 한국 계좌와 카드 하나는 살려두세요(공동인증서·OTP 포함) — 해외에서도 한국 앱, 은행, 정부24를 쓸 일이 계속 생겨요."
+        }
+      ],
+      note: {
+        en: "Directions, not advice — rules change; confirm with your bank and a tax professional.",
+        ko: "참고용 방향이지 자문이 아니에요 — 규정은 바뀌니 은행과 세무 전문가에게 확인하세요."
+      }
+    }
   },
 
   footer: {

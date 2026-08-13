@@ -678,6 +678,12 @@ a.atlas-badge.researched:hover { background: var(--accent); color: var(--bg); }
 #site-footer h3 { font-size: 1rem; color: var(--ink); margin-top: 1.6em; }
 .footer-updated { font-weight: 700; color: var(--ink); }
 .footer-fx-note { color: var(--accent); font-weight: 700; font-size: 0.85rem; }
+.footer-emergency { border-top: 1px dashed var(--line); padding-top: 0.8rem; margin-top: 1.4rem; }
+.footer-emergency strong { color: var(--ink); }
+
+.emergency-list { list-style: none; padding: 0; }
+.emergency-list li { padding: 0.2em 0; }
+.emergency-list strong { color: var(--accent); font-variant-numeric: tabular-nums; }
 .sources-list { columns: 2; list-style: none; padding: 0; }
 .sources-list li { break-inside: avoid; }
 @media (max-width: 480px) { .sources-list { columns: 1; } }
