@@ -436,53 +436,71 @@
     return box;
   }
 
-  /* ---------- school directory (filterable) ---------- */
+  /* ---------- school directory (own page, multi-pick filters) ---------- */
 
-  var schoolFilters = { stage: "all", type: "all", system: "all" };
+  // multi-pick sets per group: {pre: true, ...}; empty object = no filter (show all)
+  var schoolFilters = { stage: {}, kind: {}, tier: {}, fee: {} };
+  var schoolSort = "default";
 
-  function renderSchools() {
+  function feeBandOf(feeYr) {
+    var bands = CONTENT.education.schools.feeBands;
+    var keys = Object.keys(bands);
+    for (var i = 0; i < keys.length; i++) {
+      if (feeYr <= bands[keys[i]].max) return keys[i];
+    }
+    return keys[keys.length - 1];
+  }
+
+  function renderSchools(main) {
     var sc = CONTENT.education.schools;
 
     var tbody = h("tbody");
     var count = h("p", { class: "table-note", role: "status" });
 
+    function activeIn(group) { return Object.keys(schoolFilters[group]); }
+
     function rebuild() {
       tbody.innerHTML = "";
-      var shown = 0;
-      sc.rows.forEach(function (r) {
-        if (schoolFilters.stage !== "all" && r.stage !== schoolFilters.stage) return;
-        if (schoolFilters.type !== "all" && r.type !== schoolFilters.type) return;
-        if (schoolFilters.system !== "all" && r.system !== schoolFilters.system) return;
-        shown++;
+      var stages = activeIn("stage"), kinds = activeIn("kind"),
+          tiers = activeIn("tier"), fees = activeIn("fee");
+      var rows = sc.rows.filter(function (r) {
+        if (stages.length && !schoolFilters.stage[r.stage]) return false;
+        if (kinds.length && !schoolFilters.kind[r.kind]) return false;
+        if (tiers.length && !(r.tier && schoolFilters.tier[r.tier])) return false;
+        if (fees.length && !schoolFilters.fee[feeBandOf(r.feeYr)]) return false;
+        return true;
+      });
+      if (schoolSort === "feeAsc") rows = rows.slice().sort(function (a, b) { return a.feeYr - b.feeYr; });
+      if (schoolSort === "feeDesc") rows = rows.slice().sort(function (a, b) { return b.feeYr - a.feeYr; });
+      rows.forEach(function (r) {
         tbody.appendChild(h("tr", {},
           h("th", { scope: "row", text: t(r.name) }),
           h("td", { text: t(sc.stages[r.stage]) }),
-          h("td", { text: t(sc.types[r.type]) }),
-          h("td", {}, h("span", { text: t(sc.systemNames[r.system]) + " " }), r.systemVerify ? verifyBadge() : null),
+          h("td", {}, h("span", { text: t(sc.kinds[r.kind]) + " " }), r.kindVerify ? verifyBadge() : null),
+          h("td", { text: r.tier ? t(sc.tiers[r.tier]) : "—" }),
           h("td", {}, h("span", { text: t(r.fees) + " " }), r.verify ? verifyBadge() : null),
           h("td", { text: t(r.waitlist) }),
           h("td", { text: t(r.location) })
         ));
       });
-      count.textContent = shown + " / " + sc.rows.length + " " + t(sc.countLabel);
+      count.textContent = rows.length + " / " + sc.rows.length + " " + t(sc.countLabel);
     }
 
-    function filterRow(groupKey, options) {
+    function filterRow(groupKey, labelsObj) {
       var row = h("div", { class: "filter-row" },
         h("span", { class: "filter-label", text: t(sc.filterGroups[groupKey]) }));
       var group = h("div", { class: "chips filter-chips" });
-      var opts = [{ id: "all", label: sc.all }].concat(options);
-      opts.forEach(function (o) {
+      Object.keys(labelsObj).forEach(function (id) {
         var chip = h("button", {
           type: "button",
-          class: "chip filter-chip" + (schoolFilters[groupKey] === o.id ? " nice" : ""),
-          "aria-pressed": schoolFilters[groupKey] === o.id ? "true" : "false",
-          text: t(o.label),
+          class: "chip filter-chip" + (schoolFilters[groupKey][id] ? " nice" : ""),
+          "aria-pressed": schoolFilters[groupKey][id] ? "true" : "false",
+          text: t(labelsObj[id]),
           onclick: function () {
-            schoolFilters[groupKey] = o.id;
-            group.querySelectorAll(".chip").forEach(function (c) { c.classList.remove("nice"); c.setAttribute("aria-pressed", "false"); });
-            chip.classList.add("nice");
-            chip.setAttribute("aria-pressed", "true");
+            if (schoolFilters[groupKey][id]) delete schoolFilters[groupKey][id];
+            else schoolFilters[groupKey][id] = true;
+            chip.classList.toggle("nice", !!schoolFilters[groupKey][id]);
+            chip.setAttribute("aria-pressed", schoolFilters[groupKey][id] ? "true" : "false");
             rebuild();
           }
         });
@@ -492,28 +510,48 @@
       return row;
     }
 
-    function toOptions(obj) {
-      return Object.keys(obj).map(function (k) { return { id: k, label: obj[k] }; });
-    }
+    var feeBandLabels = {};
+    Object.keys(sc.feeBands).forEach(function (k) { feeBandLabels[k] = sc.feeBands[k].label; });
+
+    var sortChips = h("div", { class: "chips filter-chips" });
+    Object.keys(sc.sorts).forEach(function (s) {
+      var chip = h("button", {
+        type: "button",
+        class: "chip filter-chip" + (schoolSort === s ? " nice" : ""),
+        "aria-pressed": schoolSort === s ? "true" : "false",
+        text: t(sc.sorts[s]),
+        onclick: function () {
+          schoolSort = s;
+          sortChips.querySelectorAll(".chip").forEach(function (c) { c.classList.remove("nice"); c.setAttribute("aria-pressed", "false"); });
+          chip.classList.add("nice");
+          chip.setAttribute("aria-pressed", "true");
+          rebuild();
+        }
+      });
+      sortChips.appendChild(chip);
+    });
 
     rebuild();
-    var body = h("div", {},
+    main.appendChild(h("section", { id: "schools", class: "section", "aria-labelledby": "schools-title" },
+      sectionHeader("schools", sc.title, "⚑"),
       h("p", { class: "section-intro", text: t(sc.intro) }),
-      filterRow("stage", toOptions(sc.stages)),
-      filterRow("type", toOptions(sc.types)),
-      filterRow("system", toOptions(sc.systemNames)),
+      filterRow("stage", sc.stages),
+      filterRow("kind", sc.kinds),
+      filterRow("tier", sc.tiers),
+      filterRow("fee", feeBandLabels),
+      h("div", { class: "filter-row" }, h("span", { class: "filter-label", text: t(sc.sortLabel) }), sortChips),
       count,
       h("div", { class: "table-wrap" }, h("table", { class: "data-table schools-table" },
         h("thead", {}, h("tr", {},
           h("th", { text: t(sc.cols.name) }), h("th", { text: t(sc.cols.stage) }),
-          h("th", { text: t(sc.cols.type) }), h("th", { text: t(sc.cols.system) }),
+          h("th", { text: t(sc.cols.kind) }), h("th", { text: t(sc.cols.tier) }),
           h("th", { text: t(sc.cols.fees) }), h("th", { text: t(sc.cols.waitlist) }),
           h("th", { text: t(sc.cols.location) })
         )),
         tbody
-      ))
-    );
-    return sub("edu-schools", sc.title, body);
+      )),
+      h("p", { class: "table-note", text: t(sc.tierNote) })
+    ));
   }
 
   function renderEducation(main) {
@@ -522,7 +560,7 @@
       sectionHeader("education", ed.title, "✎"));
 
     section.appendChild(renderCalculator());
-    section.appendChild(renderSchools());
+    section.appendChild(h("p", {}, h("a", { class: "btn-link", href: "#schools", text: t(ed.directoryLink) })));
 
     /* preschool */
     var ps = ed.preschool;
@@ -1426,6 +1464,7 @@
     renderHero(main);
     renderHome(main);
     renderEducation(main);
+    renderSchools(main);
     renderLiving(main);
     renderCommunity(main);
     renderChurch(main);
