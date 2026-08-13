@@ -72,7 +72,8 @@ var CONTENT = {
       subs: [
         { id: "living-overview", label: { en: "Overview", ko: "개요" } },
         { id: "living-picker", label: { en: "Priorities", ko: "우선순위" } },
-        { id: "living-compare", label: { en: "Compare", ko: "비교표" } },
+        { id: "living-table", label: { en: "All areas", ko: "전체 표" } },
+        { id: "living-compare", label: { en: "Shortlist", ko: "후보 비교" } },
         { id: "sg-map", label: { en: "Map", ko: "지도" } },
         { id: "living-atlas", label: { en: "Neighbourhoods", ko: "동네별" } },
         { id: "renting-box", label: { en: "Renting", ko: "임대 절차" } }
@@ -1069,9 +1070,77 @@ var CONTENT = {
       ]
     },
 
+    /* All-areas table — every atlas neighbourhood with indicative prices, stock mix
+       and commute estimates to user-set work/school anchors. Prices on rows marked
+       rough:true are BALLPARKS to structure thinking, not researched figures. */
+    areaTable: {
+      title: { en: "Every area at a glance", ko: "전체 동네 한눈에 보기" },
+      intro: {
+        en: "Set your own work and school anchors below — commutes recompute for every row. Prices marked ~ are unresearched ballparks (averages to orient by, not quotes); rows without ~ carry researched Aug 2026 figures. Stock columns show roughly how much of each housing type an area has.",
+        ko: "아래에 직장과 학교 주소를 직접 넣어 보세요 — 모든 행의 통근 시간이 다시 계산돼요. ~ 표시가 붙은 가격은 조사 전의 대략적인 감(見) 잡기용 평균이고, ~ 없는 행은 2026년 8월 조사 수치예요. 주거 형태 열은 그 동네에 각 유형이 얼마나 있는지를 보여줘요."
+      },
+      estNote: {
+        en: "Commutes are straight-line estimates calibrated against researched door-to-door times (±10 min) — good for comparing areas, not for planning a specific trip. Address lookup uses the Singapore government's free OneMap service.",
+        ko: "통근 시간은 실측 조사값에 맞춰 보정한 직선거리 기반 추정치예요(±10분) — 동네끼리 비교하는 용도이지, 특정 이동 계획용은 아니에요. 주소 검색은 싱가포르 정부의 무료 OneMap 서비스를 써요."
+      },
+      workLabel: { en: "Work address / postcode", ko: "직장 주소 · 우편번호" },
+      schoolLabel: { en: "School address / postcode", ko: "학교 주소 · 우편번호" },
+      setLabel: { en: "Set", ko: "설정" },
+      resetLabel: { en: "Defaults", ko: "기본값" },
+      workDefaultName: { en: "Marina One (default)", ko: "Marina One (기본값)" },
+      schoolDefaultName: { en: "SKIS (default)", ko: "SKIS (기본값)" },
+      resolveError: { en: "Address not found — try a postcode", ko: "주소를 찾지 못했어요 — 우편번호로 시도해 보세요" },
+      lookupOffline: { en: "Lookup unavailable (offline?) — using defaults", ko: "검색을 사용할 수 없어요(오프라인?) — 기본값을 사용해요" },
+      sortLabel: { en: "Sort", ko: "정렬" },
+      sorts: {
+        default: { en: "Default", ko: "기본" },
+        br3: { en: "3BR price", ko: "3BR 가격" },
+        br4: { en: "4BR price", ko: "4BR 가격" },
+        work: { en: "Work commute", ko: "직장 통근" },
+        school: { en: "School commute", ko: "학교 통근" }
+      },
+      cols: {
+        district: { en: "District", ko: "구역" },
+        area: { en: "Area", ko: "지역" },
+        br3: { en: "3BR (avg)", ko: "3BR (평균)" },
+        br4: { en: "4BR (avg)", ko: "4BR (평균)" },
+        work: { en: "To work (MRT, est.)", ko: "직장까지 (MRT, 추정)" },
+        school: { en: "To school (drive, est.)", ko: "학교까지 (차량, 추정)" },
+        condo: { en: "Condo", ko: "콘도" },
+        hdb: { en: "HDB", ko: "HDB" },
+        landed: { en: "Landed", ko: "단독" }
+      },
+      stockNote: {
+        en: "Stock: ●●● lots · ●● some · ● a little · — basically none. Rough characterisations, not counts.",
+        ko: "주거 형태: ●●● 많음 · ●● 어느 정도 · ● 조금 · — 거의 없음. 개수가 아니라 대략적인 성격이에요."
+      },
+      /* rows reference atlas entries by id for names/links; lat/lng are area centroids */
+      rows: [
+        { id: "beauty-world", district: "D21", lat: 1.3410, lng: 103.7758, br3: 5500, br4: 8500, condo: 2, hdb: 0, landed: 2 },
+        { id: "kap-sixth", district: "D10/21", lat: 1.3315, lng: 103.7970, br3: 6800, br4: 10000, condo: 1, hdb: 0, landed: 3 },
+        { id: "hillview", district: "D23", lat: 1.3624, lng: 103.7674, br3: 4400, br4: null, condo: 2, hdb: 1, landed: 2 },
+        { id: "clementi-bv", district: "D5", lat: 1.3120, lng: 103.7700, br3: 6000, br4: 9500, condo: 2, hdb: 3, landed: 1 },
+        { id: "holland-v", district: "D10", lat: 1.3115, lng: 103.7960, br3: 7500, br4: 12500, condo: 3, hdb: 1, landed: 2 },
+        { id: "east-coast", district: "D15", lat: 1.3030, lng: 103.9050, br3: 6500, br4: 9500, condo: 3, hdb: 2, landed: 2 },
+        { id: "newton-novena", district: "D11", lat: 1.3165, lng: 103.8420, br3: 7200, br4: 9500, condo: 3, hdb: 0, landed: 0 },
+        { id: "river-valley", district: "D9", lat: 1.2935, lng: 103.8330, br3: 8500, br4: 13000, rough: true, condo: 3, hdb: 0, landed: 0 },
+        { id: "orchard-tanglin", district: "D9/10", lat: 1.3050, lng: 103.8250, br3: 9500, br4: 15000, rough: true, condo: 3, hdb: 0, landed: 1 },
+        { id: "tiong-bahru", district: "D3", lat: 1.2860, lng: 103.8270, br3: 6500, br4: 9000, rough: true, condo: 2, hdb: 3, landed: 0 },
+        { id: "tanjong-rhu", district: "D15", lat: 1.2960, lng: 103.8760, br3: 6500, br4: 9000, rough: true, condo: 3, hdb: 1, landed: 1 },
+        { id: "thomson", district: "D20/26", lat: 1.3540, lng: 103.8330, br3: 5500, br4: 8000, rough: true, condo: 2, hdb: 2, landed: 3 },
+        { id: "serangoon", district: "D19", lat: 1.3640, lng: 103.8660, br3: 5000, br4: 7000, rough: true, condo: 1, hdb: 2, landed: 3 },
+        { id: "pasir-panjang", district: "D5", lat: 1.2760, lng: 103.7910, br3: 5500, br4: 8000, rough: true, condo: 2, hdb: 1, landed: 1 },
+        { id: "bishan-amk", district: "D20", lat: 1.3610, lng: 103.8480, br3: 5000, br4: 7000, rough: true, condo: 2, hdb: 3, landed: 1 },
+        { id: "tampines", district: "D18", lat: 1.3530, lng: 103.9440, br3: 4500, br4: 6500, rough: true, condo: 2, hdb: 3, landed: 1 },
+        { id: "woodlands", district: "D25", lat: 1.4360, lng: 103.7860, br3: 3800, br4: 5500, rough: true, condo: 1, hdb: 3, landed: 1 },
+        { id: "sentosa", district: "D4", lat: 1.2490, lng: 103.8300, br3: 9000, br4: 14000, rough: true, condo: 2, hdb: 0, landed: 2 },
+        { id: "bukit-batok", district: "D23", lat: 1.3590, lng: 103.7500, br3: 4200, br4: 6000, rough: true, condo: 2, hdb: 3, landed: 1 }
+      ]
+    },
+
     /* §3.4 — comparison table (7 rows; commutes are estimates) */
     comparison: {
-      title: { en: "The sub-areas at a glance", ko: "후보 동네 한눈에 보기" },
+      title: { en: "The researched shortlist, compared", ko: "조사된 후보 동네 비교" },
       note: { en: "Aug 2026 asking rents; commute times are door-to-door estimates.", ko: "2026년 8월 호가 기준이고, 통근 시간은 문앞 기준 추정치예요." },
       cols: {
         area: { en: "Area (district)", ko: "지역 (구역)" },

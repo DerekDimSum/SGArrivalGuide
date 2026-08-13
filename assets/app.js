@@ -857,6 +857,179 @@
     );
   }
 
+  /* ---------- all-areas table (work/school anchors + commute estimates) ---------- */
+
+  var ANCHORS_KEY = "sgguide:anchors";
+  var tableSort = "default";
+
+  function haversineKm(a, b) {
+    var R = 6371, d2r = Math.PI / 180;
+    var dLat = (b.lat - a.lat) * d2r, dLng = (b.lng - a.lng) * d2r;
+    var s = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(a.lat * d2r) * Math.cos(b.lat * d2r) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
+    return 2 * R * Math.asin(Math.sqrt(s));
+  }
+  // heuristics calibrated against the researched door-to-door figures (§3.4)
+  function mrtMinutes(km) { return Math.max(10, Math.round((8 + 2.6 * km) / 5) * 5); }
+  function driveMinutes(km) { return Math.max(5, Math.round((4 + 1.8 * km) / 5) * 5); }
+
+  function defaultAnchors() {
+    var at = CONTENT.living.areaTable;
+    return {
+      work: { name: t(at.workDefaultName), lat: 1.2764, lng: 103.8540, isDefault: true },
+      school: { name: t(at.schoolDefaultName), lat: 1.3446, lng: 103.7780, isDefault: true }
+    };
+  }
+
+  function loadAnchors() {
+    var d = defaultAnchors();
+    try {
+      var saved = JSON.parse(localStorage.getItem(ANCHORS_KEY)) || {};
+      if (saved.work && !saved.work.isDefault) d.work = saved.work;
+      if (saved.school && !saved.school.isDefault) d.school = saved.school;
+    } catch (e) {}
+    return d;
+  }
+  function saveAnchors(anchors) {
+    try { localStorage.setItem(ANCHORS_KEY, JSON.stringify(anchors)); } catch (e) {}
+  }
+
+  function geocodeSG(query) {
+    var url = "https://www.onemap.gov.sg/api/common/elastic/search?searchVal=" +
+      encodeURIComponent(query) + "&returnGeom=Y&getAddrDetails=Y&pageNum=1";
+    return fetch(url).then(function (res) { return res.json(); }).then(function (data) {
+      var hit = data && data.results && data.results[0];
+      if (!hit) return null;
+      return { name: hit.SEARCHVAL || query, lat: parseFloat(hit.LATITUDE), lng: parseFloat(hit.LONGITUDE) };
+    });
+  }
+
+  function atlasById(id) {
+    var found = null;
+    CONTENT.living.atlas.entries.forEach(function (e) { if (e.id === id) found = e; });
+    return found;
+  }
+
+  function renderAreaTable() {
+    var at = CONTENT.living.areaTable;
+    var anchors = loadAnchors();
+
+    var tbody = h("tbody");
+
+    function dots(n) { return n ? "●●●".slice(0, n) : "—"; }
+    function price(row, key) {
+      var v = row[key];
+      if (v == null) return { en: "thin supply", ko: "매물 적음" };
+      return (row.rough ? "~" : "") + "S$" + v.toLocaleString("en-US");
+    }
+
+    function rebuild() {
+      tbody.innerHTML = "";
+      var rows = at.rows.map(function (row) {
+        return {
+          row: row,
+          work: mrtMinutes(haversineKm(row, anchors.work)),
+          school: driveMinutes(haversineKm(row, anchors.school))
+        };
+      });
+      if (tableSort !== "default") {
+        rows.sort(function (a, b) {
+          if (tableSort === "work" || tableSort === "school") return a[tableSort] - b[tableSort];
+          var av = a.row[tableSort], bv = b.row[tableSort];
+          return (av == null ? 1e9 : av) - (bv == null ? 1e9 : bv);
+        });
+      }
+      rows.forEach(function (r) {
+        var e = atlasById(r.row.id);
+        var href = e && e.cardId ? "#area-" + e.cardId : "#atlas-" + r.row.id;
+        tbody.appendChild(h("tr", { class: r.row.rough ? "row-rough" : null },
+          h("td", { text: r.row.district }),
+          h("th", { scope: "row" }, h("a", { href: href, text: e ? t(e.name) : r.row.id })),
+          h("td", { text: t(price(r.row, "br3")) }),
+          h("td", { text: t(price(r.row, "br4")) }),
+          h("td", { text: "~" + r.work + (lang === "ko" ? "분" : " min") }),
+          h("td", { text: "~" + r.school + (lang === "ko" ? "분" : " min") }),
+          h("td", { class: "stock-cell", text: dots(r.row.condo) }),
+          h("td", { class: "stock-cell", text: dots(r.row.hdb) }),
+          h("td", { class: "stock-cell", text: dots(r.row.landed) })
+        ));
+      });
+    }
+
+    function anchorField(key, labelLeaf) {
+      var input = h("input", { type: "text", placeholder: lang === "ko" ? "예: 018936" : "e.g. 018936" });
+      var status = h("span", { class: "anchor-status", text: anchors[key].name });
+      function resolve() {
+        var q = input.value.trim();
+        if (!q) return;
+        status.textContent = "…";
+        geocodeSG(q).then(function (pt) {
+          if (!pt || isNaN(pt.lat)) { status.textContent = t(at.resolveError); return; }
+          anchors[key] = pt;
+          saveAnchors(anchors);
+          status.textContent = pt.name;
+          rebuild();
+        }).catch(function () { status.textContent = t(at.lookupOffline); });
+      }
+      input.addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); resolve(); } });
+      return h("div", { class: "anchor-field" },
+        h("label", {}, h("span", { text: t(labelLeaf) }), input),
+        h("button", { type: "button", class: "reset-btn", text: t(at.setLabel), onclick: resolve }),
+        status
+      );
+    }
+
+    var sortChips = h("div", { class: "chips filter-chips" });
+    ["default", "br3", "br4", "work", "school"].forEach(function (s) {
+      var chip = h("button", {
+        type: "button",
+        class: "chip filter-chip" + (tableSort === s ? " nice" : ""),
+        "aria-pressed": tableSort === s ? "true" : "false",
+        text: t(at.sorts[s]),
+        onclick: function () {
+          tableSort = s;
+          sortChips.querySelectorAll(".chip").forEach(function (c) { c.classList.remove("nice"); c.setAttribute("aria-pressed", "false"); });
+          chip.classList.add("nice");
+          chip.setAttribute("aria-pressed", "true");
+          rebuild();
+        }
+      });
+      sortChips.appendChild(chip);
+    });
+
+    var resetBtn = h("button", {
+      type: "button", class: "reset-btn", text: t(at.resetLabel),
+      onclick: function () {
+        anchors = defaultAnchors();
+        saveAnchors(anchors);
+        renderAll(true);
+      }
+    });
+
+    rebuild();
+    return h("div", { id: "living-table", class: "area-table-block" },
+      h("h3", { text: t(at.title) }),
+      h("p", { class: "section-intro", text: t(at.intro) }),
+      h("div", { class: "anchor-fields" },
+        anchorField("work", at.workLabel),
+        anchorField("school", at.schoolLabel),
+        resetBtn
+      ),
+      h("div", { class: "filter-row" }, h("span", { class: "filter-label", text: t(at.sortLabel) }), sortChips),
+      h("div", { class: "table-wrap" }, h("table", { class: "data-table area-table" },
+        h("thead", {}, h("tr", {},
+          h("th", { text: t(at.cols.district) }), h("th", { text: t(at.cols.area) }),
+          h("th", { text: t(at.cols.br3) }), h("th", { text: t(at.cols.br4) }),
+          h("th", { text: t(at.cols.work) }), h("th", { text: t(at.cols.school) }),
+          h("th", { text: t(at.cols.condo) }), h("th", { text: t(at.cols.hdb) }), h("th", { text: t(at.cols.landed) })
+        )),
+        tbody
+      )),
+      h("p", { class: "table-note", text: t(at.stockNote) }),
+      h("p", { class: "table-note", text: t(at.estNote) })
+    );
+  }
+
   /* ---------- neighbourhood atlas ---------- */
 
   function renderAtlas() {
@@ -941,6 +1114,9 @@
 
     /* priorities picker */
     section.appendChild(renderPicker());
+
+    /* all-areas table */
+    section.appendChild(renderAreaTable());
 
     /* §3.4 comparison table */
     section.appendChild(h("h3", { id: "living-compare", text: t(lv.comparison.title) }));

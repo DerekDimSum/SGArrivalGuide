@@ -421,6 +421,24 @@ tbody tr:last-child th, tbody tr:last-child td { border-bottom: none; }
 .schools-table th[scope="row"] { min-width: 11em; }
 .schools-table td { min-width: 7em; }
 
+/* ---------- all-areas table ---------- */
+
+.area-table-block { margin: 2.2rem 0; }
+.anchor-fields { display: flex; flex-wrap: wrap; gap: 0.9rem 1.4rem; align-items: flex-end; margin: 0.9rem 0; }
+.anchor-field { display: flex; align-items: flex-end; gap: 0.5rem; flex-wrap: wrap; }
+.anchor-field label { display: flex; flex-direction: column; gap: 0.25em; font-size: 0.78rem; font-weight: 700; color: var(--ink-soft); }
+.anchor-field input {
+  font-family: var(--font-body); font-size: 0.95rem;
+  padding: 0.4em 0.7em; width: 13em;
+  border: 1.5px solid var(--line); border-radius: 8px;
+  background: var(--bg); color: var(--ink);
+}
+.anchor-status { font-size: 0.78rem; color: var(--accent); font-weight: 700; max-width: 14em; }
+.area-table th[scope="row"] { min-width: 10em; }
+.area-table td { white-space: nowrap; }
+.area-table .stock-cell { letter-spacing: 0.1em; color: var(--accent); min-width: 3em; }
+.row-rough td, .row-rough th { opacity: 0.88; }
+
 .picker-results { margin-top: 1.2rem; }
 .match-card {
   display: block; text-decoration: none; color: var(--ink);
