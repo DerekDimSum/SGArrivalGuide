@@ -432,6 +432,10 @@ tbody tr:last-child th, tbody tr:last-child td { border-bottom: none; }
   /* app-style data view: no inner scroll box — the page scrolls, the header row sticks */
   .schools-scroll { max-height: none; overflow: visible; }
   .schools-scroll thead th { top: var(--header-h, 0px); }
+  /* JS adds .needs-scroll when the table is wider than the bleed: keep a scroll box
+     so the page never scrolls horizontally (headers stick within the box instead) */
+  .schools-scroll.needs-scroll { max-height: 75vh; overflow: auto; }
+  .schools-scroll.needs-scroll thead th { top: 0; }
 }
 .schools-scroll thead th {
   position: sticky; top: 0; z-index: 2;
@@ -717,8 +721,8 @@ thead th { position: relative; }
 @media (min-width: 1024px) {
   .table-wrap.schools-scroll,
   .data-view-bleed {
-    width: calc(100vw - 64px);
-    margin-left: calc((100% - (100vw - 64px)) / 2);
+    width: calc(var(--page-w, 100vw) - 64px);
+    margin-left: calc((100% - (var(--page-w, 100vw) - 64px)) / 2);
   }
   /* denser, data-app row rhythm in the big tables */
   .schools-table th, .schools-table td,

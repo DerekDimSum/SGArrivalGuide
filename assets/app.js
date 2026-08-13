@@ -1772,7 +1772,7 @@
     var out = [];
     table.querySelectorAll("tr").forEach(function (tr) {
       var cells = Array.prototype.slice.call(tr.querySelectorAll("th, td")).map(function (c) {
-        var txt = (c.innerText || "").replace(/\s+/g, " ").replace(/\s*[▾▴]\s*$/, "").trim();
+        var txt = (c.innerText || "").replace(/\s+/g, " ").replace(/[\s▾▴↑↓●]+$/, "").trim();
         return '"' + txt.replace(/"/g, '""') + '"';
       });
       if (cells.length) out.push(cells.join(","));
@@ -1809,6 +1809,9 @@
     // expose the sticky header's height so table headers can stick right below it
     var hd = document.getElementById("site-header");
     if (hd) document.documentElement.style.setProperty("--header-h", hd.offsetHeight + "px");
+    // scrollbar-safe viewport width for the full-bleed tables (100vw includes the
+    // scrollbar on Windows/Linux, which forced ~8px of horizontal page scroll)
+    document.documentElement.style.setProperty("--page-w", document.documentElement.clientWidth + "px");
     // let each data table's toolbar/filter bar span the same full-bleed width as its table
     document.querySelectorAll(".table-wrap.schools-scroll").forEach(function (wrap) {
       var sec = wrap.parentElement;
@@ -1817,6 +1820,11 @@
         var el = sec.querySelector("." + cls);
         if (el) el.classList.add("data-view-bleed");
       });
+      // the ≥1024 app-view drops the inner scroll box so headers can stick to the
+      // page — but if the table is wider than the bleed, that overflows the page.
+      // Restore the scroll box for exactly that case (falls back to in-box sticky).
+      var tbl = wrap.querySelector("table");
+      if (tbl) wrap.classList.toggle("needs-scroll", tbl.scrollWidth > wrap.clientWidth + 1);
     });
   }
   window.addEventListener("resize", syncDataViewChrome);
