@@ -137,13 +137,10 @@ li { margin: 0.45em 0; }
 .seg button.active { background: var(--accent); color: var(--bg); }
 
 .site-nav {
-  display: flex; gap: 0.25rem;
-  overflow-x: auto;
+  display: flex; gap: 0.25rem; flex-wrap: wrap;
   padding: 0.2rem 1rem 0.55rem;
   max-width: var(--content-w); margin: 0 auto;
-  scrollbar-width: none;
 }
-.site-nav::-webkit-scrollbar { display: none; }
 .site-nav a {
   flex: 0 0 auto;
   font-size: 0.85rem;
@@ -780,3 +777,23 @@ thead th { position: relative; }
 }
 /* area names may wrap rather than force a few px of horizontal scroll */
 .area-table td:nth-child(2) { white-space: normal; }
+
+/* ---------- header dropdown sub-menus ---------- */
+.nav-item { position: relative; display: inline-flex; }
+.nav-menu {
+  display: none; position: absolute; left: 0; top: 100%; z-index: 80;
+  min-width: 13em; padding: 0.3rem;
+  background: var(--bg-raised); border: 1px solid var(--line); border-radius: 10px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.16);
+}
+.nav-item:hover .nav-menu, .nav-item:focus-within .nav-menu { display: block; }
+.nav-menu a {
+  display: block; white-space: nowrap;
+  padding: 0.45em 0.8em; border-radius: 6px;
+  font-size: 0.85rem; color: var(--ink); text-decoration: none;
+}
+.nav-menu a:hover { background: var(--bg-accent); color: var(--accent); }
+.nav-item > a::after { content: " ▾"; font-size: 0.7em; color: var(--ink-soft); }
+
+/* csv export button sits at the toolbar's right edge */
+.table-toolbar .csv-btn { margin-left: auto; }

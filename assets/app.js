@@ -176,9 +176,20 @@
     curSeg.setAttribute("title", t(CONTENT.currencies.note));
 
     var nav = h("nav", { class: "site-nav", "aria-label": lang === "ko" ? "섹션 이동" : "Sections" });
-    nav.appendChild(h("a", { href: "#home", dataset: { navId: "home" }, text: t(CONTENT.ui.homeLabel) }));
+    function navEntry(id, label, subs) {
+      var link = h("a", { href: "#" + id, dataset: { navId: id }, text: label });
+      if (!subs || !subs.length) return link;
+      var wrap = h("div", { class: "nav-item" }, link);
+      var menu = h("div", { class: "nav-menu", role: "menu" });
+      subs.forEach(function (s) {
+        menu.appendChild(h("a", { href: "#" + s.id, role: "menuitem", text: t(s.label) }));
+      });
+      wrap.appendChild(menu);
+      return wrap;
+    }
+    nav.appendChild(navEntry("home", t(CONTENT.ui.homeLabel), null));
     CONTENT.nav.forEach(function (item) {
-      nav.appendChild(h("a", { href: "#" + item.id, dataset: { navId: item.id }, text: t(item.label) }));
+      nav.appendChild(navEntry(item.id, t(item.label), item.subs));
     });
 
     header.appendChild(h("div", { class: "header-row" },
@@ -1757,7 +1768,44 @@
       });
     });
   }
+  function tableToCSV(table) {
+    var out = [];
+    table.querySelectorAll("tr").forEach(function (tr) {
+      var cells = Array.prototype.slice.call(tr.querySelectorAll("th, td")).map(function (c) {
+        var txt = (c.innerText || "").replace(/\s+/g, " ").replace(/\s*[▾▴]\s*$/, "").trim();
+        return '"' + txt.replace(/"/g, '""') + '"';
+      });
+      if (cells.length) out.push(cells.join(","));
+    });
+    return "\uFEFF" + out.join("\n"); // BOM so Excel opens Korean text correctly
+  }
+
+  function addExportButtons() {
+    document.querySelectorAll(".table-wrap.schools-scroll").forEach(function (wrap) {
+      var sec = wrap.parentElement;
+      if (!sec) return;
+      var bar = sec.querySelector(".table-toolbar");
+      if (!bar || bar.querySelector(".csv-btn")) return;
+      var btn = h("button", {
+        type: "button", class: "reset-btn csv-btn",
+        text: lang === "ko" ? "CSV 내보내기 ↓" : "Export CSV ↓",
+        onclick: function () {
+          var table = wrap.querySelector("table");
+          if (!table) return;
+          var blob = new Blob([tableToCSV(table)], { type: "text/csv;charset=utf-8" });
+          var aEl = document.createElement("a");
+          aEl.href = URL.createObjectURL(blob);
+          aEl.download = (sec.id || "table") + ".csv";
+          document.body.appendChild(aEl); aEl.click();
+          setTimeout(function () { URL.revokeObjectURL(aEl.href); aEl.remove(); }, 500);
+        }
+      });
+      bar.appendChild(btn);
+    });
+  }
+
   function syncDataViewChrome() {
+    addExportButtons();
     // expose the sticky header's height so table headers can stick right below it
     var hd = document.getElementById("site-header");
     if (hd) document.documentElement.style.setProperty("--header-h", hd.offsetHeight + "px");
