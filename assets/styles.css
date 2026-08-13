@@ -421,6 +421,23 @@ tbody tr:last-child th, tbody tr:last-child td { border-bottom: none; }
 .schools-table th[scope="row"] { min-width: 11em; }
 .schools-table td { min-width: 7em; }
 
+/* schools: consolidated filter bar + internally-scrolling table with fixed headers */
+.filter-bar {
+  background: var(--bg-raised);
+  border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 0.7rem 1rem 0.5rem; margin: 1rem 0 0.8rem;
+  box-shadow: var(--shadow);
+}
+.filter-bar [role="status"] { margin: 0.3em 0 0.1em; }
+.schools-scroll { max-height: 68vh; overflow: auto; }
+.schools-scroll thead th {
+  position: sticky; top: 0; z-index: 2;
+  background: var(--bg-accent);
+  box-shadow: 0 1px 0 var(--line);
+}
+.schools-table th[scope="row"] a { color: var(--accent); text-decoration: none; }
+.schools-table th[scope="row"] a:hover { text-decoration: underline; }
+
 /* ---------- all-areas table ---------- */
 
 .area-table-block { margin: 2.2rem 0; }

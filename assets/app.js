@@ -474,7 +474,9 @@
       if (schoolSort === "feeDesc") rows = rows.slice().sort(function (a, b) { return b.feeYr - a.feeYr; });
       rows.forEach(function (r) {
         tbody.appendChild(h("tr", {},
-          h("th", { scope: "row", text: t(r.name) }),
+          h("th", { scope: "row" },
+            r.site ? h("a", { href: r.site, target: "_blank", rel: "noopener", text: t(r.name) })
+                   : h("span", { text: t(r.name) })),
           h("td", { text: t(sc.stages[r.stage]) }),
           h("td", {}, h("span", { text: t(sc.kinds[r.kind]) + " " }), r.kindVerify ? verifyBadge() : null),
           h("td", { text: r.tier ? t(sc.tiers[r.tier]) : "—" }),
@@ -534,14 +536,15 @@
     rebuild();
     main.appendChild(h("section", { id: "schools", class: "section", "aria-labelledby": "schools-title" },
       sectionHeader("schools", sc.title, "⚑"),
-      h("p", { class: "section-intro", text: t(sc.intro) }),
-      filterRow("stage", sc.stages),
-      filterRow("kind", sc.kinds),
-      filterRow("tier", sc.tiers),
-      filterRow("fee", feeBandLabels),
-      h("div", { class: "filter-row" }, h("span", { class: "filter-label", text: t(sc.sortLabel) }), sortChips),
-      count,
-      h("div", { class: "table-wrap" }, h("table", { class: "data-table schools-table" },
+      h("div", { class: "filter-bar" },
+        filterRow("stage", sc.stages),
+        filterRow("kind", sc.kinds),
+        filterRow("tier", sc.tiers),
+        filterRow("fee", feeBandLabels),
+        h("div", { class: "filter-row" }, h("span", { class: "filter-label", text: t(sc.sortLabel) }), sortChips),
+        count
+      ),
+      h("div", { class: "table-wrap schools-scroll" }, h("table", { class: "data-table schools-table" },
         h("thead", {}, h("tr", {},
           h("th", { text: t(sc.cols.name) }), h("th", { text: t(sc.cols.stage) }),
           h("th", { text: t(sc.cols.kind) }), h("th", { text: t(sc.cols.tier) }),
