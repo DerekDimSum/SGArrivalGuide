@@ -13,7 +13,7 @@
   --focus: #b4552d;
   --shadow: 0 1px 3px rgba(60, 45, 30, 0.08);
   --radius: 12px;
-  --content-w: 1200px;
+  --content-w: min(1680px, calc(100vw - 48px));
   --font-head: "Fraunces", "Noto Serif KR", "Noto Sans KR", serif;
   --font-body: "Noto Sans KR", -apple-system, "Segoe UI", sans-serif;
 
@@ -797,3 +797,9 @@ thead th { position: relative; }
 
 /* csv export button sits at the toolbar's right edge */
 .table-toolbar .csv-btn { margin-left: auto; }
+
+/* ---------- wide fluid layout: prose stays readable, data uses the width ---------- */
+main p, main li { max-width: 76ch; }
+main table p, main table li, .nav-menu a, .table-wrap p { max-width: none; }
+/* home section cards: use the width for more columns instead of stretching two */
+@media (min-width: 700px) { .section-cards { grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); } }
