@@ -419,15 +419,16 @@
       results.appendChild(h("div", { class: "table-wrap" }, h("table", { class: "data-table calc-table" },
         h("thead", {}, h("tr", {},
           h("th", { text: t(cal.cols.system) }),
-          h("th", { text: t(cal.cols.cutoff) }),
           h("th", { text: t(cal.cols.now) }),
           h("th", { text: t(cal.cols.next) })
         )),
         h("tbody", {}, rows.map(function (r) {
           var s = cal.systems[r.sys];
           return h("tr", {},
-            h("th", { scope: "row", text: t(s.name) }),
-            h("td", { text: t(s.cutoff) }),
+            h("th", { scope: "row" },
+              h("span", { text: t(s.name) }),
+              h("span", { class: "sys-sub", text: t(s.sub) })
+            ),
             h("td", {}, h("strong", { text: t(r.now) }), h("span", { class: "ay-label", text: " · " + r.nowAy })),
             h("td", {}, h("span", { text: t(r.next) }), h("span", { class: "ay-label", text: " · " + r.nextAy }))
           );

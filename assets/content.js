@@ -282,20 +282,31 @@ var CONTENT = {
       yearLabel: { en: "Birth year", ko: "출생 연도" },
       cols: {
         system: { en: "School system", ko: "학교 시스템" },
-        cutoff: { en: "Cutoff", ko: "기준일" },
         now: { en: "This academic year", ko: "올해 학년" },
         next: { en: "Next academic year", ko: "내년 학년" }
       },
       systems: {
-        local: { name: { en: "Local preschool / MOE (PCF, My First Skool, MindChamps, Pat's, EtonHouse… → local primary)", ko: "로컬 유치원 · MOE (PCF, My First Skool, MindChamps, Pat's, EtonHouse… → 로컬 초등)" }, cutoff: { en: "calendar year (1 Jan)", ko: "역년 (1월 1일)" } },
-        british: { name: { en: "British (Tanglin, Dulwich, NLCS, Dover Court…)", ko: "영국계 (Tanglin, Dulwich, NLCS, Dover Court…)" }, cutoff: { en: "1 September", ko: "9월 1일" } },
-        american: { name: { en: "American (SAS, SAIS)", ko: "미국계 (SAS, SAIS)" }, cutoff: { en: "1 September", ko: "9월 1일" } },
-        korean: { name: { en: "Korean — SKIS (싱가포르한국국제학교)", ko: "한국계 — SKIS (싱가포르한국국제학교)" }, cutoff: { en: "calendar year · March–Feb school year", ko: "역년 · 3월 학기제" } }
+        local: {
+          name: { en: "Local — MOE / ECDA", ko: "로컬 — MOE·ECDA" },
+          sub: { en: "PCF, My First Skool, MindChamps, Pat's… → local primary · 1 Jan cohort", ko: "PCF, My First Skool, MindChamps, Pat's… → 로컬 초등 · 1월 1일 기준" }
+        },
+        british: {
+          name: { en: "British", ko: "영국계" },
+          sub: { en: "Tanglin, Dulwich, NLCS, Dover Court… · cutoff 1 Sep", ko: "Tanglin, Dulwich, NLCS, Dover Court… · 9월 1일 기준" }
+        },
+        american: {
+          name: { en: "American", ko: "미국계" },
+          sub: { en: "SAS, SAIS · cutoff 1 Sep", ko: "SAS, SAIS · 9월 1일 기준" }
+        },
+        korean: {
+          name: { en: "Korean — SKIS", ko: "한국계 — SKIS" },
+          sub: { en: "싱가포르한국국제학교 · March–Feb school year", ko: "싱가포르한국국제학교 · 3월 학기제" }
+        }
       },
       tooYoung: { en: "too young — infant care", ko: "아직 어려요 — 영유아 보육" },
       note: {
-        en: "Cutoff dates are each system's standard convention — some schools flex a month or two. IB world schools (UWCSEA, CIS, Nexus, OFS, Chatsworth…) generally run the August–June year, so read the September rows; the Australian system (AIS) runs a southern-hemisphere January calendar with its own cutoffs, and GESS's German stream follows the German system. Always confirm the placement with the specific school.",
-        ko: "기준일은 각 시스템의 일반적인 관행이에요 — 학교에 따라 한두 달 유연하게 보기도 해요. IB 스쿨들(UWCSEA, CIS, Nexus, OFS, Chatsworth…)은 대개 8월–6월 학기제라 9월 기준 행을 보면 되고, 호주계(AIS)는 남반구 1월 학기제로 기준이 또 다르며, GESS 독일 과정은 독일 학제를 따라요. 반 배정은 반드시 해당 학교에 직접 확인하세요."
+        en: "Conventions, not guarantees: IB schools (UWCSEA, CIS, Nexus…) read as the September rows, AIS runs a January calendar, and GESS's German stream differs. Confirm placement with the school.",
+        ko: "일반적인 관행일 뿐 학교마다 달라요: IB 스쿨(UWCSEA, CIS, Nexus…)은 9월 기준 행을 보면 되고, AIS는 1월 학기제, GESS 독일 과정은 별도예요. 반 배정은 학교에 확인하세요."
       },
       noteVerify: true
     },
