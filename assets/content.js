@@ -36,6 +36,12 @@ var CONTENT = {
     source: { en: "Source ↗", ko: "출처 ↗" },
     verify: { en: "⚠ verify directly", ko: "⚠ 직접 확인 필요" },
     localTake: { en: "Local take", ko: "로컬 팁" },
+    sortAsc: { en: "Sort ↑ low to high", ko: "정렬 ↑ 낮은순" },
+    sortDesc: { en: "Sort ↓ high to low", ko: "정렬 ↓ 높은순" },
+    sortAZ: { en: "Sort A → Z", ko: "정렬 가나다순" },
+    sortZA: { en: "Sort Z → A", ko: "정렬 역순" },
+    clearFilter: { en: "Clear", ko: "해제" },
+    clearAll: { en: "Reset table", ko: "표 초기화" },
     checklistProgress: { en: "done", ko: "완료" },
     resetChecklist: { en: "Reset checklist", ko: "체크리스트 초기화" },
     mapHint: {
@@ -73,12 +79,13 @@ var CONTENT = {
       subs: [
         { id: "living-overview", label: { en: "Overview", ko: "개요" } },
         { id: "living-picker", label: { en: "Priorities", ko: "우선순위" } },
-        { id: "living-table", label: { en: "All areas", ko: "전체 표" } },
         { id: "living-compare", label: { en: "Shortlist", ko: "후보 비교" } },
         { id: "sg-map", label: { en: "Map", ko: "지도" } },
         { id: "living-atlas", label: { en: "Neighbourhoods", ko: "동네별" } },
         { id: "renting-box", label: { en: "Renting", ko: "임대 절차" } }
       ] },
+    { id: "areas", label: { en: "Area table", ko: "동네 표" },
+      desc: { en: "All 19 neighbourhoods in one sortable, filterable table — with your own commute anchors.", ko: "19개 동네를 정렬·필터 가능한 한 표로 — 통근 기준점도 직접 설정해요." } },
     { id: "community", label: { en: "Korean community", ko: "한인 커뮤니티" },
       desc: { en: "한인회, 한국촌, K-town, Korean marts and the Saturday Hangul school.", ko: "한인회, 한국촌, K-타운, 한국 마트, 토요한글학교." } },
     { id: "church", label: { en: "Church", ko: "교회" },
@@ -1089,6 +1096,8 @@ var CONTENT = {
       ]
     },
 
+    tableLink: { en: "Open the full area table →", ko: "전체 동네 표 열기 →" },
+
     /* All-areas table — every atlas neighbourhood with indicative prices, stock mix
        and commute estimates to user-set work/school anchors. Prices on rows marked
        rough:true are BALLPARKS to structure thinking, not researched figures. */
@@ -1110,13 +1119,27 @@ var CONTENT = {
       schoolDefaultName: { en: "SKIS (default)", ko: "SKIS (기본값)" },
       resolveError: { en: "Address not found — try a postcode", ko: "주소를 찾지 못했어요 — 우편번호로 시도해 보세요" },
       lookupOffline: { en: "Lookup unavailable (offline?) — using defaults", ko: "검색을 사용할 수 없어요(오프라인?) — 기본값을 사용해요" },
-      sortLabel: { en: "Sort", ko: "정렬" },
-      sorts: {
-        default: { en: "Default", ko: "기본" },
-        br3: { en: "3BR price", ko: "3BR 가격" },
-        br4: { en: "4BR price", ko: "4BR 가격" },
-        work: { en: "Work commute", ko: "직장 통근" },
-        school: { en: "School commute", ko: "학교 통근" }
+      br3Bands: {
+        b1: { label: { en: "≤S$5k/mo", ko: "월 S$5k 이하" }, max: 5000 },
+        b2: { label: { en: "S$5–7k/mo", ko: "월 S$5–7k" }, max: 7000 },
+        b3: { label: { en: "S$7k+/mo", ko: "월 S$7k 이상" }, max: Infinity }
+      },
+      br4Bands: {
+        b1: { label: { en: "≤S$8k/mo", ko: "월 S$8k 이하" }, max: 8000 },
+        b2: { label: { en: "S$8–12k/mo", ko: "월 S$8–12k" }, max: 12000 },
+        b3: { label: { en: "S$12k+/mo", ko: "월 S$12k 이상" }, max: Infinity },
+        none: { label: { en: "— (thin supply)", ko: "— (매물 적음)" } }
+      },
+      commuteBands: {
+        b1: { label: { en: "≤20 min", ko: "20분 이하" }, max: 20 },
+        b2: { label: { en: "21–35 min", ko: "21–35분" }, max: 35 },
+        b3: { label: { en: "36+ min", ko: "36분 이상" }, max: Infinity }
+      },
+      stockLevels: {
+        l3: "●●●",
+        l2: "●●",
+        l1: "●",
+        l0: "—"
       },
       cols: {
         district: { en: "District", ko: "구역" },

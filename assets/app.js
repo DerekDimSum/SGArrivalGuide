@@ -436,42 +436,160 @@
     return box;
   }
 
-  /* ---------- school directory (own page, multi-pick filters) ---------- */
+  /* ---------- header-menu table kit ----------
+     Excel-style column menus: sort actions + multi-select filter checkboxes.
+     Panels are position:fixed (anchored to the header button) so they escape
+     the table's overflow container — works across Safari/Firefox/Chrome. */
 
-  // multi-pick sets per group: {pre: true, ...}; empty object = no filter (show all)
-  var schoolFilters = { stage: {}, kind: {}, tier: {}, fee: {} };
-  var schoolSort = "default";
+  var openThMenu = null;
 
-  function feeBandOf(feeYr) {
-    var bands = CONTENT.education.schools.feeBands;
+  function closeThMenu() {
+    if (!openThMenu) return;
+    openThMenu.panel.remove();
+    openThMenu.btn.setAttribute("aria-expanded", "false");
+    openThMenu = null;
+  }
+  document.addEventListener("click", function (e) {
+    if (openThMenu && !openThMenu.panel.contains(e.target) && !openThMenu.btn.contains(e.target)) closeThMenu();
+  });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeThMenu(); });
+  document.addEventListener("scroll", function (e) {
+    if (openThMenu && (!e.target || !openThMenu.panel.contains(e.target))) closeThMenu();
+  }, true);
+  window.addEventListener("resize", closeThMenu);
+
+  /* cfg: {
+       label: leaf, key: string,
+       sort: null | { state: {key,dir}, type: 'num'|'alpha' },
+       filter: null | { options: [{id, label}], selected: {} },
+       onChange: fn
+     } */
+  function thMenuCell(cfg) {
+    var indicator = h("span", { class: "th-ind" });
+
+    function paintIndicator() {
+      var bits = "";
+      if (cfg.sort && cfg.sort.state.key === cfg.key) bits += cfg.sort.state.dir === 1 ? "↑" : "↓";
+      if (cfg.filter && Object.keys(cfg.filter.selected).length) bits += "●";
+      indicator.textContent = bits ? " " + bits : "";
+    }
+    paintIndicator();
+
+    var btn = h("button", {
+      type: "button", class: "th-btn",
+      "aria-haspopup": "true", "aria-expanded": "false"
+    }, h("span", { text: t(cfg.label) }), indicator, h("span", { class: "th-caret", "aria-hidden": "true", text: " ▾" }));
+
+    btn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      if (openThMenu && openThMenu.btn === btn) { closeThMenu(); return; }
+      closeThMenu();
+      var panel = h("div", { class: "th-menu", role: "menu" });
+
+      if (cfg.sort) {
+        var asc = cfg.sort.type === "alpha" ? CONTENT.ui.sortAZ : CONTENT.ui.sortAsc;
+        var desc = cfg.sort.type === "alpha" ? CONTENT.ui.sortZA : CONTENT.ui.sortDesc;
+        [[asc, 1], [desc, -1]].forEach(function (pair) {
+          var active = cfg.sort.state.key === cfg.key && cfg.sort.state.dir === pair[1];
+          panel.appendChild(h("button", {
+            type: "button", class: "th-menu-item" + (active ? " active" : ""),
+            text: t(pair[0]),
+            onclick: function () {
+              if (active) { cfg.sort.state.key = null; }
+              else { cfg.sort.state.key = cfg.key; cfg.sort.state.dir = pair[1]; }
+              closeThMenu(); paintIndicator(); cfg.onChange();
+            }
+          }));
+        });
+      }
+
+      if (cfg.filter) {
+        if (cfg.sort) panel.appendChild(h("div", { class: "th-menu-sep" }));
+        cfg.filter.options.forEach(function (o) {
+          var box = h("input", { type: "checkbox", checked: !!cfg.filter.selected[o.id] });
+          var item = h("label", { class: "th-menu-check" }, box, h("span", { text: t(o.label) }));
+          box.addEventListener("change", function () {
+            if (box.checked) cfg.filter.selected[o.id] = true;
+            else delete cfg.filter.selected[o.id];
+            paintIndicator(); cfg.onChange();
+          });
+          panel.appendChild(item);
+        });
+        panel.appendChild(h("button", {
+          type: "button", class: "th-menu-item th-menu-clear", text: t(CONTENT.ui.clearFilter),
+          onclick: function () {
+            Object.keys(cfg.filter.selected).forEach(function (k) { delete cfg.filter.selected[k]; });
+            closeThMenu(); paintIndicator(); cfg.onChange();
+          }
+        }));
+      }
+
+      document.body.appendChild(panel);
+      var r = btn.getBoundingClientRect();
+      var w = Math.min(260, window.innerWidth - 16);
+      panel.style.width = w + "px";
+      panel.style.top = Math.min(r.bottom + 4, window.innerHeight - 60) + "px";
+      panel.style.left = Math.max(8, Math.min(r.left, window.innerWidth - w - 8)) + "px";
+      btn.setAttribute("aria-expanded", "true");
+      openThMenu = { btn: btn, panel: panel };
+    });
+
+    return h("th", { class: "th-interactive" }, btn);
+  }
+
+  function bandOf(value, bands) {
+    if (value == null) return "none";
     var keys = Object.keys(bands);
     for (var i = 0; i < keys.length; i++) {
-      if (feeYr <= bands[keys[i]].max) return keys[i];
+      var b = bands[keys[i]];
+      if (b.max != null && value <= b.max) return keys[i];
     }
     return keys[keys.length - 1];
   }
+
+  function optionsFrom(labelsObj) {
+    return Object.keys(labelsObj).map(function (k) {
+      return { id: k, label: labelsObj[k].label || labelsObj[k] };
+    });
+  }
+
+  function passes(selected, val) {
+    return !Object.keys(selected).length || !!selected[val];
+  }
+
+  /* ---------- school directory (own page, multi-pick filters) ---------- */
+
+  var schoolState = {
+    sort: { key: null, dir: 1 },
+    filters: { stage: {}, kind: {}, tier: {}, fee: {} }
+  };
 
   function renderSchools(main) {
     var sc = CONTENT.education.schools;
 
     var tbody = h("tbody");
-    var count = h("p", { class: "table-note", role: "status" });
+    var count = h("span", { role: "status" });
 
-    function activeIn(group) { return Object.keys(schoolFilters[group]); }
+    function sortVal(r, key) {
+      if (key === "name") return t(r.name).toLowerCase();
+      if (key === "fees") return r.feeYr;
+      return 0;
+    }
 
     function rebuild() {
       tbody.innerHTML = "";
-      var stages = activeIn("stage"), kinds = activeIn("kind"),
-          tiers = activeIn("tier"), fees = activeIn("fee");
+      var f = schoolState.filters;
       var rows = sc.rows.filter(function (r) {
-        if (stages.length && !schoolFilters.stage[r.stage]) return false;
-        if (kinds.length && !schoolFilters.kind[r.kind]) return false;
-        if (tiers.length && !(r.tier && schoolFilters.tier[r.tier])) return false;
-        if (fees.length && !schoolFilters.fee[feeBandOf(r.feeYr)]) return false;
-        return true;
+        return passes(f.stage, r.stage) && passes(f.kind, r.kind) &&
+          passes(f.tier, r.tier || "none") && passes(f.fee, bandOf(r.feeYr, sc.feeBands));
       });
-      if (schoolSort === "feeAsc") rows = rows.slice().sort(function (a, b) { return a.feeYr - b.feeYr; });
-      if (schoolSort === "feeDesc") rows = rows.slice().sort(function (a, b) { return b.feeYr - a.feeYr; });
+      if (schoolState.sort.key) {
+        var k = schoolState.sort.key, d = schoolState.sort.dir;
+        rows = rows.slice().sort(function (a, b) {
+          var av = sortVal(a, k), bv = sortVal(b, k);
+          return (av < bv ? -1 : av > bv ? 1 : 0) * d;
+        });
+      }
       rows.forEach(function (r) {
         tbody.appendChild(h("tr", {},
           h("th", { scope: "row" },
@@ -488,70 +606,32 @@
       count.textContent = rows.length + " / " + sc.rows.length + " " + t(sc.countLabel);
     }
 
-    function filterRow(groupKey, labelsObj) {
-      var row = h("div", { class: "filter-row" },
-        h("span", { class: "filter-label", text: t(sc.filterGroups[groupKey]) }));
-      var group = h("div", { class: "chips filter-chips" });
-      Object.keys(labelsObj).forEach(function (id) {
-        var chip = h("button", {
-          type: "button",
-          class: "chip filter-chip" + (schoolFilters[groupKey][id] ? " nice" : ""),
-          "aria-pressed": schoolFilters[groupKey][id] ? "true" : "false",
-          text: t(labelsObj[id]),
-          onclick: function () {
-            if (schoolFilters[groupKey][id]) delete schoolFilters[groupKey][id];
-            else schoolFilters[groupKey][id] = true;
-            chip.classList.toggle("nice", !!schoolFilters[groupKey][id]);
-            chip.setAttribute("aria-pressed", schoolFilters[groupKey][id] ? "true" : "false");
-            rebuild();
-          }
-        });
-        group.appendChild(chip);
-      });
-      row.appendChild(group);
-      return row;
-    }
+    var tierOptions = optionsFrom(sc.tiers).concat([{ id: "none", label: "—" }]);
 
-    var feeBandLabels = {};
-    Object.keys(sc.feeBands).forEach(function (k) { feeBandLabels[k] = sc.feeBands[k].label; });
+    var thead = h("thead", {}, h("tr", {},
+      thMenuCell({ label: sc.cols.name, key: "name", sort: { state: schoolState.sort, type: "alpha" }, filter: null, onChange: rebuild }),
+      thMenuCell({ label: sc.cols.stage, key: "stage", sort: null, filter: { options: optionsFrom(sc.stages), selected: schoolState.filters.stage }, onChange: rebuild }),
+      thMenuCell({ label: sc.cols.kind, key: "kind", sort: null, filter: { options: optionsFrom(sc.kinds), selected: schoolState.filters.kind }, onChange: rebuild }),
+      thMenuCell({ label: sc.cols.tier, key: "tier", sort: null, filter: { options: tierOptions, selected: schoolState.filters.tier }, onChange: rebuild }),
+      thMenuCell({ label: sc.cols.fees, key: "fees", sort: { state: schoolState.sort, type: "num" }, filter: { options: optionsFrom(sc.feeBands), selected: schoolState.filters.fee }, onChange: rebuild }),
+      h("th", { text: t(sc.cols.waitlist) }),
+      h("th", { text: t(sc.cols.location) })
+    ));
 
-    var sortChips = h("div", { class: "chips filter-chips" });
-    Object.keys(sc.sorts).forEach(function (s) {
-      var chip = h("button", {
-        type: "button",
-        class: "chip filter-chip" + (schoolSort === s ? " nice" : ""),
-        "aria-pressed": schoolSort === s ? "true" : "false",
-        text: t(sc.sorts[s]),
-        onclick: function () {
-          schoolSort = s;
-          sortChips.querySelectorAll(".chip").forEach(function (c) { c.classList.remove("nice"); c.setAttribute("aria-pressed", "false"); });
-          chip.classList.add("nice");
-          chip.setAttribute("aria-pressed", "true");
-          rebuild();
-        }
-      });
-      sortChips.appendChild(chip);
+    var reset = h("button", {
+      type: "button", class: "reset-btn", text: t(CONTENT.ui.clearAll),
+      onclick: function () {
+        schoolState = { sort: { key: null, dir: 1 }, filters: { stage: {}, kind: {}, tier: {}, fee: {} } };
+        renderAll(true);
+      }
     });
 
     rebuild();
     main.appendChild(h("section", { id: "schools", class: "section", "aria-labelledby": "schools-title" },
       sectionHeader("schools", sc.title, "⚑"),
-      h("div", { class: "filter-bar" },
-        filterRow("stage", sc.stages),
-        filterRow("kind", sc.kinds),
-        filterRow("tier", sc.tiers),
-        filterRow("fee", feeBandLabels),
-        h("div", { class: "filter-row" }, h("span", { class: "filter-label", text: t(sc.sortLabel) }), sortChips),
-        count
-      ),
+      h("div", { class: "table-toolbar" }, count, reset),
       h("div", { class: "table-wrap schools-scroll" }, h("table", { class: "data-table schools-table" },
-        h("thead", {}, h("tr", {},
-          h("th", { text: t(sc.cols.name) }), h("th", { text: t(sc.cols.stage) }),
-          h("th", { text: t(sc.cols.kind) }), h("th", { text: t(sc.cols.tier) }),
-          h("th", { text: t(sc.cols.fees) }), h("th", { text: t(sc.cols.waitlist) }),
-          h("th", { text: t(sc.cols.location) })
-        )),
-        tbody
+        thead, tbody
       )),
       h("p", { class: "table-note", text: t(sc.tierNote) })
     ));
@@ -901,7 +981,10 @@
   /* ---------- all-areas table (work/school anchors + commute estimates) ---------- */
 
   var ANCHORS_KEY = "sgguide:anchors";
-  var tableSort = "default";
+  var areaState = {
+    sort: { key: null, dir: 1 },
+    filters: { district: {}, br3: {}, br4: {}, work: {}, school: {}, condo: {}, hdb: {}, landed: {} }
+  };
 
   function haversineKm(a, b) {
     var R = 6371, d2r = Math.PI / 180;
@@ -951,11 +1034,12 @@
     return found;
   }
 
-  function renderAreaTable() {
+  function renderAreas(main) {
     var at = CONTENT.living.areaTable;
     var anchors = loadAnchors();
 
     var tbody = h("tbody");
+    var count = h("span", { role: "status" });
 
     function dots(n) { return n ? "●●●".slice(0, n) : "—"; }
     function price(row, key) {
@@ -966,18 +1050,34 @@
 
     function rebuild() {
       tbody.innerHTML = "";
+      var f = areaState.filters;
       var rows = at.rows.map(function (row) {
         return {
           row: row,
           work: mrtMinutes(haversineKm(row, anchors.work)),
           school: driveMinutes(haversineKm(row, anchors.school))
         };
+      }).filter(function (r) {
+        return passes(f.district, r.row.district) &&
+          passes(f.br3, bandOf(r.row.br3, at.br3Bands)) &&
+          passes(f.br4, bandOf(r.row.br4, at.br4Bands)) &&
+          passes(f.work, bandOf(r.work, at.commuteBands)) &&
+          passes(f.school, bandOf(r.school, at.commuteBands)) &&
+          passes(f.condo, "l" + r.row.condo) &&
+          passes(f.hdb, "l" + r.row.hdb) &&
+          passes(f.landed, "l" + r.row.landed);
       });
-      if (tableSort !== "default") {
-        rows.sort(function (a, b) {
-          if (tableSort === "work" || tableSort === "school") return a[tableSort] - b[tableSort];
-          var av = a.row[tableSort], bv = b.row[tableSort];
-          return (av == null ? 1e9 : av) - (bv == null ? 1e9 : bv);
+      if (areaState.sort.key) {
+        var k = areaState.sort.key, d = areaState.sort.dir;
+        rows = rows.slice().sort(function (a, b) {
+          function val(x) {
+            if (k === "area") { var e = atlasById(x.row.id); return (e ? t(e.name) : x.row.id).toLowerCase(); }
+            if (k === "work" || k === "school") return x[k];
+            var v = x.row[k];
+            return v == null ? (d === 1 ? Infinity : -Infinity) : v;
+          }
+          var av = val(a), bv = val(b);
+          return (av < bv ? -1 : av > bv ? 1 : 0) * d;
         });
       }
       rows.forEach(function (r) {
@@ -995,6 +1095,7 @@
           h("td", { class: "stock-cell", text: dots(r.row.landed) })
         ));
       });
+      count.textContent = rows.length + " / " + at.rows.length;
     }
 
     function anchorField(key, labelLeaf) {
@@ -1020,27 +1121,29 @@
       );
     }
 
-    var sortChips = h("div", { class: "chips filter-chips" });
-    ["default", "br3", "br4", "work", "school"].forEach(function (s) {
-      var chip = h("button", {
-        type: "button",
-        class: "chip filter-chip" + (tableSort === s ? " nice" : ""),
-        "aria-pressed": tableSort === s ? "true" : "false",
-        text: t(at.sorts[s]),
-        onclick: function () {
-          tableSort = s;
-          sortChips.querySelectorAll(".chip").forEach(function (c) { c.classList.remove("nice"); c.setAttribute("aria-pressed", "false"); });
-          chip.classList.add("nice");
-          chip.setAttribute("aria-pressed", "true");
-          rebuild();
-        }
-      });
-      sortChips.appendChild(chip);
-    });
+    var districtLabels = {};
+    at.rows.forEach(function (r) { districtLabels[r.district] = r.district; });
+
+    var stockFilter = function (key) {
+      return { options: optionsFrom(at.stockLevels), selected: areaState.filters[key] };
+    };
+
+    var thead = h("thead", {}, h("tr", {},
+      thMenuCell({ label: at.cols.district, key: "district", sort: null, filter: { options: optionsFrom(districtLabels), selected: areaState.filters.district }, onChange: rebuild }),
+      thMenuCell({ label: at.cols.area, key: "area", sort: { state: areaState.sort, type: "alpha" }, filter: null, onChange: rebuild }),
+      thMenuCell({ label: at.cols.br3, key: "br3", sort: { state: areaState.sort, type: "num" }, filter: { options: optionsFrom(at.br3Bands), selected: areaState.filters.br3 }, onChange: rebuild }),
+      thMenuCell({ label: at.cols.br4, key: "br4", sort: { state: areaState.sort, type: "num" }, filter: { options: optionsFrom(at.br4Bands), selected: areaState.filters.br4 }, onChange: rebuild }),
+      thMenuCell({ label: at.cols.work, key: "work", sort: { state: areaState.sort, type: "num" }, filter: { options: optionsFrom(at.commuteBands), selected: areaState.filters.work }, onChange: rebuild }),
+      thMenuCell({ label: at.cols.school, key: "school", sort: { state: areaState.sort, type: "num" }, filter: { options: optionsFrom(at.commuteBands), selected: areaState.filters.school }, onChange: rebuild }),
+      thMenuCell({ label: at.cols.condo, key: "condo", sort: null, filter: stockFilter("condo"), onChange: rebuild }),
+      thMenuCell({ label: at.cols.hdb, key: "hdb", sort: null, filter: stockFilter("hdb"), onChange: rebuild }),
+      thMenuCell({ label: at.cols.landed, key: "landed", sort: null, filter: stockFilter("landed"), onChange: rebuild })
+    ));
 
     var resetBtn = h("button", {
-      type: "button", class: "reset-btn", text: t(at.resetLabel),
+      type: "button", class: "reset-btn", text: t(CONTENT.ui.clearAll),
       onclick: function () {
+        areaState = { sort: { key: null, dir: 1 }, filters: { district: {}, br3: {}, br4: {}, work: {}, school: {}, condo: {}, hdb: {}, landed: {} } };
         anchors = defaultAnchors();
         saveAnchors(anchors);
         renderAll(true);
@@ -1048,27 +1151,20 @@
     });
 
     rebuild();
-    return h("div", { id: "living-table", class: "area-table-block" },
-      h("h3", { text: t(at.title) }),
+    main.appendChild(h("section", { id: "areas", class: "section", "aria-labelledby": "areas-title" },
+      sectionHeader("areas", at.title, "▦"),
       h("p", { class: "section-intro", text: t(at.intro) }),
       h("div", { class: "anchor-fields" },
         anchorField("work", at.workLabel),
-        anchorField("school", at.schoolLabel),
-        resetBtn
+        anchorField("school", at.schoolLabel)
       ),
-      h("div", { class: "filter-row" }, h("span", { class: "filter-label", text: t(at.sortLabel) }), sortChips),
-      h("div", { class: "table-wrap" }, h("table", { class: "data-table area-table" },
-        h("thead", {}, h("tr", {},
-          h("th", { text: t(at.cols.district) }), h("th", { text: t(at.cols.area) }),
-          h("th", { text: t(at.cols.br3) }), h("th", { text: t(at.cols.br4) }),
-          h("th", { text: t(at.cols.work) }), h("th", { text: t(at.cols.school) }),
-          h("th", { text: t(at.cols.condo) }), h("th", { text: t(at.cols.hdb) }), h("th", { text: t(at.cols.landed) })
-        )),
-        tbody
+      h("div", { class: "table-toolbar" }, count, resetBtn),
+      h("div", { class: "table-wrap schools-scroll" }, h("table", { class: "data-table area-table" },
+        thead, tbody
       )),
       h("p", { class: "table-note", text: t(at.stockNote) }),
       h("p", { class: "table-note", text: t(at.estNote) })
-    );
+    ));
   }
 
   /* ---------- neighbourhood atlas ---------- */
@@ -1155,9 +1251,7 @@
 
     /* priorities picker */
     section.appendChild(renderPicker());
-
-    /* all-areas table */
-    section.appendChild(renderAreaTable());
+    section.appendChild(h("p", {}, h("a", { class: "btn-link", href: "#areas", text: t(lv.tableLink) })));
 
     /* §3.4 comparison table */
     section.appendChild(h("h3", { id: "living-compare", text: t(lv.comparison.title) }));
@@ -1469,6 +1563,7 @@
     renderEducation(main);
     renderSchools(main);
     renderLiving(main);
+    renderAreas(main);
     renderCommunity(main);
     renderChurch(main);
     renderHelper(main);

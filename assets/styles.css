@@ -438,6 +438,54 @@ tbody tr:last-child th, tbody tr:last-child td { border-bottom: none; }
 .schools-table th[scope="row"] a { color: var(--accent); text-decoration: none; }
 .schools-table th[scope="row"] a:hover { text-decoration: underline; }
 
+/* ---------- header menus (sort + filter in the column headers) ---------- */
+
+.table-toolbar {
+  display: flex; align-items: center; gap: 1rem;
+  margin: 0.8rem 0 0.5rem;
+  font-size: 0.85rem; color: var(--ink-soft);
+}
+.th-interactive { padding: 0; }
+.th-btn {
+  font-family: var(--font-body); font-size: 0.82rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.04em;
+  display: flex; align-items: center; width: 100%;
+  padding: 0.6rem 0.75rem;
+  background: none; border: none; color: var(--ink);
+  cursor: pointer; text-align: left; white-space: nowrap;
+}
+.th-btn:hover { color: var(--accent); }
+.th-caret { color: var(--ink-soft); font-size: 0.7em; }
+.th-ind { color: var(--accent); }
+
+.th-menu {
+  position: fixed; z-index: 100;
+  background: var(--bg-raised);
+  border: 1px solid var(--line); border-radius: 10px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.18);
+  padding: 0.35rem;
+  max-height: 60vh; overflow: auto;
+}
+.th-menu-item {
+  display: block; width: 100%;
+  font-family: var(--font-body); font-size: 0.88rem;
+  padding: 0.45em 0.7em; border: none; border-radius: 6px;
+  background: none; color: var(--ink); text-align: left; cursor: pointer;
+}
+.th-menu-item:hover { background: var(--bg-accent); }
+.th-menu-item.active { color: var(--accent); font-weight: 700; }
+.th-menu-clear { color: var(--ink-soft); border-top: 1px solid var(--line); border-radius: 0; margin-top: 0.25rem; }
+.th-menu-sep { border-top: 1px solid var(--line); margin: 0.3rem 0; }
+.th-menu-check {
+  display: flex; align-items: center; gap: 0.55em;
+  font-size: 0.88rem; padding: 0.4em 0.7em;
+  border-radius: 6px; cursor: pointer;
+}
+.th-menu-check:hover { background: var(--bg-accent); }
+.th-menu-check input { accent-color: var(--accent); width: 1.05rem; height: 1.05rem; flex: 0 0 auto; }
+.area-table th[scope="row"] a { color: var(--accent); text-decoration: none; }
+.area-table th[scope="row"] a:hover { text-decoration: underline; }
+
 /* ---------- all-areas table ---------- */
 
 .area-table-block { margin: 2.2rem 0; }
