@@ -1454,6 +1454,7 @@
     var dd = h("div", {},
       h("h3", { text: t(lv.districts.title) }),
       h("p", { text: t(lv.districts.intro) }),
+      h("p", { text: t(lv.districts.postal) }),
       h("div", { class: "table-wrap" }, h("table", { class: "data-table" },
         h("thead", {}, h("tr", {},
           h("th", { text: t(lv.districts.cols.d) }), h("th", { text: t(lv.districts.cols.name) }),
@@ -1577,32 +1578,46 @@
     section.appendChild(h("h3", { id: "living-cards", text: t(lv.cardsTitle) }));
     lv.areas.forEach(function (a) {
       var gmaps = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(a.gmapsQuery);
+      // prose renders as a paragraph; an array renders as scannable fact bullets
+      function richBody(value, verify) {
+        if (Array.isArray(value)) {
+          var ul = h("ul", { class: "card-facts" }, value.map(function (f) {
+            return h("li", { text: t(f) });
+          }));
+          if (!verify) return [ul];
+          return [ul, h("p", {}, verifyBadge())];
+        }
+        return [h("p", {}, h("span", { text: t(value) + " " }), verify ? verifyBadge() : null)];
+      }
+
       var parts = [
-        { title: { en: "The pitch", ko: "한 줄 요약" }, body: a.pitch },
+        { title: { en: "The pitch", ko: "한 줄 요약" }, body: a.pitch, wide: true },
         { subAreas: true },
         { title: { en: "Walkability check", ko: "도보 생활권 점검" }, body: a.walk },
         { title: { en: "Kids", ko: "아이 키우기" }, body: a.kids, verify: a.kidsVerify },
         { title: { en: "Community makeup", ko: "커뮤니티 구성" }, body: a.community },
         { title: { en: "Property & prices", ko: "매물과 가격" }, body: a.property, verify: a.verify }
       ];
-      var body = h("div", { class: "sub-body" });
+      var body = h("div", { class: "sub-body card-grid" });
       parts.forEach(function (p) {
         if (p.subAreas) {
           (a.subAreas || []).forEach(function (sa) {
-            body.appendChild(h("div", { class: "subarea" },
-              h("h4", { class: "subarea-name", text: t(sa.name) }),
-              h("p", {}, h("span", { text: t(sa.body) + " " }), sa.verify ? verifyBadge() : null),
-              sa.take ? h("div", { class: "local-take" },
-                h("span", { class: "take-badge", text: t(CONTENT.ui.localTake) }),
-                h("span", { text: t(sa.take) })
-              ) : null
+            var block = h("div", { class: "subarea card-part wide" },
+              h("h4", { class: "subarea-name", text: t(sa.name) }));
+            richBody(sa.facts || sa.body, sa.verify).forEach(function (el) { block.appendChild(el); });
+            if (sa.take) block.appendChild(h("div", { class: "local-take" },
+              h("span", { class: "take-badge", text: t(CONTENT.ui.localTake) }),
+              h("span", { text: t(sa.take) })
             ));
+            body.appendChild(block);
           });
           return;
         }
         if (!p.body) return;
-        body.appendChild(h("h4", { text: t(p.title) }));
-        body.appendChild(h("p", {}, h("span", { text: t(p.body) + " " }), p.verify ? verifyBadge() : null));
+        var part = h("div", { class: "card-part" + (p.wide ? " wide" : "") },
+          h("h4", { text: t(p.title) }));
+        richBody(p.body, p.verify).forEach(function (el) { part.appendChild(el); });
+        body.appendChild(part);
       });
       body.appendChild(h("p", { class: "card-links" },
         h("a", { class: "btn-link", href: gmaps, target: "_blank", rel: "noopener", text: t(CONTENT.ui.openInMaps) }),

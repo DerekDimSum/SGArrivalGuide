@@ -837,6 +837,10 @@ var CONTENT = {
         en: "Property listings and agents speak in postal districts (D1–D28) — an old classification the market still runs on. Analysts group them into three bands: CCR (Core Central: D9/D10/D11 plus the CBD — priciest), RCR (city fringe) and OCR (suburbs). Government statistics use URA planning-area names instead, which mostly overlap.",
         ko: "부동산 매물과 에이전트들은 우편 구역(D1–D28) 단위로 이야기해요 — 오래된 분류지만 시장은 여전히 이걸로 돌아가요. 분석에서는 이걸 세 구간으로 묶어요: CCR(핵심 중심부: D9·D10·D11 + CBD — 가장 비쌈), RCR(시티 프린지), OCR(외곽). 정부 통계는 URA 계획구역 이름을 따로 쓰는데, 범위는 대체로 겹쳐요."
       },
+      postal: {
+        en: "The neat part: every building in Singapore has its own unique six-digit postal code, and the first two digits are the postal sector — exactly what the D1–D28 districts group together. 018936 → sector 01 → D1, and that specific code is Marina One and nothing else. It's why taxis, deliveries and forms only ever ask for six digits — and why this guide's address lookups work with just a postcode.",
+        ko: "재미있는 부분: 싱가포르의 모든 건물에는 고유한 6자리 우편번호가 있고, 앞 두 자리가 우편 섹터예요 — D1–D28 구역이 묶는 게 바로 이 섹터들이에요. 018936 → 섹터 01 → D1이고, 이 번호는 오직 Marina One 한 건물만 가리켜요. 그래서 택시·배달·서류가 6자리만 물어보는 거고, 이 가이드의 주소 검색도 우편번호만으로 동작해요."
+      },
       cols: {
         d: { en: "District", ko: "구역" },
         name: { en: "Name", ko: "이름" },
@@ -1564,10 +1568,13 @@ var CONTENT = {
         subAreas: [
           {
             name: { en: "1a — Beauty World / Upper Bukit Timah (D21)", ko: "1a — Beauty World · Upper Bukit Timah (D21)" },
-            body: {
-              en: "The Korean node: SKIS is walkable (71 Bukit Tinggi Rd), Bukit Timah Plaza houses Sol Mart (B1-66) plus several Korean restaurants and a tuition-centre cluster, and Koryo Mart sits at 17 Lorong Kilat. Malls on three corners of the MRT (Beauty World Centre with its Level-4 hawker centre, Beauty World Plaza, Bukit Timah Plaza with FairPrice Finest); an interim hawker centre sits beside the station (rebuilt hub ~2029), and The Reserve Residences integrated mall + bus interchange opens on top of the MRT (~2028). 3BR: new stock S$5,000–6,700 (Forett ~S$5,800–6,700 at an 11-min walk; Linq's compact 3BRs ~S$5,000–5,500 right above the MRT); the older 999-yr Southaven II runs ~S$4,500–5,000 by the Nature Reserve. Cluster-house pocket in Toh Tuck/Eng Kong.",
-              ko: "한인 거점이에요: SKIS(71 Bukit Tinggi Rd)가 도보권이고, Bukit Timah Plaza에는 Sol Mart(B1-66)와 한식당 여러 곳, 학원 클러스터가 들어와 있어요. Koryo Mart는 17 Lorong Kilat에 있어요. MRT 세 모퉁이마다 몰이 하나씩 있고(4층에 호커센터가 있는 Beauty World Centre, Beauty World Plaza, FairPrice Finest가 있는 Bukit Timah Plaza), 역 옆에 임시 호커센터(재건축 허브는 2029년경), 역 바로 위에는 The Reserve Residences 복합몰+버스 인터체인지가 2028년경 열려요. 3BR: 신축 S$5,000–6,700(도보 11분 Forett 약 S$5,800–6,700, 역 위 Linq 콤팩트 3BR 약 S$5,000–5,500), 자연보호구역 쪽 999년 구축 Southaven II는 약 S$4,500–5,000이에요. Toh Tuck/Eng Kong에 클러스터하우스 포켓이 있어요."
-            },
+            facts: [
+              { en: "The Korean node: SKIS walkable (71 Bukit Tinggi Rd); Sol Mart (B1-66), Korean restaurants and a tuition-centre cluster inside Bukit Timah Plaza; Koryo Mart at 17 Lorong Kilat.", ko: "한인 거점: SKIS(71 Bukit Tinggi Rd) 도보권. Bukit Timah Plaza 안에 Sol Mart(B1-66)·한식당들·학원 클러스터, 17 Lorong Kilat에 Koryo Mart." },
+              { en: "Malls on three corners of the MRT: Beauty World Centre (Level-4 hawker centre), Beauty World Plaza, Bukit Timah Plaza (FairPrice Finest); interim hawker centre beside the station (rebuilt hub ~2029).", ko: "MRT 세 모퉁이마다 몰: Beauty World Centre(4층 호커센터), Beauty World Plaza, Bukit Timah Plaza(FairPrice Finest). 역 옆에 임시 호커센터(재건축 허브 2029년경)." },
+              { en: "Coming: The Reserve Residences integrated mall + bus interchange opens on top of the MRT (~2028).", ko: "예정: 역 바로 위 The Reserve Residences 복합몰+버스 인터체인지가 2028년경 오픈." },
+              { en: "3BR: new stock S$5,000–6,700 (Forett ~S$5,800–6,700 at an 11-min walk; Linq's compact 3BRs ~S$5,000–5,500 above the MRT); older 999-yr Southaven II ~S$4,500–5,000 by the Nature Reserve.", ko: "3BR: 신축 S$5,000–6,700(도보 11분 Forett 약 S$5,800–6,700, 역 위 Linq 콤팩트 3BR 약 S$5,000–5,500). 자연보호구역 쪽 999년 구축 Southaven II 약 S$4,500–5,000." },
+              { en: "Cluster-house pocket in Toh Tuck / Eng Kong.", ko: "Toh Tuck/Eng Kong에 클러스터하우스 포켓." }
+            ],
             take: {
               en: "Likely the highest Korean concentration, but the shops are older-strata-mall grade rather than upscale, and it can feel remote — travel in and out drags at peak (the DTL ride itself is ~23 min to Downtown; the \"remote\" feeling is mostly a car thing).",
               ko: "한인 밀도는 아마 싱가포르에서 가장 높아요. 다만 상권은 고급이라기보단 오래된 상가 수준이고, 러시아워엔 드나들기가 답답할 수 있어요 — DTL 승차 자체는 Downtown까지 약 23분이라, '외지다'는 느낌은 주로 차로 다닐 때 이야기예요."
@@ -1575,10 +1582,12 @@ var CONTENT = {
           },
           {
             name: { en: "1b — King Albert Park / Sixth Avenue / Tan Kah Kee (D10/D21 border)", ko: "1b — King Albert Park · Sixth Avenue · Tan Kah Kee (D10/D21 경계)" },
-            body: {
-              en: "The prestige end. Sixth Avenue is a landed/GCB enclave where condos are the exception — a small newer cluster at Sixth Ave MRT (RoyalGreen ~S$7,000–8,500 est., Fourth Avenue Residences) and older freeholds near KAP (Maplewoods 3BR ~S$6,200; The Cascadia S$6,000–7,500; Signature Park's big, cheap older units ~S$5,800–6,500 for 4BR-scale space). Cold Storage at Guthrie House; KAP Mall is cinema-and-cafes with no supermarket (verify). On the doorstep of Nanyang, Hwa Chong, MGS and NJC; SKIS is a ~5-minute drive.",
-              ko: "명문가 구간이에요. Sixth Avenue는 단독주택·GCB 동네라 콘도가 오히려 예외예요 — Sixth Ave역 옆의 작은 신축 클러스터(RoyalGreen 약 S$7,000–8,500 추정, Fourth Avenue Residences)와 KAP 근처 구축 프리홀드(Maplewoods 3BR 약 S$6,200, The Cascadia S$6,000–7,500, 4BR급 공간이 크고 저렴한 구축 Signature Park 약 S$5,800–6,500)가 있어요. Guthrie House에 Cold Storage가 있고, KAP Mall은 영화관·카페 위주라 슈퍼마켓은 없어요(확인 필요). Nanyang, Hwa Chong, MGS, NJC가 문앞이고 SKIS는 차로 약 5분이에요."
-            },
+            facts: [
+              { en: "The prestige end: Sixth Avenue is a landed/GCB enclave where condos are the exception.", ko: "명문가 구간: Sixth Avenue는 단독주택·GCB 동네라 콘도가 오히려 예외예요." },
+              { en: "Condos: a small newer cluster at Sixth Ave MRT (RoyalGreen ~S$7,000–8,500 est., Fourth Avenue Residences) and older freeholds near KAP — Maplewoods 3BR ~S$6,200 · The Cascadia S$6,000–7,500 · Signature Park ~S$5,800–6,500 for 4BR-scale space.", ko: "콘도: Sixth Ave역 옆 작은 신축 클러스터(RoyalGreen 약 S$7,000–8,500 추정, Fourth Avenue Residences)와 KAP 근처 구축 프리홀드 — Maplewoods 3BR 약 S$6,200 · The Cascadia S$6,000–7,500 · 4BR급 공간의 Signature Park 약 S$5,800–6,500." },
+              { en: "Daily life: Cold Storage at Guthrie House; KAP Mall is cinema-and-cafes with no supermarket (verify).", ko: "생활: Guthrie House에 Cold Storage. KAP Mall은 영화관·카페 위주라 슈퍼마켓은 없어요(확인 필요)." },
+              { en: "Schools: Nanyang, Hwa Chong, MGS and NJC at the doorstep; SKIS a ~5-minute drive.", ko: "학교: Nanyang, Hwa Chong, MGS, NJC가 문앞. SKIS는 차로 약 5분." }
+            ],
             verify: true,
             take: {
               en: "Sixth Avenue itself has very few condos — it's really a landed neighbourhood with an MRT station.",
@@ -1587,10 +1596,14 @@ var CONTENT = {
           },
           {
             name: { en: "1c — Hillview (D23)", ko: "1c — Hillview (D23)" },
-            body: {
-              en: "The corridor's value play: 3BR from S$3,900–5,300 (Glendale Park, 2-min walk to the MRT) to S$4,600–4,850 (Midwood, next to HillV2) — S$1,500–2,000/month below Beauty World's new stock. The stock is a condo strip along Hillview Avenue plus landed estates and a thin cluster-house pocket on the Chestnut side (Chestnut Residences, Chestnut Ville). HillV2 anchors the lifestyle: CS Fresh (Cold Storage's premium format) plus a restaurant strip (iO Italian Osteria, Wine Connection, Joyden Canton); Rail Mall Cold Storage nearby; the Rail Corridor and Bukit Timah Nature Reserve on the doorstep; GESS one stop up at Dairy Farm Lane. Two DTL stations (Hillview DT3; the new Hume DT4, 2025). Caveats: parts of the estate are a long uphill walk from the MRT (Hazel Park is really Cashew-side), Hillhaven isn't rentable until 2027, and it's ~27 min by DTL to Downtown. SKIS is a 5–10 min drive.",
-              ko: "이 축의 가성비 카드예요: 3BR이 S$3,900–5,300(MRT 도보 2분 Glendale Park)에서 S$4,600–4,850(HillV2 옆 Midwood)까지 — Beauty World 신축보다 월 S$1,500–2,000 저렴해요. Hillview Avenue를 따라 콘도가 줄지어 있고, 단독주택 단지와 Chestnut 쪽의 얇은 클러스터하우스 포켓(Chestnut Residences, Chestnut Ville)도 있어요. 생활은 HillV2가 책임져요: CS Fresh(Cold Storage 프리미엄 매장) + 레스토랑 스트립(iO Italian Osteria, Wine Connection, Joyden Canton). 근처에 Rail Mall Cold Storage, 문앞에 Rail Corridor와 Bukit Timah 자연보호구역, 한 정거장 위 Dairy Farm Lane에 GESS가 있어요. DTL 역이 두 개예요(Hillview DT3, 2025년 신설 Hume DT4). 주의: 단지에 따라 MRT까지 오르막을 한참 걸어야 하고(Hazel Park는 사실상 Cashew 생활권), Hillhaven은 2027년까지 임대가 안 되고, Downtown까지 DTL로 약 27분이에요. SKIS는 차로 5–10분."
-            },
+            facts: [
+              { en: "3BR: S$3,900–5,300 (Glendale Park, 2-min MRT walk) up to S$4,600–4,850 (Midwood, next to HillV2) — S$1,500–2,000/month below Beauty World's new stock.", ko: "3BR: S$3,900–5,300(MRT 도보 2분 Glendale Park) ~ S$4,600–4,850(HillV2 옆 Midwood) — Beauty World 신축보다 월 S$1,500–2,000 저렴해요." },
+              { en: "Stock: a condo strip along Hillview Avenue, plus landed estates and a thin cluster-house pocket on the Chestnut side (Chestnut Residences, Chestnut Ville).", ko: "매물 구성: Hillview Avenue를 따라 콘도 스트립 + 단독주택 단지 + Chestnut 쪽의 얇은 클러스터하우스 포켓(Chestnut Residences, Chestnut Ville)." },
+              { en: "Daily life: HillV2 anchors it — CS Fresh (Cold Storage's premium format) and a restaurant strip (iO Italian Osteria, Wine Connection, Joyden Canton); Rail Mall Cold Storage nearby.", ko: "생활: HillV2가 중심 — CS Fresh(Cold Storage 프리미엄)와 레스토랑 스트립(iO Italian Osteria, Wine Connection, Joyden Canton). 근처에 Rail Mall Cold Storage." },
+              { en: "Nature & schools: the Rail Corridor and Bukit Timah Nature Reserve at the doorstep; GESS one stop up at Dairy Farm Lane; SKIS a 5–10 min drive.", ko: "자연·학교: 문앞이 Rail Corridor와 Bukit Timah 자연보호구역, 한 정거장 위 Dairy Farm Lane에 GESS. SKIS는 차로 5–10분." },
+              { en: "Transport: two DTL stations (Hillview DT3; the new Hume DT4, 2025); ~27 min by DTL to Downtown.", ko: "교통: DTL 역 두 개(Hillview DT3, 2025년 신설 Hume DT4). Downtown까지 DTL로 약 27분." },
+              { en: "Caveats: parts of the estate are a long uphill walk from the MRT (Hazel Park is really Cashew-side); Hillhaven isn't rentable until 2027.", ko: "주의: 단지에 따라 MRT까지 오르막을 한참 걸어야 하고(Hazel Park는 사실상 Cashew 생활권), Hillhaven은 2027년까지 임대가 안 돼요." }
+            ],
             take: {
               en: "Feels like a walkable upscale suburb — the CS Fresh + restaurant strip does a lot of work — but check the specific condo's MRT walk before committing.",
               ko: "걸어 다닐 수 있는 고급 교외 같은 느낌이에요 — CS Fresh와 레스토랑 스트립이 큰 몫을 해요. 다만 계약 전에 그 콘도의 MRT 도보 거리를 꼭 확인하세요."
@@ -1634,10 +1647,12 @@ var CONTENT = {
           en: "The most local-majority of the five. A quiet Japanese family undercurrent (the Japanese School has Clementi and West Coast campuses) and an academic/tech expat crowd around NUS and one-north. Korean presence: modest.",
           ko: "다섯 곳 중 로컬 비중이 가장 높아요. 일본인 학교(클레멘티·웨스트코스트 캠퍼스) 덕에 일본 가족이 조용히 많고, NUS·one-north 주변에는 학계·테크 외국인들이 살아요. 한인은 많지 않은 편이에요."
         },
-        property: {
-          en: "3BR S$5,500–6,500: Whistler Grand S$6,000–6,500 (958 sqft), Hundred Trees S$6,200–6,400 (1,163–1,302 sqft), the older Westcove S$5,500 (1,259 sqft), Clement Canopy ~S$5,800–6,400. 4BR S$8,000–11,000: Clavon S$8,000 (1,281 sqft), Parc Clematis ~S$8,500–9,500. Stock mix: an HDB-heavy heartland ringed by mega new 99-yr condos and 1990s West Coast condos; landed only in pockets (the Pasir Panjang hillside). Best HDB play of the group: Clementi 4-room median S$3,900, Queenstown S$4,000 — saving S$2,000+/month.",
-          ko: "3BR S$5,500–6,500: Whistler Grand S$6,000–6,500(958sqft), Hundred Trees S$6,200–6,400(1,163–1,302sqft), 구축 Westcove S$5,500(1,259sqft), Clement Canopy 약 S$5,800–6,400. 4BR S$8,000–11,000: Clavon S$8,000(1,281sqft), Parc Clematis 약 S$8,500–9,500. 매물 구성은 HDB 중심의 서민 지역을 신축 대단지 99년 콘도와 1990년대 West Coast 콘도가 둘러싼 형태이고, 단독주택은 Pasir Panjang 언덕 쪽 일부뿐이에요. HDB 활용도는 후보 중 최고: Clementi 방4개 중위 S$3,900, Queenstown S$4,000 — 월 S$2,000 이상 아껴요."
-        },
+        property: [
+          { en: "3BR S$5,500–6,500: Whistler Grand S$6,000–6,500 (958 sqft) · Hundred Trees S$6,200–6,400 (1,163–1,302 sqft) · older Westcove S$5,500 (1,259 sqft) · Clement Canopy ~S$5,800–6,400.", ko: "3BR S$5,500–6,500: Whistler Grand S$6,000–6,500(958sqft) · Hundred Trees S$6,200–6,400(1,163–1,302sqft) · 구축 Westcove S$5,500(1,259sqft) · Clement Canopy 약 S$5,800–6,400." },
+          { en: "4BR S$8,000–11,000: Clavon S$8,000 (1,281 sqft) · Parc Clematis ~S$8,500–9,500.", ko: "4BR S$8,000–11,000: Clavon S$8,000(1,281sqft) · Parc Clematis 약 S$8,500–9,500." },
+          { en: "Stock mix: an HDB-heavy heartland ringed by mega new 99-yr condos and 1990s West Coast condos; landed only in Pasir Panjang hillside pockets.", ko: "매물 구성: HDB 중심의 서민 지역을 신축 대단지 99년 콘도와 1990년대 West Coast 콘도가 둘러싼 형태. 단독주택은 Pasir Panjang 언덕 쪽 일부뿐이에요." },
+          { en: "Best HDB play of the group: Clementi 4-room median S$3,900, Queenstown S$4,000 — saving S$2,000+/month.", ko: "HDB 활용도는 후보 중 최고: Clementi 방4개 중위 S$3,900, Queenstown S$4,000 — 월 S$2,000 이상 아껴요." }
+        ],
         srcUrl: "https://property.singaporeexpats.com/district/apartment-condo/rent/05"
       },
       {
@@ -1685,10 +1700,12 @@ var CONTENT = {
           en: "A long-established expat pocket — skewing Australian/British/Western plus Indian expat families (directional, not exact) — blended into a strongly local, Peranakan-heritage area. Laid-back family lifestyle. Korean presence: minimal, and SKIS is a cross-island trek.",
           ko: "호주·영국계 서양 가족과 인도계 외국인 가족이 많은(대략적인 경향이에요) 오래된 외국인 포켓이, 페라나칸 전통이 살아있는 로컬 동네와 섞여 있어요. 느긋한 가족 라이프스타일이 특징이에요. 한인은 거의 없고, SKIS까지는 섬을 가로질러야 해요."
         },
-        property: {
-          en: "3BR S$4,500–8,500: The Esta ~S$6,000–6,800 (1,346 sqft, helper rooms common), Seaside Residences ~S$6,400–7,200, Villa Marina S$5,800 (1,281 sqft). 4BR S$7,500–12,000: One Amber ~S$8,500 (1,700 sqft); Mandarin Gardens' huge older units S$7,000–7,700 (1,787–2,034 sqft — the cheapest big space around). Landed: terraces from S$6,500–15,500 — roughly half Bukit Timah's D10 prices. HDB: Marine Parade 4-room median S$3,500 (live asks ~S$4,100), right by the TEL and Parkway Parade.",
-          ko: "3BR S$4,500–8,500: The Esta 약 S$6,000–6,800(1,346sqft, 헬퍼룸 흔함), Seaside Residences 약 S$6,400–7,200, Villa Marina S$5,800(1,281sqft). 4BR S$7,500–12,000: One Amber 약 S$8,500(1,700sqft), Mandarin Gardens의 초대형 구축 S$7,000–7,700(1,787–2,034sqft — 넓은 집 기준 최저가). 단독주택: 테라스 S$6,500–15,500부터 — 부킷 티마 D10의 대략 절반 가격이에요. HDB: Marine Parade 방4개 중위 S$3,500(실제 호가는 약 S$4,100) — TEL역과 Parkway Parade 바로 옆이에요."
-        },
+        property: [
+          { en: "3BR S$4,500–8,500: The Esta ~S$6,000–6,800 (1,346 sqft, helper rooms common) · Seaside Residences ~S$6,400–7,200 · Villa Marina S$5,800 (1,281 sqft).", ko: "3BR S$4,500–8,500: The Esta 약 S$6,000–6,800(1,346sqft, 헬퍼룸 흔함) · Seaside Residences 약 S$6,400–7,200 · Villa Marina S$5,800(1,281sqft)." },
+          { en: "4BR S$7,500–12,000: One Amber ~S$8,500 (1,700 sqft) · Mandarin Gardens' huge older units S$7,000–7,700 (1,787–2,034 sqft — the cheapest big space around).", ko: "4BR S$7,500–12,000: One Amber 약 S$8,500(1,700sqft) · Mandarin Gardens 초대형 구축 S$7,000–7,700(1,787–2,034sqft — 넓은 집 기준 최저가)." },
+          { en: "Landed: terraces S$6,500–15,500 — roughly half Bukit Timah's D10 prices.", ko: "단독주택: 테라스 S$6,500–15,500 — 부킷 티마 D10의 대략 절반 가격." },
+          { en: "HDB: Marine Parade 4-room median S$3,500 (live asks ~S$4,100), right by the TEL and Parkway Parade.", ko: "HDB: Marine Parade 방4개 중위 S$3,500(실제 호가 약 S$4,100) — TEL역과 Parkway Parade 바로 옆." }
+        ],
         srcUrl: "https://www.edgeprop.sg/condo-apartment/the-esta"
       },
       {
@@ -1713,10 +1730,13 @@ var CONTENT = {
           en: "The traditional Western-expat heartland: high expat and family density, and hiring a helper is the near-universal norm. Korean families are present at the fringe of the Bukit Timah cluster.",
           ko: "전통적인 서양 외국인 중심지예요. 외국인·가족 밀도가 높고, 입주 헬퍼 고용이 거의 기본값인 동네예요. 부킷 티마 한인 클러스터의 가장자리라 한인 가족도 어느 정도 있어요."
         },
-        property: {
-          en: "3BR S$5,500–10,000: The Serenade @ Holland S$5,500 (1,152 sqft), d'Leedon ~S$6,500–8,100 (compact Zaha layouts, mostly no utility room), the older freehold Sommerville Park S$7,000–8,500 (1,600–2,000 sqft, utility rooms standard), One Holland Village Residences ~S$10,000. 4BR S$10,000–15,000: Leedon Green ~S$10,000 (1,490 sqft), d'Leedon ~S$12,900 (2,300 sqft); the Orchard-side luxury tail runs S$15,000–39,000. Stock mix: a prestige condo belt plus GCB/landed enclaves and the low-rise Chip Bee Gardens terraces; no walk-ups to speak of. Prime central = the least negotiating room. The HDB hack: Holland Close/Ghim Moh blocks (Queenstown 4-room median S$4,000) give the Holland Village lifestyle at half price, quota permitting. If you'd trade space for location: One Holland Village 2BR runs S$6,200–7,000.",
-          ko: "3BR S$5,500–10,000: The Serenade @ Holland S$5,500(1,152sqft), d'Leedon 약 S$6,500–8,100(자하 하디드 설계의 콤팩트 구조, 유틸리티룸 없는 유닛이 대부분), 구축 프리홀드 Sommerville Park S$7,000–8,500(1,600–2,000sqft, 유틸리티룸 기본), One Holland Village Residences 약 S$10,000. 4BR S$10,000–15,000: Leedon Green 약 S$10,000(1,490sqft), d'Leedon 약 S$12,900(2,300sqft); 오차드 쪽 럭셔리 구간은 S$15,000–39,000까지 가요. 매물 구성은 명품 콘도 벨트 + GCB·단독주택 단지 + 저층 Chip Bee Gardens 테라스이고, 워크업은 거의 없어요. 핵심 중심부라 협상 여지가 가장 적어요. HDB 꿀팁: Holland Close/Ghim Moh 단지(Queenstown 방4개 중위 S$4,000)는 '홀랜드 빌리지 라이프를 반값에' — 외국인 쿼터가 허용된다면요. 공간을 줄이고 위치를 택한다면 One Holland Village 2BR이 S$6,200–7,000이에요."
-        },
+        property: [
+          { en: "3BR S$5,500–10,000: The Serenade @ Holland S$5,500 (1,152 sqft) · d'Leedon ~S$6,500–8,100 (compact Zaha layouts, mostly no utility room) · Sommerville Park S$7,000–8,500 (1,600–2,000 sqft freehold, utility rooms standard) · One Holland Village Residences ~S$10,000.", ko: "3BR S$5,500–10,000: The Serenade @ Holland S$5,500(1,152sqft) · d'Leedon 약 S$6,500–8,100(자하 하디드 콤팩트 구조, 유틸리티룸 없는 유닛 다수) · Sommerville Park S$7,000–8,500(1,600–2,000sqft 프리홀드, 유틸리티룸 기본) · One Holland Village Residences 약 S$10,000." },
+          { en: "4BR S$10,000–15,000: Leedon Green ~S$10,000 (1,490 sqft) · d'Leedon ~S$12,900 (2,300 sqft); the Orchard-side luxury tail runs S$15,000–39,000.", ko: "4BR S$10,000–15,000: Leedon Green 약 S$10,000(1,490sqft) · d'Leedon 약 S$12,900(2,300sqft). 오차드 쪽 럭셔리 구간은 S$15,000–39,000까지." },
+          { en: "Stock mix: a prestige condo belt plus GCB/landed enclaves and the low-rise Chip Bee Gardens terraces; prime central = the least negotiating room.", ko: "매물 구성: 명품 콘도 벨트 + GCB·단독주택 단지 + 저층 Chip Bee Gardens 테라스. 핵심 중심부라 협상 여지가 가장 적어요." },
+          { en: "The HDB hack: Holland Close/Ghim Moh blocks (Queenstown 4-room median S$4,000) give the Holland Village lifestyle at half price, quota permitting.", ko: "HDB 꿀팁: Holland Close/Ghim Moh 단지(Queenstown 방4개 중위 S$4,000)는 '홀랜드 빌리지 라이프를 반값에' — 외국인 쿼터가 허용된다면요." },
+          { en: "Trading space for location: One Holland Village 2BR runs S$6,200–7,000.", ko: "공간 대신 위치를 택한다면: One Holland Village 2BR이 S$6,200–7,000." }
+        ],
         srcUrl: "https://www.edgeprop.sg/condo-apartment/dleedon"
       },
       {
@@ -1742,10 +1762,12 @@ var CONTENT = {
           en: "Younger expats and professional couples; mixed-nationality with no single cluster; strong local affluent families (the ACS/SJI/CHIJ school belt). Lower expat-family density than Bukit Timah or Holland V.",
           ko: "젊은 외국인 직장인과 전문직 커플이 많고, 특정 국적 클러스터 없이 다국적이에요. 로컬 부유층 가족도 많아요(ACS/SJI/CHIJ 학군 벨트). 외국인 가족 밀도는 부킷 티마나 홀랜드 빌리지보다 낮아요."
         },
-        property: {
-          en: "3BR S$6,400–7,900: Amaryllis Ville ~S$7,200 (1,300 sqft), Park Infinia ~S$7,400, Chancery Court S$6,400–7,600 (huge 2,034–2,271 sqft older units); newer/larger stock runs S$9,000–12,000 (Soleil @ Sinaran S$11,800). 4BR S$6,800–12,000: Hillcrest Arcadia S$6,900–8,500 (1,970 sqft — bargain space), Chancery Court S$7,600 (2,271 sqft), Sky@Eleven ~S$11,000–12,000 (2,700 sqft). Stock mix: essentially all high-rise condo — but the abundant older large stock means families can get a helper's room here without jumping to a 4BR. HDB: basically none in-district (Whampoa/Toa Payoh S$3,600 nearby).",
-          ko: "3BR S$6,400–7,900: Amaryllis Ville 약 S$7,200(1,300sqft), Park Infinia 약 S$7,400, Chancery Court S$6,400–7,600(2,034–2,271sqft의 초대형 구축). 신축·대형은 S$9,000–12,000(Soleil @ Sinaran S$11,800). 4BR S$6,800–12,000: Hillcrest Arcadia S$6,900–8,500(1,970sqft — 공간 가성비 갑), Chancery Court S$7,600(2,271sqft), Sky@Eleven 약 S$11,000–12,000(2,700sqft). 매물 구성은 사실상 전부 고층 콘도인데, 구축 대형 평형이 많아서 4BR로 올라가지 않아도 헬퍼룸을 구할 수 있는 동네예요. HDB는 구역 안에는 거의 없어요(인근 Whampoa/Toa Payoh S$3,600)."
-        },
+        property: [
+          { en: "3BR S$6,400–7,900: Amaryllis Ville ~S$7,200 (1,300 sqft) · Park Infinia ~S$7,400 · Chancery Court S$6,400–7,600 (huge 2,034–2,271 sqft older units); newer/larger stock runs S$9,000–12,000 (Soleil @ Sinaran S$11,800).", ko: "3BR S$6,400–7,900: Amaryllis Ville 약 S$7,200(1,300sqft) · Park Infinia 약 S$7,400 · Chancery Court S$6,400–7,600(2,034–2,271sqft 초대형 구축). 신축·대형은 S$9,000–12,000(Soleil @ Sinaran S$11,800)." },
+          { en: "4BR S$6,800–12,000: Hillcrest Arcadia S$6,900–8,500 (1,970 sqft — bargain space) · Chancery Court S$7,600 (2,271 sqft) · Sky@Eleven ~S$11,000–12,000 (2,700 sqft).", ko: "4BR S$6,800–12,000: Hillcrest Arcadia S$6,900–8,500(1,970sqft — 공간 가성비 갑) · Chancery Court S$7,600(2,271sqft) · Sky@Eleven 약 S$11,000–12,000(2,700sqft)." },
+          { en: "Stock mix: essentially all high-rise condo — but the abundant older large stock means a helper's room without jumping to a 4BR.", ko: "매물 구성: 사실상 전부 고층 콘도 — 다만 구축 대형 평형이 많아 4BR로 안 올라가도 헬퍼룸을 구할 수 있어요." },
+          { en: "HDB: basically none in-district (Whampoa/Toa Payoh S$3,600 nearby).", ko: "HDB: 구역 안에는 거의 없음(인근 Whampoa/Toa Payoh S$3,600)." }
+        ],
         srcUrl: "https://www.edgeprop.sg/condo-apartment/amaryllis-ville"
       }
     ],
