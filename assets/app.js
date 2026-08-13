@@ -176,8 +176,8 @@
     curSeg.setAttribute("title", t(CONTENT.currencies.note));
 
     var nav = h("nav", { class: "site-nav", "aria-label": lang === "ko" ? "섹션 이동" : "Sections" });
-    function navEntry(id, label, subs) {
-      var link = h("a", { href: "#" + id, dataset: { navId: id }, text: label });
+    function navEntry(id, label, subs, target) {
+      var link = h("a", { href: "#" + (target || id), dataset: { navId: id }, text: label });
       if (!subs || !subs.length) return link;
       var wrap = h("div", { class: "nav-item" }, link);
       var menu = h("div", { class: "nav-menu", role: "menu" });
@@ -189,7 +189,7 @@
     }
     nav.appendChild(navEntry("home", t(CONTENT.ui.homeLabel), null));
     CONTENT.nav.forEach(function (item) {
-      nav.appendChild(navEntry(item.id, t(item.label), item.subs));
+      nav.appendChild(navEntry(item.id, t(item.label), item.subs, item.target));
     });
 
     header.appendChild(h("div", { class: "header-row" },
@@ -202,11 +202,11 @@
 
   /* the header's second row: subsection anchors for the current view */
   var subSpy = null;
-  function updateSubNav(viewId) {
+  function updateSubNav(navId, viewId) {
     var row = document.getElementById("sub-nav");
     if (!row) return;
     var item = null;
-    CONTENT.nav.forEach(function (n) { if (n.id === viewId) item = n; });
+    CONTENT.nav.forEach(function (n) { if (n.id === navId) item = n; });
     var subs = item && item.subs;
     row.innerHTML = "";
     row.hidden = !subs;
@@ -215,7 +215,11 @@
     if (!subs) return;
     var links = {};
     subs.forEach(function (s) {
-      links[s.id] = row.appendChild(h("a", { href: "#" + s.id, dataset: { subId: s.id }, text: t(s.label) }));
+      links[s.id] = row.appendChild(h("a", {
+        href: "#" + s.id, dataset: { subId: s.id },
+        class: s.id === viewId ? "active" : null,
+        text: t(s.label)
+      }));
     });
     subSpy = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
@@ -242,7 +246,7 @@
   function renderHome(main) {
     main.appendChild(h("section", { id: "home", class: "home-view", "aria-label": t(CONTENT.ui.homeLabel) },
       h("div", { class: "section-cards" }, CONTENT.nav.map(function (n) {
-        return h("a", { class: "section-card", href: "#" + n.id },
+        return h("a", { class: "section-card", href: "#" + (n.target || n.id) },
           h("span", { class: "card-title", text: t(n.label) }),
           h("span", { class: "card-desc", text: t(n.desc) }),
           h("span", { class: "card-arrow", "aria-hidden": "true", text: "→" })
@@ -1015,8 +1019,19 @@
   var ANCHORS_KEY = "sgguide:anchors";
   var areaState = {
     sort: { key: null, dir: 1 },
-    filters: { district: {}, br3: {}, br4: {}, work: {}, school: {}, condo: {}, hdb: {}, landed: {} }
+    filters: { district: {}, br3: {}, br4: {}, work: {}, school: {}, walk: {}, condo: {}, hdb: {}, landed: {} }
   };
+
+  function areaRowName(row) {
+    if (row.name) return t(row.name);
+    var e = atlasById(row.id);
+    return e ? t(e.name) : row.id;
+  }
+  function areaRowHref(row) {
+    var e = atlasById(row.id);
+    var card = row.cardId || (e && e.cardId);
+    return card ? "#area-" + card : "#atlas-" + row.id;
+  }
 
   function haversineKm(a, b) {
     var R = 6371, d2r = Math.PI / 180;
@@ -1095,6 +1110,7 @@
           passes(f.br4, bandOf(r.row.br4, at.br4Bands)) &&
           passes(f.work, bandOf(r.work, at.commuteBands)) &&
           passes(f.school, bandOf(r.school, at.commuteBands)) &&
+          passes(f.walk, "l" + r.row.walk) &&
           passes(f.condo, "l" + r.row.condo) &&
           passes(f.hdb, "l" + r.row.hdb) &&
           passes(f.landed, "l" + r.row.landed);
@@ -1103,7 +1119,7 @@
         var k = areaState.sort.key, d = areaState.sort.dir;
         rows = rows.slice().sort(function (a, b) {
           function val(x) {
-            if (k === "area") { var e = atlasById(x.row.id); return (e ? t(e.name) : x.row.id).toLowerCase(); }
+            if (k === "area") return areaRowName(x.row).toLowerCase();
             if (k === "work" || k === "school") return x[k];
             var v = x.row[k];
             return v == null ? (d === 1 ? Infinity : -Infinity) : v;
@@ -1113,15 +1129,15 @@
         });
       }
       rows.forEach(function (r) {
-        var e = atlasById(r.row.id);
-        var href = e && e.cardId ? "#area-" + e.cardId : "#atlas-" + r.row.id;
         tbody.appendChild(h("tr", { class: r.row.rough ? "row-rough" : null },
           h("td", { text: r.row.district }),
-          h("th", { scope: "row" }, h("a", { href: href, text: e ? t(e.name) : r.row.id })),
+          h("th", { scope: "row" }, h("a", { href: areaRowHref(r.row), text: areaRowName(r.row) })),
           h("td", { text: t(price(r.row, "br3")) }),
           h("td", { text: t(price(r.row, "br4")) }),
           h("td", { text: "~" + r.work + (lang === "ko" ? "분" : " min") }),
           h("td", { text: "~" + r.school + (lang === "ko" ? "분" : " min") }),
+          h("td", { class: "stock-cell", text: dots(r.row.walk) }),
+          h("td", { class: "malls-cell", text: r.row.malls }),
           h("td", { class: "stock-cell", text: dots(r.row.condo) }),
           h("td", { class: "stock-cell", text: dots(r.row.hdb) }),
           h("td", { class: "stock-cell", text: dots(r.row.landed) })
@@ -1167,6 +1183,8 @@
       thMenuCell({ label: at.cols.br4, key: "br4", sort: { state: areaState.sort, type: "num" }, filter: { options: optionsFrom(at.br4Bands), selected: areaState.filters.br4 }, onChange: rebuild }),
       thMenuCell({ label: at.cols.work, key: "work", sort: { state: areaState.sort, type: "num" }, filter: { options: optionsFrom(at.commuteBands), selected: areaState.filters.work }, onChange: rebuild }),
       thMenuCell({ label: at.cols.school, key: "school", sort: { state: areaState.sort, type: "num" }, filter: { options: optionsFrom(at.commuteBands), selected: areaState.filters.school }, onChange: rebuild }),
+      thMenuCell({ label: at.cols.walk, key: "walk", sort: null, filter: stockFilter("walk"), onChange: rebuild }),
+      h("th", { text: t(at.cols.malls) }),
       thMenuCell({ label: at.cols.condo, key: "condo", sort: null, filter: stockFilter("condo"), onChange: rebuild }),
       thMenuCell({ label: at.cols.hdb, key: "hdb", sort: null, filter: stockFilter("hdb"), onChange: rebuild }),
       thMenuCell({ label: at.cols.landed, key: "landed", sort: null, filter: stockFilter("landed"), onChange: rebuild })
@@ -1175,7 +1193,7 @@
     var resetBtn = h("button", {
       type: "button", class: "reset-btn", text: t(CONTENT.ui.clearAll),
       onclick: function () {
-        areaState = { sort: { key: null, dir: 1 }, filters: { district: {}, br3: {}, br4: {}, work: {}, school: {}, condo: {}, hdb: {}, landed: {} } };
+        areaState = { sort: { key: null, dir: 1 }, filters: { district: {}, br3: {}, br4: {}, work: {}, school: {}, walk: {}, condo: {}, hdb: {}, landed: {} } };
         anchors = defaultAnchors();
         saveAnchors(anchors);
         renderAll(true);
@@ -1195,6 +1213,7 @@
         thead, tbody
       )),
       h("p", { class: "table-note", text: t(at.stockNote) }),
+      h("p", { class: "table-note", text: t(at.districtNote) }),
       h("p", { class: "table-note", text: t(at.estNote) })
     ));
   }
@@ -1493,9 +1512,12 @@
       h("h3", { text: t(car.reality.title) }),
       h("ul", {}, car.reality.items.map(function (i) { return h("li", { text: t(i) }); })),
       h("p", {}, srcLink(car.reality.srcUrl)),
-      h("div", { class: "info-box" },
-        h("h3", { text: t(car.childSeats.title) }),
-        h("p", {}, h("span", { text: t(car.childSeats.body) + " " }), srcLink(car.childSeats.url))
+      h("div", { id: "car-alternatives" },
+        h("h3", { text: t(car.altTitle) }),
+        h("div", { class: "info-box" },
+          h("h4", { text: t(car.childSeats.title) }),
+          h("p", {}, h("span", { text: t(car.childSeats.body) + " " }), srcLink(car.childSeats.url))
+        )
       )
     );
     main.appendChild(section);
@@ -1600,8 +1622,8 @@
     renderChurch(main);
     renderHelper(main);
     renderCar(main);
-    renderApps(main);
     renderCosts(main);
+    renderApps(main);
     renderChecklist(main);
     addPagers();
     renderFooter();
@@ -1629,7 +1651,20 @@
 
   /* ---------- view routing ---------- */
 
-  function viewIds() { return ["home"].concat(CONTENT.nav.map(function (n) { return n.id; })); }
+  // every section view, in page order (nav items may be groups pointing at these)
+  var SECTION_VIEWS = ["home", "education", "schools", "living", "areas",
+    "community", "church", "helper", "car", "costs", "apps", "checklist"];
+  function viewIds() { return SECTION_VIEWS; }
+
+  // which top-level nav item owns a view (self, or the group whose subs include it)
+  function navOwnerOf(viewId) {
+    var owner = viewId;
+    CONTENT.nav.forEach(function (n) {
+      if (n.id === viewId) owner = n.id;
+      (n.subs || []).forEach(function (s) { if (s.id === viewId) owner = n.id; });
+    });
+    return owner;
+  }
 
   function applyView(id, targetEl, noScroll) {
     currentView = id;
@@ -1640,15 +1675,16 @@
     document.querySelectorAll("main section.section").forEach(function (sec) {
       sec.hidden = sec.id !== id;
     });
+    var owner = navOwnerOf(id);
     document.querySelectorAll(".site-nav a[data-nav-id]").forEach(function (a) {
-      a.classList.toggle("active", a.getAttribute("data-nav-id") === id);
+      a.classList.toggle("active", a.getAttribute("data-nav-id") === owner);
     });
     var active = document.querySelector(".site-nav a.active");
     if (active) {
       var navEl = active.parentElement;
       navEl.scrollTo({ left: Math.max(0, active.offsetLeft - (navEl.clientWidth - active.offsetWidth) / 2) });
     }
-    updateSubNav(id);
+    updateSubNav(owner, id);
     if (targetEl) {
       if (targetEl.tagName === "DETAILS") targetEl.setAttribute("open", "");
       requestAnimationFrame(function () { targetEl.scrollIntoView({ block: "start" }); });
@@ -1665,6 +1701,10 @@
   function route() {
     var hash = decodeURIComponent(location.hash.replace(/^#\/?/, ""));
     if (!hash || hash === "home" || hash === "top") { applyView("home"); return; }
+    // group nav ids (Social, Transport, Arrival…) route to their first member view
+    var group = null;
+    CONTENT.nav.forEach(function (n) { if (n.id === hash && n.target) group = n; });
+    if (group) { applyView(group.target); return; }
     if (viewIds().indexOf(hash) !== -1) { applyView(hash); return; }
     var el = document.getElementById(hash);
     if (el) {
@@ -1694,7 +1734,25 @@
   }
 
   function addPagers() {
-    var items = CONTENT.nav;
+    function navLabel(id) {
+      var found = null;
+      CONTENT.nav.forEach(function (n) { if (n.id === id) found = n.label; });
+      return found;
+    }
+    // pager sequence = section views in page order, whatever nav grouping looks like
+    var items = [
+      { id: "education", label: navLabel("education") },
+      { id: "schools", label: CONTENT.education.schools.title },
+      { id: "living", label: navLabel("living") },
+      { id: "areas", label: CONTENT.living.areaTable.title },
+      { id: "community", label: CONTENT.community.title },
+      { id: "church", label: CONTENT.church.title },
+      { id: "helper", label: CONTENT.helper.title },
+      { id: "car", label: CONTENT.car.title },
+      { id: "costs", label: CONTENT.costs.title },
+      { id: "apps", label: CONTENT.apps.title },
+      { id: "checklist", label: CONTENT.checklist.title }
+    ];
     items.forEach(function (n, i) {
       var sec = document.getElementById(n.id);
       if (!sec) return;

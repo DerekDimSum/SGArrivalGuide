@@ -65,41 +65,46 @@ var CONTENT = {
 
   nav: [
     { id: "education", label: { en: "Education", ko: "교육" },
-      desc: { en: "The age calculator, preschool now, primary-school paths, and enrichment.", ko: "나이 계산기부터 유치원, 초등 로드맵, 사교육까지." },
+      desc: { en: "The class calculator, the school directory, preschool, primary paths, and enrichment.", ko: "반 배정 계산기와 학교 디렉토리, 유치원, 초등 로드맵, 사교육까지." },
       subs: [
-        { id: "edu-calculator", label: { en: "Age calculator", ko: "나이 계산기" } },
+        { id: "edu-calculator", label: { en: "Class calculator", ko: "반 배정 계산기" } },
+        { id: "schools", label: { en: "School directory", ko: "학교 디렉토리" } },
         { id: "edu-preschool", label: { en: "Preschool", ko: "유치원" } },
         { id: "edu-primary", label: { en: "Primary school", ko: "초등학교" } },
-        { id: "edu-enrichment", label: { en: "Enrichment", ko: "사교육" } }
+        { id: "edu-enrichment", label: { en: "Enrichment classes", ko: "사교육 클래스" } }
       ] },
-    { id: "schools", label: { en: "Schools", ko: "학교" },
-      desc: { en: "All 30 schools in one filterable directory — type, stage, fees, waitlists.", ko: "학교 30곳을 한 표에서 필터로 — 구분, 과정, 학비, 대기까지." } },
     { id: "living", label: { en: "Where to live", ko: "어디에 살까" },
-      desc: { en: "How the island works, a priorities matcher, and a neighbourhood atlas.", ko: "싱가포르 구조 해설, 우선순위 매처, 동네 아틀라스까지." },
+      desc: { en: "How the island works, the sortable area table, maps, and a neighbourhood atlas.", ko: "싱가포르 구조 해설, 정렬 가능한 동네 표, 지도, 동네 아틀라스까지." },
       subs: [
         { id: "living-overview", label: { en: "Overview", ko: "개요" } },
-        { id: "living-picker", label: { en: "Priorities", ko: "우선순위" } },
+        { id: "areas", label: { en: "Area table", ko: "동네 표" } },
         { id: "living-compare", label: { en: "Shortlist", ko: "후보 비교" } },
         { id: "sg-map", label: { en: "Map", ko: "지도" } },
         { id: "living-atlas", label: { en: "Neighbourhoods", ko: "동네별" } },
         { id: "renting-box", label: { en: "Renting", ko: "임대 절차" } }
       ] },
-    { id: "areas", label: { en: "Area table", ko: "동네 표" },
-      desc: { en: "All 19 neighbourhoods in one sortable, filterable table — with your own commute anchors.", ko: "19개 동네를 정렬·필터 가능한 한 표로 — 통근 기준점도 직접 설정해요." } },
-    { id: "community", label: { en: "Korean community", ko: "한인 커뮤니티" },
-      desc: { en: "한인회, 한국촌, K-town, Korean marts and the Saturday Hangul school.", ko: "한인회, 한국촌, K-타운, 한국 마트, 토요한글학교." } },
-    { id: "church", label: { en: "Church", ko: "교회" },
-      desc: { en: "Korean congregations — and the fastest way to meet Korean parents.", ko: "한인 교회들 — 한인 부모들을 가장 빨리 만나는 길이기도 해요." } },
+    { id: "social", target: "community", label: { en: "Social", ko: "커뮤니티" },
+      desc: { en: "The Korean community network and Korean churches — the fastest ways in.", ko: "한인 커뮤니티 네트워크와 한인 교회 — 가장 빠른 정착 지름길이에요." },
+      subs: [
+        { id: "community", label: { en: "Korean community", ko: "한인 커뮤니티" } },
+        { id: "church", label: { en: "Church", ko: "교회" } }
+      ] },
     { id: "helper", label: { en: "Helper", ko: "입주 헬퍼" },
       desc: { en: "Costs, process and timeline for hiring live-in help.", ko: "입주 헬퍼 고용의 비용, 절차, 소요 기간." } },
-    { id: "car", label: { en: "Car?", ko: "자동차?" },
-      desc: { en: "COE reality check and why most MRT-adjacent households skip it.", ko: "COE의 현실, 그리고 역세권에 살면 차를 안 사는 이유." } },
-    { id: "apps", label: { en: "Apps", ko: "앱" },
-      desc: { en: "Day-one downloads, one line each.", ko: "첫날 깔아야 할 앱, 한 줄씩." } },
+    { id: "transport", target: "car", label: { en: "Transport", ko: "교통" },
+      desc: { en: "The car question — and life on Grab, taxis and the MRT.", ko: "자동차 고민 — 그리고 Grab·택시·MRT로 사는 법." },
+      subs: [
+        { id: "car", label: { en: "The car question", ko: "자동차, 살까 말까" } },
+        { id: "car-alternatives", label: { en: "Grab · taxi · MRT", ko: "Grab · 택시 · MRT" } }
+      ] },
     { id: "costs", label: { en: "Monthly costs", ko: "월 생활비" },
       desc: { en: "A realistic monthly budget, low and high.", ko: "현실적인 월 예산, 최소·최대." } },
-    { id: "checklist", label: { en: "First 30 days", ko: "첫 30일" },
-      desc: { en: "The landing checklist — passes, Singpass, bank, SIM, transport, in order.", ko: "정착 체크리스트 — 패스, 싱패스, 은행, 유심, 교통을 순서대로." } }
+    { id: "arrival", target: "apps", label: { en: "Arrival", ko: "정착 준비" },
+      desc: { en: "Day-one apps and the first-30-days checklist.", ko: "첫날 깔아야 할 앱과 첫 30일 체크리스트." },
+      subs: [
+        { id: "apps", label: { en: "Useful apps", ko: "유용한 앱" } },
+        { id: "checklist", label: { en: "First 30 days checklist", ko: "첫 30일 체크리스트" } }
+      ] }
   ],
 
   hero: {
@@ -268,7 +273,7 @@ var CONTENT = {
 
     /* Age calculator — one input, one answer per school system */
     calculator: {
-      title: { en: "What level is my child? — age calculator", ko: "우리 아이는 몇 학년? — 나이 계산기" },
+      title: { en: "Which class will my child join? — class calculator", ko: "우리 아이는 몇 반? — 반 배정 계산기" },
       intro: {
         en: "Singapore levels don't map one-to-one from Korea, and each school system uses a different cutoff date. Enter a birth month and year to see where a child lands in each system.",
         ko: "싱가포르 학제는 한국과 1:1로 맞지 않고, 학교 시스템마다 기준일도 달라요. 출생 연월을 입력하면 시스템별로 어느 반·학년인지 보여드려요."
@@ -1148,35 +1153,45 @@ var CONTENT = {
         br4: { en: "4BR (avg)", ko: "4BR (평균)" },
         work: { en: "To work (MRT, est.)", ko: "직장까지 (MRT, 추정)" },
         school: { en: "To school (drive, est.)", ko: "학교까지 (차량, 추정)" },
+        walk: { en: "Walkability", ko: "도보 생활" },
+        malls: { en: "Malls & groceries", ko: "몰 · 장보기" },
         condo: { en: "Condo", ko: "콘도" },
         hdb: { en: "HDB", ko: "HDB" },
         landed: { en: "Landed", ko: "단독" }
       },
       stockNote: {
-        en: "Stock: ●●● lots · ●● some · ● a little · — basically none. Rough characterisations, not counts.",
-        ko: "주거 형태: ●●● 많음 · ●● 어느 정도 · ● 조금 · — 거의 없음. 개수가 아니라 대략적인 성격이에요."
+        en: "Stock and walkability: ●●● lots / errands fully on foot · ●● some / mostly walkable · ● a little / car-leaning · — none / car-dependent. Rough characterisations, not counts.",
+        ko: "주거 형태·도보 생활: ●●● 많음/도보로 다 해결 · ●● 어느 정도/대체로 도보 · ● 조금/차가 편함 · — 거의 없음/차 필수. 개수가 아니라 대략적인 성격이에요."
       },
-      /* rows reference atlas entries by id for names/links; lat/lng are area centroids */
+      districtNote: {
+        en: "Rows follow the sub-district neighbourhoods agents actually name; the listings portals (PropertyGuru, 99.co) search by these same D1–D28 districts, so \"district + area\" is exactly how to brief an agent.",
+        ko: "행은 에이전트들이 실제로 부르는 세부 동네 단위예요. 매물 포털(PropertyGuru, 99.co)도 같은 D1–D28 구역으로 검색하니, 에이전트에게는 '구역 + 동네'로 말하면 정확해요."
+      },
+      /* rows reference atlas entries by id for names/links (name/cardId override for
+         split rows); lat/lng are area centroids; walk 0–3 like the stock ratings */
       rows: [
-        { id: "beauty-world", district: "D21", lat: 1.3410, lng: 103.7758, br3: 5500, br4: 8500, condo: 2, hdb: 0, landed: 2 },
-        { id: "kap-sixth", district: "D10/21", lat: 1.3315, lng: 103.7970, br3: 6800, br4: 10000, condo: 1, hdb: 0, landed: 3 },
-        { id: "hillview", district: "D23", lat: 1.3624, lng: 103.7674, br3: 4400, br4: null, condo: 2, hdb: 1, landed: 2 },
-        { id: "clementi-bv", district: "D5", lat: 1.3120, lng: 103.7700, br3: 6000, br4: 9500, condo: 2, hdb: 3, landed: 1 },
-        { id: "holland-v", district: "D10", lat: 1.3115, lng: 103.7960, br3: 7500, br4: 12500, condo: 3, hdb: 1, landed: 2 },
-        { id: "east-coast", district: "D15", lat: 1.3030, lng: 103.9050, br3: 6500, br4: 9500, condo: 3, hdb: 2, landed: 2 },
-        { id: "newton-novena", district: "D11", lat: 1.3165, lng: 103.8420, br3: 7200, br4: 9500, condo: 3, hdb: 0, landed: 0 },
-        { id: "river-valley", district: "D9", lat: 1.2935, lng: 103.8330, br3: 8500, br4: 13000, rough: true, condo: 3, hdb: 0, landed: 0 },
-        { id: "orchard-tanglin", district: "D9/10", lat: 1.3050, lng: 103.8250, br3: 9500, br4: 15000, rough: true, condo: 3, hdb: 0, landed: 1 },
-        { id: "tiong-bahru", district: "D3", lat: 1.2860, lng: 103.8270, br3: 6500, br4: 9000, rough: true, condo: 2, hdb: 3, landed: 0 },
-        { id: "tanjong-rhu", district: "D15", lat: 1.2960, lng: 103.8760, br3: 6500, br4: 9000, rough: true, condo: 3, hdb: 1, landed: 1 },
-        { id: "thomson", district: "D20/26", lat: 1.3540, lng: 103.8330, br3: 5500, br4: 8000, rough: true, condo: 2, hdb: 2, landed: 3 },
-        { id: "serangoon", district: "D19", lat: 1.3640, lng: 103.8660, br3: 5000, br4: 7000, rough: true, condo: 1, hdb: 2, landed: 3 },
-        { id: "pasir-panjang", district: "D5", lat: 1.2760, lng: 103.7910, br3: 5500, br4: 8000, rough: true, condo: 2, hdb: 1, landed: 1 },
-        { id: "bishan-amk", district: "D20", lat: 1.3610, lng: 103.8480, br3: 5000, br4: 7000, rough: true, condo: 2, hdb: 3, landed: 1 },
-        { id: "tampines", district: "D18", lat: 1.3530, lng: 103.9440, br3: 4500, br4: 6500, rough: true, condo: 2, hdb: 3, landed: 1 },
-        { id: "woodlands", district: "D25", lat: 1.4360, lng: 103.7860, br3: 3800, br4: 5500, rough: true, condo: 1, hdb: 3, landed: 1 },
-        { id: "sentosa", district: "D4", lat: 1.2490, lng: 103.8300, br3: 9000, br4: 14000, rough: true, condo: 2, hdb: 0, landed: 2 },
-        { id: "bukit-batok", district: "D23", lat: 1.3590, lng: 103.7500, br3: 4200, br4: 6000, rough: true, condo: 2, hdb: 3, landed: 1 }
+        { id: "beauty-world", district: "D21", lat: 1.3410, lng: 103.7758, br3: 5500, br4: 8500, walk: 3, malls: "Beauty World Centre · Bukit Timah Plaza (Sol Mart) · FairPrice Finest", condo: 2, hdb: 0, landed: 2 },
+        { id: "kap-sixth", district: "D10/21", lat: 1.3315, lng: 103.7970, br3: 6800, br4: 10000, walk: 1, malls: "KAP Mall · Cold Storage (Guthrie House)", condo: 1, hdb: 0, landed: 3 },
+        { id: "hillview", district: "D23", lat: 1.3624, lng: 103.7674, br3: 4400, br4: null, walk: 2, malls: "HillV2 (CS Fresh) · Rail Mall", condo: 2, hdb: 1, landed: 2 },
+        { id: "clementi-bv", district: "D5", lat: 1.3120, lng: 103.7700, br3: 6000, br4: 9500, walk: 3, malls: "Clementi Mall · 321 Clementi · Star Vista", condo: 2, hdb: 3, landed: 1 },
+        { id: "holland-v", cardId: "holland-village", name: { en: "Holland Village", ko: "Holland Village (홀랜드 빌리지)" }, district: "D10", lat: 1.3115, lng: 103.7960, br3: 8000, br4: 13000, rough: true, walk: 3, malls: "Holland V enclave · One Holland Village · Cold Storage", condo: 3, hdb: 1, landed: 2 },
+        { id: "farrer-road", cardId: "holland-village", name: { en: "Farrer Road", ko: "Farrer Road (파러 로드)" }, district: "D10", lat: 1.3175, lng: 103.8074, br3: 7000, br4: 11500, rough: true, walk: 2, malls: "Empress Market · d'Leedon shops · Holland V one stop", condo: 3, hdb: 0, landed: 1 },
+        { id: "katong-joochiat", cardId: "east-coast", name: { en: "Katong / Joo Chiat", ko: "Katong · Joo Chiat (카통)" }, district: "D15", lat: 1.3075, lng: 103.9010, br3: 6000, br4: 8500, rough: true, walk: 3, malls: "i12 Katong · Katong V · Cold Storage", condo: 2, hdb: 1, landed: 2 },
+        { id: "amber-meyer", cardId: "east-coast", name: { en: "Amber / Meyer", ko: "Amber · Meyer (앰버)" }, district: "D15", lat: 1.2980, lng: 103.8880, br3: 7800, br4: 9500, rough: true, walk: 2, malls: "Katong Park TEL · i12 Katong (walk)", condo: 3, hdb: 0, landed: 0 },
+        { id: "marine-parade", cardId: "east-coast", name: { en: "Marine Parade / Siglap", ko: "Marine Parade · Siglap (마린 퍼레이드)" }, district: "D15", lat: 1.3025, lng: 103.9130, br3: 6000, br4: 8000, rough: true, walk: 3, malls: "Parkway Parade · FairPrice · hawker centres", condo: 2, hdb: 3, landed: 1 },
+        { id: "newton-novena", district: "D11", lat: 1.3165, lng: 103.8420, br3: 7200, br4: 9500, walk: 3, malls: "United Square · Velocity · Square 2 (Sol Mart)", condo: 3, hdb: 0, landed: 0 },
+        { id: "river-valley", district: "D9", lat: 1.2935, lng: 103.8330, br3: 8500, br4: 13000, rough: true, walk: 3, malls: "Great World (TEL) · UE Square", condo: 3, hdb: 0, landed: 0 },
+        { id: "orchard-tanglin", district: "D9/10", lat: 1.3050, lng: 103.8250, br3: 9500, br4: 15000, rough: true, walk: 3, malls: "Orchard malls · Tanglin Mall", condo: 3, hdb: 0, landed: 1 },
+        { id: "tiong-bahru", district: "D3", lat: 1.2860, lng: 103.8270, br3: 6500, br4: 9000, rough: true, walk: 3, malls: "Tiong Bahru Plaza · wet market & cafes", condo: 2, hdb: 3, landed: 0 },
+        { id: "tanjong-rhu", district: "D15", lat: 1.2960, lng: 103.8760, br3: 6500, br4: 9000, rough: true, walk: 1, malls: "Kallang Wave · Leisure Park Kallang", condo: 3, hdb: 1, landed: 1 },
+        { id: "thomson", district: "D20/26", lat: 1.3540, lng: 103.8330, br3: 5500, br4: 8000, rough: true, walk: 2, malls: "Thomson Plaza · Upper Thomson food strip", condo: 2, hdb: 2, landed: 3 },
+        { id: "serangoon", district: "D19", lat: 1.3640, lng: 103.8660, br3: 5000, br4: 7000, rough: true, walk: 2, malls: "myVillage · Chomp Chomp · NEX nearby", condo: 1, hdb: 2, landed: 3 },
+        { id: "pasir-panjang", district: "D5", lat: 1.2760, lng: 103.7910, br3: 5500, br4: 8000, rough: true, walk: 1, malls: "No mall — Pasir Panjang Food Centre", condo: 2, hdb: 1, landed: 1 },
+        { id: "bishan-amk", district: "D20", lat: 1.3610, lng: 103.8480, br3: 5000, br4: 7000, rough: true, walk: 3, malls: "Junction 8 · AMK Hub", condo: 2, hdb: 3, landed: 1 },
+        { id: "tampines", district: "D18", lat: 1.3530, lng: 103.9440, br3: 4500, br4: 6500, rough: true, walk: 3, malls: "Tampines Mall · Century Square · Tampines 1", condo: 2, hdb: 3, landed: 1 },
+        { id: "woodlands", district: "D25", lat: 1.4360, lng: 103.7860, br3: 3800, br4: 5500, rough: true, walk: 2, malls: "Causeway Point", condo: 1, hdb: 3, landed: 1 },
+        { id: "sentosa", district: "D4", lat: 1.2490, lng: 103.8300, br3: 9000, br4: 14000, rough: true, walk: 1, malls: "Quayside Isle · VivoCity (HarbourFront side)", condo: 2, hdb: 0, landed: 2 },
+        { id: "bukit-batok", district: "D23", lat: 1.3590, lng: 103.7500, br3: 4200, br4: 6000, rough: true, walk: 2, malls: "West Mall (Sol Mart) · Hillion Mall", condo: 2, hdb: 3, landed: 1 }
       ]
     },
 
@@ -1919,6 +1934,7 @@ var CONTENT = {
       ],
       srcUrl: "https://www.smartcalculator.sg/articles/how-much-car-cost-singapore-2026"
     },
+    altTitle: { en: "Getting around without a car — Grab, taxi, MRT", ko: "차 없이 다니기 — Grab · 택시 · MRT" },
     childSeats: {
       title: { en: "Child seats — kids under 1.35m", ko: "카시트 — 키 1.35m 미만 아이들" },
       body: {
@@ -1930,7 +1946,7 @@ var CONTENT = {
   },
 
   apps: {
-    title: { en: "Apps to install", ko: "설치할 앱" },
+    title: { en: "Useful apps", ko: "유용한 앱" },
     intro: {
       en: "Day-one downloads, roughly in order of how often you'll open them.",
       ko: "도착 첫날 깔아야 할 앱들이에요. 자주 쓰게 될 순서대로 정리했어요."

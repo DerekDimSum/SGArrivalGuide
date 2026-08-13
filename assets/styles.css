@@ -754,9 +754,13 @@ thead th { position: relative; }
 /* commute estimates right-aligned too — they're comparable quantities */
 .area-table td:nth-child(5), .area-table td:nth-child(6) { text-align: right; }
 .area-table th:nth-child(5) .th-btn, .area-table th:nth-child(6) .th-btn { justify-content: flex-end; text-align: right; }
-/* stock-density dot columns centred */
-.area-table td:nth-child(7), .area-table td:nth-child(8), .area-table td:nth-child(9) { text-align: center; }
-.area-table th:nth-child(7) .th-btn, .area-table th:nth-child(8) .th-btn, .area-table th:nth-child(9) .th-btn { justify-content: center; }
+/* dot-rating columns centred: walkability (7) and the stock trio (9-11) */
+.area-table td:nth-child(7), .area-table td:nth-child(9),
+.area-table td:nth-child(10), .area-table td:nth-child(11) { text-align: center; }
+.area-table th:nth-child(7) .th-btn, .area-table th:nth-child(9) .th-btn,
+.area-table th:nth-child(10) .th-btn, .area-table th:nth-child(11) .th-btn { justify-content: center; }
+/* malls column: readable text, allowed to wrap */
+.area-table td.malls-cell { white-space: normal; min-width: 15em; font-size: 0.82rem; color: var(--ink-soft); }
 
 /* calmer grid: hairline row rules, no heavy outer border on the bleed tables */
 .schools-scroll { border: none; border-radius: 0; }
