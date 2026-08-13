@@ -573,10 +573,44 @@ a.atlas-badge.researched:hover { background: var(--accent); color: var(--bg); }
 
 .leaflet-tooltip.map-real-label {
   background: var(--bg-raised); color: var(--ink);
-  border: 1px solid var(--line); border-radius: 999px;
-  padding: 0.15em 0.7em; font-family: var(--font-body);
-  font-size: 12.5px; font-weight: 700; box-shadow: var(--shadow);
+  border: 1.5px solid var(--accent); border-radius: 999px;
+  padding: 0.2em 0.8em; font-family: var(--font-body);
+  font-size: 13px; font-weight: 700; box-shadow: var(--shadow);
+  cursor: pointer;
 }
+
+/* lift the near-black dark tiles so the island actually reads */
+@media (prefers-color-scheme: dark) {
+  .leaflet-tile { filter: brightness(1.3) saturate(1.25) contrast(1.03); }
+}
+
+/* declutter: minor neighbourhood pills only from zoom ~11.5 in */
+.map-zoomed-out .map-real-lm-minor { display: none; }
+/* the four anchors (school, office, K-town, Changi) always show */
+.map-zoomed-out .map-real-lm.map-real-anchor { display: block; }
+.map-divicon { background: none; border: none; }
+
+/* user pins */
+.map-add-pin {
+  font-family: var(--font-body); font-size: 0.82rem; font-weight: 700;
+  padding: 0.35em 0.9em; border-radius: 999px;
+  border: 1.5px solid var(--accent); background: var(--bg-raised); color: var(--accent);
+  cursor: pointer; box-shadow: var(--shadow);
+}
+.map-add-pin:hover { background: var(--accent); color: var(--bg); }
+.pin-mode { cursor: crosshair; }
+.pin-mode .leaflet-interactive { cursor: crosshair; }
+.map-user-pin-label { border-color: var(--accent); font-weight: 700; }
+.pin-form input {
+  font-family: var(--font-body); font-size: 0.95rem;
+  width: 100%; padding: 0.4em 0.6em;
+  border: 1.5px solid var(--line); border-radius: 8px;
+  background: var(--bg); color: var(--ink);
+}
+.pin-form-btns { display: flex; gap: 0.5rem; margin-top: 0.5rem; }
+.pin-remove { color: #b03030; border-color: #b03030; }
+.leaflet-popup-content-wrapper { background: var(--bg-raised); color: var(--ink); border-radius: 10px; }
+.leaflet-popup-tip { background: var(--bg-raised); }
 .leaflet-tooltip.map-real-lm {
   background: var(--bg-raised); color: var(--ink-soft);
   border: 1px solid var(--line); border-radius: 6px;

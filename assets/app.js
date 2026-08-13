@@ -866,13 +866,24 @@
     var geo = CONTENT.living.map.geo;
     var accent = getComputedStyle(document.documentElement).getPropertyValue("--accent").trim() || "#b4552d";
 
-    leafletMap = L.map(host, { scrollWheelZoom: false, attributionControl: true, zoomSnap: 0.5 });
+    leafletMap = L.map(host, {
+      scrollWheelZoom: false, attributionControl: true, zoomSnap: 0.5,
+      minZoom: 10.5,
+      maxBounds: [[1.13, 103.55], [1.52, 104.15]], maxBoundsViscosity: 0.8
+    });
     leafletMap.attributionControl.setPrefix(false);
     tileLayer = L.tileLayer(tileUrl(), {
       maxZoom: 19,
       attribution: "&copy; <a href='https://www.openstreetmap.org/copyright' target='_blank' rel='noopener'>OpenStreetMap</a> contributors &copy; <a href='https://carto.com/attributions' target='_blank' rel='noopener'>CARTO</a>"
     }).addTo(leafletMap);
-    leafletMap.fitBounds(geo.bounds);
+    leafletMap.fitBounds(geo.bounds, { maxZoom: 12 });
+
+    // declutter: minor neighbourhood pills only appear once you zoom in
+    function syncZoomClass() {
+      host.classList.toggle("map-zoomed-out", leafletMap.getZoom() < 11.5);
+    }
+    leafletMap.on("zoomend", syncZoomClass);
+    syncZoomClass();
 
     CONTENT.living.areas.forEach(function (area) {
       var pts = geo.areas[area.id];
@@ -881,11 +892,19 @@
         color: accent, weight: 2, dashArray: "6 5",
         fillColor: accent, fillOpacity: 0.12
       }).addTo(leafletMap);
+      // label at the geographic centroid via a standalone tooltip — polygon-bound
+      // permanent tooltips anchor from the projected shape at bind time, which
+      // strands them at the map edge when the container is still sizing
+      var centroid = pts.reduce(function (acc, p) {
+        return [acc[0] + p[0] / pts.length, acc[1] + p[1] / pts.length];
+      }, [0, 0]);
       // spread the two western labels apart so their pills don't collide at island zoom
       var labelDir = { "holland-village": "top", "clementi": "bottom" }[area.id] || "center";
-      poly.bindTooltip(biLabel(area.short), {
-        permanent: true, direction: labelDir, className: "map-real-label"
-      });
+      L.tooltip({ permanent: true, direction: labelDir, className: "map-real-label", interactive: true })
+        .setLatLng(centroid)
+        .setContent(biLabel(area.short))
+        .addTo(leafletMap)
+        .on("click", function () { activateArea(area.id, true); });
       poly.on("click", function () { activateArea(area.id, true); });
       poly.on("mouseover", function () { poly.setStyle({ fillOpacity: 0.25, dashArray: null }); });
       poly.on("mouseout", function () { poly.setStyle({ fillOpacity: 0.12, dashArray: "6 5" }); });
@@ -901,23 +920,48 @@
     });
 
     geo.landmarks.forEach(function (lm) {
-      L.circleMarker([lm.lat, lm.lng], {
-        radius: lm.star ? 7 : 5,
-        color: accent, weight: 2,
-        fillColor: lm.star ? accent : "#ffffff", fillOpacity: 1
-      }).addTo(leafletMap)
+      var marker;
+      if (lm.star) {
+        // SKIS gets the schematic's star
+        marker = L.marker([lm.lat, lm.lng], {
+          icon: L.divIcon({
+            className: "map-divicon",
+            html: "<svg width='24' height='24' viewBox='-12 -12 24 24'><path d='M0,-10 L2.7,-3.1 10,-3.1 4.1,1.4 6.2,8.6 0,4.2 -6.2,8.6 -4.1,1.4 -10,-3.1 -2.7,-3.1 Z' fill='" + accent + "' stroke='rgba(0,0,0,0.35)' stroke-width='1'/></svg>",
+            iconSize: [24, 24], iconAnchor: [12, 12]
+          })
+        });
+      } else if (lm.id === "office") {
+        // the office gets the schematic's square
+        marker = L.marker([lm.lat, lm.lng], {
+          icon: L.divIcon({
+            className: "map-divicon",
+            html: "<svg width='16' height='16'><rect x='2' y='2' width='12' height='12' rx='2.5' fill='" + accent + "' stroke='rgba(0,0,0,0.35)' stroke-width='1'/></svg>",
+            iconSize: [16, 16], iconAnchor: [8, 8]
+          })
+        });
+      } else {
+        marker = L.circleMarker([lm.lat, lm.lng], {
+          radius: 5, color: accent, weight: 2, fillColor: "#ffffff", fillOpacity: 1
+        });
+      }
+      // the star/square symbols speak for themselves (legend in the caption);
+      // their names appear on hover only — K-town and Changi keep pills
+      var iconic = lm.star || lm.id === "office";
+      marker.addTo(leafletMap)
         .bindTooltip(biLabel(lm.label), {
-          permanent: true, direction: lm.dir || "top",
-          offset: lm.dir === "left" ? [-8, 0] : lm.dir === "right" ? [8, 0] : [0, -8],
-          className: "map-real-lm"
+          permanent: !iconic, direction: lm.dir || "top",
+          offset: lm.dir === "left" ? [-10, 0] : lm.dir === "right" ? [10, 0] : [0, -10],
+          className: "map-real-lm map-real-anchor"
         });
     });
+
+    initUserPins(accent);
     // atlas spots — the rest of the neighbourhood atlas as smaller pins
     (geo.spots || []).forEach(function (sp) {
       var entry = (CONTENT.living.atlas.entries || []).find(function (e) { return e.id === sp.id; });
       if (!entry) return;
       var m = L.circleMarker([sp.lat, sp.lng], {
-        radius: sp.sub ? 3.5 : 4.5, color: accent, weight: 1.5,
+        radius: sp.sub ? 4 : 5.5, color: accent, weight: 1.5,
         fillColor: "#ffffff", fillOpacity: sp.sub ? 0.7 : 0.9
       }).addTo(leafletMap);
       m.bindTooltip(biLabel(entry.name), {
@@ -933,6 +977,102 @@
         }
       });
     });
+  }
+
+  /* ---------- user pins (own labels on the real map) ---------- */
+
+  var PINS_KEY = "sgguide:pins";
+
+  function loadPins() {
+    try { return JSON.parse(localStorage.getItem(PINS_KEY)) || []; } catch (e) { return []; }
+  }
+  function savePins(pins) {
+    try { localStorage.setItem(PINS_KEY, JSON.stringify(pins)); } catch (e) {}
+  }
+
+  function initUserPins(accent) {
+    var pins = loadPins();
+
+    function pinIcon() {
+      return L.divIcon({
+        className: "map-divicon",
+        html: "<svg width='26' height='30' viewBox='0 0 26 30'><path d='M13 1 C6.5 1 2 6 2 12 c0 8 11 17 11 17 s11-9 11-17 C24 6 19.5 1 13 1 Z' fill='" + accent + "' stroke='rgba(0,0,0,0.35)'/><circle cx='13' cy='11.5' r='4' fill='#fff'/></svg>",
+        iconSize: [26, 30], iconAnchor: [13, 29], popupAnchor: [0, -26]
+      });
+    }
+
+    function addPinMarker(pin) {
+      var marker = L.marker([pin.lat, pin.lng], { icon: pinIcon() }).addTo(leafletMap);
+
+      function refreshLabel() {
+        marker.unbindTooltip();
+        if (pin.label) {
+          marker.bindTooltip(pin.label, {
+            permanent: true, direction: "top", offset: [0, -26],
+            className: "map-real-lm map-user-pin-label"
+          });
+        }
+      }
+
+      function openEditor() {
+        var input = h("input", { type: "text", value: pin.label || "", placeholder: t(CONTENT.ui.pinPlaceholder) });
+        var save = h("button", {
+          type: "button", class: "reset-btn", text: t(CONTENT.ui.pinSave),
+          onclick: function () {
+            pin.label = input.value.trim();
+            savePins(pins);
+            refreshLabel();
+            marker.closePopup();
+          }
+        });
+        var remove = h("button", {
+          type: "button", class: "reset-btn pin-remove", text: t(CONTENT.ui.pinRemove),
+          onclick: function () {
+            pins.splice(pins.indexOf(pin), 1);
+            savePins(pins);
+            leafletMap.removeLayer(marker);
+          }
+        });
+        var form = h("div", { class: "pin-form" }, input, h("div", { class: "pin-form-btns" }, save, remove));
+        input.addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); save.click(); } });
+        marker.bindPopup(form, { closeButton: false, minWidth: 200 }).openPopup();
+        setTimeout(function () { input.focus(); }, 60);
+      }
+
+      marker.on("click", openEditor);
+      refreshLabel();
+      return { marker: marker, openEditor: openEditor };
+    }
+
+    pins.forEach(addPinMarker);
+
+    // "+ Add your pin" control: arm, then one tap places the pin
+    var AddPinControl = L.Control.extend({
+      options: { position: "topright" },
+      onAdd: function () {
+        var btn = L.DomUtil.create("button", "map-add-pin");
+        btn.type = "button";
+        btn.textContent = t(CONTENT.ui.addPin);
+        L.DomEvent.disableClickPropagation(btn);
+        L.DomEvent.on(btn, "click", function () {
+          var host = leafletMap.getContainer();
+          var armed = host.classList.toggle("pin-mode");
+          btn.textContent = armed ? t(CONTENT.ui.addPinArmed) : t(CONTENT.ui.addPin);
+          if (armed) {
+            leafletMap.once("click", function (e) {
+              host.classList.remove("pin-mode");
+              btn.textContent = t(CONTENT.ui.addPin);
+              var pin = { lat: e.latlng.lat, lng: e.latlng.lng, label: "" };
+              pins.push(pin);
+              savePins(pins);
+              addPinMarker(pin).openEditor();
+            });
+          }
+        });
+        return btn;
+      }
+    });
+    leafletMap.addControl(new AddPinControl());
   }
 
   // swap tile style when the OS theme flips

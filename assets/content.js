@@ -55,10 +55,15 @@ var CONTENT = {
     mapAriaLabel: { en: "Schematic map of Singapore with shortlisted areas", ko: "후보 지역이 표시된 싱가포르 개념 지도" },
     mrtLegend: { en: "MRT lines (simplified)", ko: "MRT 노선 (간략화)" },
     mapTabReal: { en: "Real map", ko: "실제 지도" },
+    addPin: { en: "+ Add your pin", ko: "+ 내 핀 추가" },
+    addPinArmed: { en: "Tap the map to place your pin", ko: "지도를 눌러 핀 위치를 찍으세요" },
+    pinPlaceholder: { en: "Label — e.g. my office", ko: "이름 — 예: 내 회사" },
+    pinSave: { en: "Save", ko: "저장" },
+    pinRemove: { en: "Remove", ko: "삭제" },
     mapTabSchematic: { en: "MRT schematic", ko: "MRT 노선 개념도" },
     realMapHint: {
-      en: "Pinch or double-tap to zoom. Shaded areas are approximate neighbourhood outlines — tap one to jump to its guide.",
-      ko: "손가락으로 확대하거나 두 번 탭하세요. 색칠된 구역은 대략적인 동네 범위예요 — 누르면 해당 카드로 이동해요."
+      en: "Pinch or double-tap to zoom — more neighbourhood labels appear as you zoom in. Shaded areas are approximate outlines; tap one to jump to its guide. ★ Korean school · ■ Marina One.",
+      ko: "손가락으로 확대하거나 두 번 탭하세요 — 확대할수록 동네 라벨이 더 나타나요. 색칠된 구역은 대략적인 범위이고, 누르면 해당 카드로 이동해요. ★ 한국학교 · ■ Marina One."
     },
     skipToContent: { en: "Skip to content", ko: "본문으로 건너뛰기" },
     homeLabel: { en: "Home", ko: "홈" },
