@@ -347,15 +347,20 @@
 
   var DOB_KEY = "sgguide:childdob";
 
-  function levelLocal(a) {
+  function levelLocalPre(a) {
     if (a <= 1) return { en: "infant care", ko: "영유아 보육" };
     if (a === 2) return "Playgroup";
     if (a === 3) return "N1";
     if (a === 4) return "N2";
     if (a === 5) return "K1";
     if (a === 6) return "K2";
+    return { en: "school age — see the MOE row", ko: "학령기 — MOE 행 참고" };
+  }
+  function levelLocalMoe(a) {
+    if (a < 7) return { en: "preschool age", ko: "미취학" };
     if (a <= 12) return "P" + (a - 6);
-    return { en: "Secondary", ko: "중등 과정" };
+    if (a <= 16) return { en: "Secondary " + (a - 12), ko: "중등 " + (a - 12) + "년차" };
+    return { en: "post-secondary", ko: "고등 과정 이후" };
   }
   function levelBritish(a) {
     if (a < 2) return { en: "too young", ko: "아직 어려요" };
@@ -396,7 +401,8 @@
     var aKo = ayKo - y;
     function ayLabel(s) { return s + "/" + String(s + 1).slice(2); }
     return [
-      { sys: "local", now: levelLocal(aLocal), next: levelLocal(aLocal + 1), nowAy: String(cy), nextAy: String(cy + 1) },
+      { sys: "localPre", now: levelLocalPre(aLocal), next: levelLocalPre(aLocal + 1), nowAy: String(cy), nextAy: String(cy + 1) },
+      { sys: "localMoe", now: levelLocalMoe(aLocal), next: levelLocalMoe(aLocal + 1), nowAy: String(cy), nextAy: String(cy + 1) },
       { sys: "british", now: levelBritish(aSep), next: levelBritish(aSep + 1), nowAy: ayLabel(ayStart), nextAy: ayLabel(ayStart + 1) },
       { sys: "american", now: levelAmerican(aSep), next: levelAmerican(aSep + 1), nowAy: ayLabel(ayStart), nextAy: ayLabel(ayStart + 1) },
       { sys: "korean", now: levelKorean(aKo), next: levelKorean(aKo + 1), nowAy: ayKo + " (Mar–)", nextAy: (ayKo + 1) + " (Mar–)" }
@@ -432,7 +438,8 @@
         h("thead", {}, h("tr", {},
           h("th", { text: t(cal.cols.system) }),
           h("th", { text: t(cal.cols.now) }),
-          h("th", { text: t(cal.cols.next) })
+          h("th", { text: t(cal.cols.next) }),
+          h("th", { text: t(cal.cols.apply) })
         )),
         h("tbody", {}, rows.map(function (r) {
           var s = cal.systems[r.sys];
@@ -442,7 +449,8 @@
               h("span", { class: "sys-sub", text: t(s.sub) })
             ),
             h("td", {}, h("strong", { text: t(r.now) }), h("span", { class: "ay-label", text: " · " + r.nowAy })),
-            h("td", {}, h("span", { text: t(r.next) }), h("span", { class: "ay-label", text: " · " + r.nextAy }))
+            h("td", {}, h("span", { text: t(r.next) }), h("span", { class: "ay-label", text: " · " + r.nextAy })),
+            h("td", { class: "apply-cell", text: t(s.apply) })
           );
         }))
       )));
@@ -699,8 +707,8 @@
           );
         }))
       )),
-      h("h4", { text: t(ps.twins.title) }),
-      h("p", { text: t(ps.twins.body) }),
+      h("h4", { text: t(ps.siblings.title) }),
+      h("p", { text: t(ps.siblings.body) }),
       h("h4", { text: t(ps.waitlist.title) }),
       h("p", {}, h("span", { text: t(ps.waitlist.body) + " " }), srcLink(ps.waitlist.srcUrl)),
       h("h4", { text: t(ps.docs.title) }),
@@ -741,6 +749,7 @@
       h("p", { text: t(pr.intl.intro) }),
       intlTable,
       h("p", {}, h("span", { text: t(pr.intl.extras) + " " }), srcLink(pr.intl.extrasUrl)),
+      h("p", {}, h("span", { text: t(pr.intl.prepNote) + " " }), verifyBadge()),
       h("div", { class: "info-box" },
         h("h4", { text: t(pr.intl.decision.title) }),
         h("ul", {}, pr.intl.decision.items.map(function (i) { return h("li", { text: t(i) }); }))
@@ -1233,10 +1242,22 @@
       }
     });
 
+    var decision = h("div", { class: "decision-block" },
+      h("h3", { text: t(CONTENT.living.decision.title) }),
+      h("p", { class: "table-note", text: t(CONTENT.living.decision.intro) }),
+      h("ul", { class: "decision-list" }, CONTENT.living.decision.items.map(function (d) {
+        return h("li", {},
+          h("strong", { text: t(d.priority) + " → " }),
+          h("span", { text: t(d.pick) })
+        );
+      }))
+    );
+
     rebuild();
     main.appendChild(h("section", { id: "areas", class: "section", "aria-labelledby": "areas-title" },
       sectionHeader("areas", at.title, "▦"),
       renderPicker(),
+      decision,
       h("p", { class: "section-intro", text: t(at.intro) }),
       h("div", { class: "anchor-fields" },
         anchorField("work", at.workLabel),
@@ -1369,7 +1390,7 @@
     });
     var cmpDetails = sub("living-compare", lv.comparison.title, cmpBody);
     if (!openState.hasOwnProperty("living-compare")) cmpDetails.removeAttribute("open");
-    section.appendChild(cmpDetails);
+    // (appended after the deep-dive cards below — Learn → Explore → reference)
 
     /* map */
     var mapHost = h("div", { class: "map-host" });
@@ -1413,6 +1434,7 @@
     section.appendChild(renderAtlas());
 
     /* area cards */
+    section.appendChild(h("h3", { id: "living-cards", text: t(lv.cardsTitle) }));
     lv.areas.forEach(function (a) {
       var gmaps = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(a.gmapsQuery);
       var parts = [
@@ -1464,24 +1486,14 @@
       section.appendChild(card);
     });
 
+    /* researched shortlist, as a collapsed reference after the cards */
+    section.appendChild(cmpDetails);
+
     /* §3.6 helper's-room rule */
     section.appendChild(h("aside", { class: "info-box" },
       h("h3", { text: t(lv.helperRoom.title) }),
       h("p", {}, h("span", { text: t(lv.helperRoom.body) + " " }), srcLink(lv.helperRoom.srcUrl))
     ));
-
-    /* §3.7 decision block */
-    var dec = h("div", { class: "decision-block" },
-      h("h3", { text: t(lv.decision.title) }),
-      h("p", { class: "table-note", text: t(lv.decision.intro) }),
-      h("ul", { class: "decision-list" }, lv.decision.items.map(function (d) {
-        return h("li", {},
-          h("strong", { text: t(d.priority) + " → " }),
-          h("span", { text: t(d.pick) })
-        );
-      }))
-    );
-    section.appendChild(dec);
 
     /* renting box */
     var rb = h("aside", { class: "info-box renting-box", id: "renting-box" },

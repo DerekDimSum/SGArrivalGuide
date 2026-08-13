@@ -921,3 +921,4 @@ main p, main li { max-width: 76ch; }
 main table p, main table li, .nav-menu a, .table-wrap p { max-width: none; }
 /* home section cards: use the width for more columns instead of stretching two */
 @media (min-width: 700px) { .section-cards { grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); } }
+.apply-cell { white-space: normal; min-width: 14em; font-size: 0.82rem; color: var(--ink-soft); }

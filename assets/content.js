@@ -71,7 +71,7 @@ var CONTENT = {
     { id: "education", label: { en: "Education", ko: "교육" },
       desc: { en: "The class calculator, the school directory, preschool, primary paths, and enrichment.", ko: "반 배정 계산기와 학교 디렉토리, 유치원, 초등 로드맵, 사교육까지." },
       subs: [
-        { id: "edu-calculator", label: { en: "Class calculator", ko: "반 배정 계산기" } },
+        { id: "edu-calculator", label: { en: "When to apply", ko: "입학·지원 시기" } },
         { id: "schools", label: { en: "School directory", ko: "학교 디렉토리" } },
         { id: "edu-preschool", label: { en: "Preschool", ko: "유치원" } },
         { id: "edu-primary", label: { en: "Primary school", ko: "초등학교" } },
@@ -80,11 +80,11 @@ var CONTENT = {
     { id: "living", label: { en: "Where to live", ko: "어디에 살까" },
       desc: { en: "How the island works, the sortable area table, maps, and a neighbourhood atlas.", ko: "싱가포르 구조 해설, 정렬 가능한 동네 표, 지도, 동네 아틀라스까지." },
       subs: [
-        { id: "living-overview", label: { en: "Overview", ko: "개요" } },
-        { id: "areas", label: { en: "Area table", ko: "동네 표" } },
-        { id: "living-compare", label: { en: "Shortlist", ko: "후보 비교" } },
+        { id: "living-overview", label: { en: "How it works", ko: "기본 구조" } },
         { id: "sg-map", label: { en: "Map", ko: "지도" } },
         { id: "living-atlas", label: { en: "Neighbourhoods", ko: "동네별" } },
+        { id: "living-cards", label: { en: "Deep dives", ko: "상세 카드" } },
+        { id: "areas", label: { en: "Find your area", ko: "내게 맞는 동네" } },
         { id: "renting-box", label: { en: "Renting", ko: "임대 절차" } }
       ] },
     { id: "social", target: "community", label: { en: "Social", ko: "한인 생활" },
@@ -348,34 +348,44 @@ var CONTENT = {
 
     /* Age calculator — one input, one answer per school system */
     calculator: {
-      title: { en: "Which class will my child join? — class calculator", ko: "우리 아이는 몇 반? — 반 배정 계산기" },
+      title: { en: "When would my child join — and when to apply?", ko: "우리 아이는 언제 입학하고, 언제 지원할까?" },
       intro: {
-        en: "Singapore levels don't map one-to-one from Korea, and each school system uses a different cutoff date. Enter a birth month and year to see where a child lands in each system.",
-        ko: "싱가포르 학제는 한국과 1:1로 맞지 않고, 학교 시스템마다 기준일도 달라요. 출생 연월을 입력하면 시스템별로 어느 반·학년인지 보여드려요."
+        en: "Singapore levels don't map one-to-one from Korea, and each school system uses a different cutoff date. Enter a birth month and year to see where a child lands in each system — and when applications typically happen.",
+        ko: "싱가포르 학제는 한국과 1:1로 맞지 않고, 학교 시스템마다 기준일도 달라요. 출생 연월을 입력하면 시스템별로 어느 반·학년인지, 그리고 지원은 보통 언제 하는지 보여드려요."
       },
       monthLabel: { en: "Birth month", ko: "출생 월" },
       yearLabel: { en: "Birth year", ko: "출생 연도" },
       cols: {
         system: { en: "School system", ko: "학교 시스템" },
         now: { en: "This academic year", ko: "올해 학년" },
-        next: { en: "Next academic year", ko: "내년 학년" }
+        next: { en: "Next academic year", ko: "내년 학년" },
+        apply: { en: "When to apply (typical)", ko: "지원 시기 (통상)" }
       },
       systems: {
-        local: {
-          name: { en: "Local — MOE / ECDA", ko: "로컬 — MOE·ECDA" },
-          sub: { en: "PCF, My First Skool, MindChamps, Pat's… → local primary · 1 Jan cohort", ko: "PCF, My First Skool, MindChamps, Pat's… → 로컬 초등 · 1월 1일 기준" }
+        localPre: {
+          name: { en: "Local preschool (ECDA)", ko: "로컬 유치원 (ECDA)" },
+          sub: { en: "PCF, My First Skool, MindChamps, Pat's… · 1 Jan cohort", ko: "PCF, My First Skool, MindChamps, Pat's… · 1월 1일 기준" },
+          apply: { en: "Join waitlists 12–18 months ahead", ko: "12–18개월 전에 대기 등록" }
+        },
+        localMoe: {
+          name: { en: "Local primary/secondary (MOE)", ko: "로컬 초·중등 (MOE)" },
+          sub: { en: "Government schools · P1 the year a child turns 7 · 1 Jan cohort", ko: "공립학교 · 7세 되는 해에 P1 · 1월 1일 기준" },
+          apply: { en: "May window the year before P1 (foreigners: Phase 3 indication of interest)", ko: "P1 입학 전해 5월 (외국인은 Phase 3 관심 등록)" }
         },
         british: {
           name: { en: "British", ko: "영국계" },
-          sub: { en: "Tanglin, Dulwich, NLCS, Dover Court… · cutoff 1 Sep", ko: "Tanglin, Dulwich, NLCS, Dover Court… · 9월 1일 기준" }
+          sub: { en: "Tanglin, Dulwich, NLCS, Dover Court… · cutoff 1 Sep", ko: "Tanglin, Dulwich, NLCS, Dover Court… · 9월 1일 기준" },
+          apply: { en: "~12 months ahead; flagships earlier (UWCSEA opens 1 Sep)", ko: "약 12개월 전; 플래그십은 더 일찍 (UWCSEA는 9월 1일 오픈)" }
         },
         american: {
           name: { en: "American", ko: "미국계" },
-          sub: { en: "SAS, SAIS · cutoff 1 Sep", ko: "SAS, SAIS · 9월 1일 기준" }
+          sub: { en: "SAS, SAIS · cutoff 1 Sep", ko: "SAS, SAIS · 9월 1일 기준" },
+          apply: { en: "Rolling admissions — ~12 months ahead is comfortable", ko: "수시 — 12개월 전이면 여유 있어요" }
         },
         korean: {
           name: { en: "Korean — SKIS", ko: "한국계 — SKIS" },
-          sub: { en: "싱가포르한국국제학교 · March–Feb school year", ko: "싱가포르한국국제학교 · 3월 학기제" }
+          sub: { en: "싱가포르한국국제학교 · March–Feb school year", ko: "싱가포르한국국제학교 · 3월 학기제" },
+          apply: { en: "Contact admissions (admission@skis.kr)", ko: "입학처 문의 (admission@skis.kr)" }
         }
       },
       tooYoung: { en: "too young — infant care", ko: "아직 어려요 — 영유아 보육" },
@@ -397,13 +407,15 @@ var CONTENT = {
         pre: { en: "Preschool", ko: "유치원" },
         pri: { en: "Primary & up", ko: "초등 이상" }
       },
+      /* Everything here is an international school unless marked Local (MOE/ECDA),
+         so the type column just names the curriculum system. */
       kinds: {
         local: { en: "Local (MOE / ECDA)", ko: "로컬 (MOE·ECDA)" },
-        british: { en: "Int'l — British", ko: "국제 — 영국계" },
-        american: { en: "Int'l — American", ko: "국제 — 미국계" },
-        ib: { en: "Int'l — IB", ko: "국제 — IB" },
-        korean: { en: "Int'l — Korean", ko: "국제 — 한국" },
-        other: { en: "Int'l — Other", ko: "국제 — 기타" }
+        british: { en: "British", ko: "영국계" },
+        american: { en: "American", ko: "미국계" },
+        ib: { en: "IB", ko: "IB" },
+        korean: { en: "Korean", ko: "한국" },
+        other: { en: "Other", ko: "기타" }
       },
       tiers: {
         anchor: { en: "Anchor (gov-supported)", ko: "앵커 (준공영)" },
@@ -607,11 +619,11 @@ var CONTENT = {
           { tier: { en: "Korean option", ko: "한국 학교 옵션" }, example: { en: "Singapore Korean International School kindergarten (from age 3)", ko: "싱가포르한국국제학교 유치부 (3세부터)" }, fee: { en: "~S$13,425/yr ≈ S$1,120/mo + S$3,270 one-time (verify with admission@skis.kr)", ko: "연 약 S$13,425 ≈ 월 S$1,120 + 입학금 등 1회성 S$3,270 (admission@skis.kr로 확인)" }, verify: true, url: "https://www.msmc.global/singapore-korean-international-school/" }
         ]
       },
-      twins: {
-        title: { en: "Two kids? The math", ko: "아이가 둘이라면" },
+      siblings: {
+        title: { en: "Costs scale per child", ko: "비용은 아이 수만큼 늘어나요" },
         body: {
-          en: "Everything doubles. Two children at an anchor operator ≈ S$2,400–2,600/month total; mid-tier ≈ S$3,400–5,200/month total. Sibling discounts of 5–10% exist at some chains (EtonHouse gives 10%).",
-          ko: "모든 비용이 두 배예요. 아이 둘 기준 앵커 오퍼레이터는 월 합계 약 S$2,400–2,600, 중가 사립은 월 S$3,400–5,200. 일부 체인에 형제 할인 5–10%가 있어요(EtonHouse는 10%)."
+          en: "Fees are per child, so budget accordingly — the builder in Monthly costs does the math for your situation. Sibling discounts of 5–10% exist at some chains (EtonHouse gives 10%).",
+          ko: "학비는 아이 1명 기준이라 인원수만큼 잡아야 해요 — 월 생활비의 예산 계산기가 상황에 맞게 계산해 줘요. 일부 체인에 형제 할인 5–10%가 있어요(EtonHouse는 10%)."
         }
       },
       waitlist: {
@@ -716,6 +728,10 @@ var CONTENT = {
           ko: "모든 학교군 공통 추가 비용: 지원비 S$290–3,500, 등록비 S$2,900–5,780, 첫해 발전기금 S$3,000–10,000. 업계 통념상 약 12개월 전에 지원하고, 플래그십 학교군은 대기가 수년이에요."
         },
         extrasUrl: "https://www.tutopiya.com/blog/parents-blog/international-school-fees-structure-singapore/",
+        prepNote: {
+          en: "Several international schools also run preparatory or bridging intakes (foundation classes, intensive English) for children joining mid-track — ask each admissions office what exists for your child's year; a proper list is pending a research round.",
+          ko: "일부 국제학교는 중간에 합류하는 아이들을 위한 준비·브리지 과정(파운데이션 반, 집중 영어)도 운영해요 — 아이 학년에 맞는 과정이 있는지 각 학교 입학처에 문의하세요. 제대로 된 목록은 다음 조사 라운드에서 다룰 예정이에요."
+        },
         decision: {
           title: { en: "How to decide", ko: "선택 기준" },
           items: [
@@ -1189,7 +1205,8 @@ var CONTENT = {
       ]
     },
 
-    tableLink: { en: "Open the full area table →", ko: "전체 동네 표 열기 →" },
+    tableLink: { en: "Find your area — matcher + full table →", ko: "내게 맞는 동네 찾기 — 매처 + 전체 표 →" },
+    cardsTitle: { en: "Deep dives — the researched corridors", ko: "상세 카드 — 조사가 끝난 지역들" },
 
     /* All-areas table — every atlas neighbourhood with indicative prices, stock mix
        and commute estimates to user-set work/school anchors. Prices on rows marked
@@ -2156,8 +2173,8 @@ var CONTENT = {
   costs: {
     title: { en: "Monthly cost snapshot", ko: "월 생활비 한눈에" },
     intro: {
-      en: "A realistic monthly budget, modelled on a family of four with two preschoolers — scale it to your situation. Low = anchor preschool + value area; High = mid-tier preschool + pricier area.",
-      ko: "미취학 아이 둘이 있는 4인 가족을 모델로 한 현실적인 월 예산이에요 — 각자 상황에 맞게 조정하세요. Low는 앵커 유치원 + 실속 지역, High는 중가 사립 유치원 + 비싼 지역 기준이에요."
+      en: "Build your own estimate below — the snapshot table after it is one worked example so you can sanity-check the parts. Low = anchor preschool + value area; High = mid-tier preschool + pricier area.",
+      ko: "아래 계산기로 내 예산을 직접 만들어 보세요 — 그 아래 스냅샷 표는 항목별 감을 잡기 위한 예시 하나예요. Low는 앵커 유치원 + 실속 지역, High는 중가 사립 + 비싼 지역 기준이에요."
     },
     /* Budget builder — figures are the midpoints of this page's tables */
     builder: {
@@ -2339,6 +2356,7 @@ var CONTENT = {
     openTitle: { en: "Worth confirming directly", ko: "직접 확인해 둘 것들" },
     openItems: [
       { en: "SKIS school-bus coverage — free shuttles to Newton MRT and Clementi MRT are reported; confirm routes and eligibility at admission@skis.kr.", ko: "SKIS 스쿨버스 — Newton MRT·Clementi MRT 무료 셔틀이 있다고 알려져 있어요. 노선과 이용 자격을 admission@skis.kr로 확인하세요." },
+      { en: "Preparatory/bridging programmes at international schools (foundation classes, intensive English, e.g. via SJII) — needs a research round before listing.", ko: "국제학교 준비·브리지 과정(파운데이션, 집중 영어 — 예: SJII 계열) — 목록화 전에 조사가 필요해요." },
       { en: "Rent budget → narrows the sub-area shortlist.", ko: "월세 예산 → 후보 동네를 좁힐 수 있어요." },
       { en: "Church tradition (Protestant denomination vs Catholic) → reorders the church list.", ko: "교회 전통(개신교 교단 또는 천주교) → 교회 목록의 우선순위가 달라져요." },
       { en: "Move date → anchors the waitlist and helper timelines.", ko: "이사 날짜 → 유치원 대기와 헬퍼 채용 일정의 기준이 돼요." },
