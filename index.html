@@ -32,6 +32,16 @@
   <header id="site-header"></header>
   <main id="main"></main>
   <footer id="site-footer"></footer>
+  <!-- Vercel Web Analytics (static-site snippet — the no-build equivalent of
+       @vercel/analytics inject(); skipped during local development) -->
+  <script>
+    if (!["localhost", "127.0.0.1"].includes(location.hostname)) {
+      var va = document.createElement("script");
+      va.defer = true;
+      va.src = "/_vercel/insights/script.js";
+      document.head.appendChild(va);
+    }
+  </script>
   <!-- Leaflet is lazy-loaded by app.js when a map first becomes visible -->
   <script src="assets/content.js?v=20260813i"></script>
   <script src="assets/app.js?v=20260813i"></script>
