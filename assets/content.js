@@ -114,6 +114,7 @@ var CONTENT = {
       desc: { en: "How the island works, the sortable area table, maps, and a neighbourhood atlas.", ko: "싱가포르 구조 해설, 정렬 가능한 동네 표, 지도, 동네 아틀라스까지." },
       subs: [
         { id: "living", label: { en: "Overview", ko: "개요" } },
+        { id: "briefing", label: { en: "Quick-start", ko: "퀵스타트" } },
         { id: "sg-map", label: { en: "Map", ko: "지도" } },
         { id: "neighborhoods", label: { en: "Neighbourhoods", ko: "동네별 가이드" } },
         { id: "areas", label: { en: "Find your area", ko: "내게 맞는 동네" } }
@@ -2163,7 +2164,11 @@ var CONTENT = {
            sub:true = Bukit Timah corridor sub-areas: small dots, label on hover only
            (they sit inside the corridor polygon, permanent pills would pile up). */
         spots: [
-          { id: "beauty-world",   lat: 1.3410, lng: 103.7757, sub: true },
+          { id: "beauty-world",   lat: 1.3410, lng: 103.7757, dir: "left" },
+          { id: "holland-v",      lat: 1.3110, lng: 103.7961, dir: "left" },
+          { id: "clementi-bv",    lat: 1.3151, lng: 103.7654, dir: "bottom" },
+          { id: "east-coast",     lat: 1.3050, lng: 103.9053, dir: "right" },
+          { id: "newton-novena",  lat: 1.3138, lng: 103.8433, dir: "top" },
           { id: "woodleigh",      lat: 1.3387, lng: 103.8709, sub: true },
           { id: "keppel-bay",     lat: 1.2662, lng: 103.8129, sub: true },
           { id: "kap-sixth",      lat: 1.3328, lng: 103.7896, sub: true },
@@ -2408,6 +2413,185 @@ var CONTENT = {
       }
     ],
     /* §3.6 — helper's-room rule of thumb */
+    /* Quick-start briefing & decision framework — its own page */
+    briefing: {
+      title: { en: "Newcomer's quick-start briefing", ko: "뉴커머 퀵스타트 브리핑" },
+      intro: {
+        en: "Before diving into individual neighbourhoods, use this one-page briefing to understand the ground-level living realities, find your ideal district match, and decode how the transit grid actually powers daily life in Singapore.",
+        ko: "동네를 하나씩 파기 전에, 이 한 페이지 브리핑으로 실제 거주 현실을 이해하고, 나에게 맞는 지역을 찾고, 지하철망이 싱가포르의 일상을 어떻게 움직이는지 해독해 보세요."
+      },
+      realities: {
+        title: { en: "Unfiltered ground realities (what agents won't tell you)", ko: "여과 없는 현실 (에이전트가 말해주지 않는 것들)" },
+        items: [
+          {
+            name: { en: "The west-sun penalty — orientation matters", ko: "서향 페널티 — 방향이 중요해요" },
+            body: {
+              en: "The gold standard here is a North-South facing. Balconies or master bedrooms facing West or South-West take the full brunt of direct afternoon tropical radiation (2:00–6:30 PM) — walls absorb the heat and radiate it back well past midnight, noticeably driving up monthly aircon bills.",
+              ko: "여기서 정석은 남북향이에요. 서향·남서향 발코니나 안방은 오후(2:00–6:30) 열대 직사광을 정통으로 받는데, 벽이 흡수한 열이 자정 넘어서까지 실내로 방출돼 에어컨 요금이 눈에 띄게 올라가요."
+            }
+          },
+          {
+            name: { en: "Covered linkway coverage", ko: "지붕 있는 연결로(링크웨이)" },
+            body: {
+              en: "Monsoon downpours hit with sudden, torrential force. Neighbourhoods built with continuous covered walkways (HDB linkways) let you walk from doorstep to train or grocery completely dry — many standalone private condos lack covered paths to the nearest station, leaving you stranded without an umbrella or cab.",
+              ko: "몬순 폭우는 예고 없이 쏟아져요. HDB 링크웨이처럼 지붕 있는 통로가 이어진 동네에서는 집 앞에서 역·마트까지 비 한 방울 안 맞고 걸을 수 있어요. 반면 단독형 콘도 상당수는 역까지 지붕길이 없어서 우산이나 택시 없이는 발이 묶여요."
+            }
+          },
+          {
+            name: { en: "Expressway acoustics — the high-floor myth", ko: "고속도로 소음 — 고층 신화" },
+            body: {
+              en: "Condos directly facing major expressways (PIE, CTE, AYE, ECP) get relentless tyre-and-engine hum 24/7. Sound travels upward — units on floors 15–30 often catch more focused acoustic reflection than lower units buffered by trees and boundary walls.",
+              ko: "주요 고속도로(PIE, CTE, AYE, ECP)를 정면으로 마주보는 콘도는 24시간 타이어·엔진 소음에 노출돼요. 소리는 위로 올라가서, 15–30층이 오히려 나무와 담장이 막아주는 저층보다 반사음을 더 집중적으로 받는 경우가 많아요."
+            }
+          },
+          {
+            name: { en: "ERP gantries & commute surcharges", ko: "ERP 톨게이트와 출퇴근 추가 비용" },
+            body: {
+              en: "Electronic Road Pricing (ERP 2.0) gantries auto-deduct tolls during peak hours along arterial expressways and entries into the CBD/Orchard. If you drive, budget an extra ~S$3–10+ per day in routine peak-hour tolls alone.",
+              ko: "ERP 2.0 톨게이트가 피크 시간대 간선도로와 CBD·오차드 진입로에서 통행료를 자동 차감해요. 운전한다면 피크 톨비만으로 하루 ~S$3–10+가 추가된다고 잡으세요."
+            }
+          },
+          {
+            name: { en: "In-unit vs central rubbish chutes", ko: "세대 내 vs 공용 쓰레기 투입구" },
+            body: {
+              en: "Older condos often have an individual garbage chute hopper inside the kitchen, which can attract pests if building-level pest control lapses. Modern builds put centralised chutes in the common lift lobbies.",
+              ko: "구축 콘도는 주방 안에 세대별 쓰레기 투입구가 있는 경우가 많은데, 건물 방역이 소홀하면 해충을 부를 수 있어요. 신축은 공용 엘리베이터 로비에 중앙 투입구를 둬요."
+            }
+          }
+        ]
+      },
+      matrix: {
+        title: { en: "The 60-second quick-match matrix", ko: "60초 퀵매치 매트릭스" },
+        cols: {
+          priority: { en: "If your core priority is…", ko: "최우선 순위가 이것이라면…" },
+          matches: { en: "Top neighbourhood matches", ko: "가장 잘 맞는 동네" },
+          why: { en: "Key micro-enclaves & why", ko: "핵심 세부 구역과 이유" }
+        },
+        rows: [
+          {
+            priority: { en: "Walkable dining & nightlife", ko: "걸어서 즐기는 다이닝·나이트라이프" },
+            matches: [
+              { label: "River Valley", id: "river-valley" },
+              { label: "Tanjong Pagar", id: "tanjong-pagar" },
+              { label: "Katong", id: "east-coast" }
+            ],
+            why: {
+              en: "Robertson Quay (riverside wine bars & dog-friendly alfresco), Duxton Hill (K-town & craft-cocktail shophouses), Joo Chiat (bakeries & cafes).",
+              ko: "Robertson Quay(강변 와인바·반려견 동반 야외석), Duxton Hill(K-타운·크래프트 칵테일 숍하우스), Joo Chiat(베이커리·카페)."
+            }
+          },
+          {
+            priority: { en: "Nature, trails & active outdoors", ko: "자연·트레일·아웃도어" },
+            matches: [
+              { label: "KAP", id: "kap-sixth" },
+              { label: "Beauty World", id: "beauty-world" },
+              { label: "Upper Thomson", id: "thomson" },
+              { label: "Hillview", id: "hillview" }
+            ],
+            why: {
+              en: "King Albert Park (direct Rail Corridor & Rifle Range trail gate), Upper Thomson (MacRitchie Reservoir boardwalks), Dairy Farm (mountain-bike trails).",
+              ko: "King Albert Park(Rail Corridor·Rifle Range 트레일 직결), Upper Thomson(MacRitchie 저수지 보드워크), Dairy Farm(산악자전거 트레일)."
+            }
+          },
+          {
+            priority: { en: "Coastal living & beach weekends", ko: "해안 생활과 주말 바다" },
+            matches: [
+              { label: "East Coast", id: "east-coast" },
+              { label: "Siglap", id: "bedok-siglap" },
+              { label: "Sentosa Cove", id: "sentosa" },
+              { label: "Keppel Bay", id: "keppel-bay" }
+            ],
+            why: {
+              en: "Meyer/Amber Road (coastal condo belt with park underpasses), Sentosa Cove (marina yacht berths), Keppel Bay (waterfront boardwalk to VivoCity).",
+              ko: "Meyer·Amber Road(공원 지하보도가 있는 해안 콘도 벨트), Sentosa Cove(마리나 요트 정박지), Keppel Bay(VivoCity까지 수변 보드워크)."
+            }
+          },
+          {
+            priority: { en: "Family space & value per sq ft", ko: "가족 공간과 평당 가성비" },
+            matches: [
+              { label: "Clementi", id: "clementi-bv" },
+              { label: "Tampines", id: "tampines" },
+              { label: "Serangoon", id: "serangoon" },
+              { label: "Novena (older stock)", id: "newton-novena" }
+            ],
+            why: {
+              en: "Clementi West (large HDB & condo floor plans near NUS), Serangoon Gardens (landed enclave), Novena older stock (1,800+ sq ft 3BR layouts with helper rooms).",
+              ko: "Clementi West(NUS 인근 대형 HDB·콘도 평면), Serangoon Gardens(단독주택 단지), Novena 구축(헬퍼룸 딸린 1,800sqft+ 3BR)."
+            }
+          },
+          {
+            priority: { en: "Zero-commute walking to the CBD", ko: "통근 제로 — CBD 도보권" },
+            matches: [
+              { label: "Marina Bay", id: "marina-bay" },
+              { label: "Shenton Way", id: "tanjong-pagar" },
+              { label: "Bugis", id: "bugis-rochor" }
+            ],
+            why: {
+              en: "Marina One / The Sail (direct underground link to MBFC & Raffles Place), Wallich Residence (integrated directly above Tanjong Pagar MRT).",
+              ko: "Marina One·The Sail(MBFC·Raffles Place 지하 직결), Wallich Residence(Tanjong Pagar역 바로 위 통합)."
+            }
+          }
+        ]
+      },
+      transit: {
+        title: { en: "Transit decoder — the MRT network at a glance", ko: "교통 해독 — MRT 노선 한눈에 보기" },
+        intro: {
+          en: "The grid is colour-coded, and trains run every 2–4 minutes at peak — so your daily route is defined by which line you sit on, not by map distance.",
+          ko: "노선은 색으로 구분되고 피크 시간엔 2–4분 간격으로 다녀요 — 그래서 일상 동선은 지도상 거리가 아니라 '어느 노선에 앉아 있느냐'로 결정돼요."
+        },
+        lines: [
+          {
+            code: "te", name: { en: "Thomson-East Coast Line — the expat & coastal trunk", ko: "톰슨-이스트코스트선 — 외국인·해안 간선" },
+            route: "Upper Thomson ⇄ Orchard ⇄ River Valley ⇄ Marina Bay ⇄ Katong",
+            body: {
+              en: "Connects the East Coast (Katong/Marine Parade) directly across to Marina Bay, Shenton Way, River Valley (Great World) and Orchard — one continuous seat, no transfers.",
+              ko: "East Coast(Katong·Marine Parade)에서 Marina Bay, Shenton Way, River Valley(Great World), Orchard까지 환승 없이 한 번에 이어줘요."
+            }
+          },
+          {
+            code: "dt", name: { en: "Downtown Line — the green-belt express", ko: "다운타운선 — 그린벨트 급행" },
+            route: "Beauty World ⇄ KAP ⇄ Newton ⇄ Bugis ⇄ Telok Ayer ⇄ CBD",
+            body: {
+              en: "Connects the western nature-and-schooling corridor (Bukit Panjang, Hillview, Beauty World, KAP, Tan Kah Kee) through Newton to Bugis and the financial core in about 20 minutes.",
+              ko: "서부 자연·교육 코리도(Bukit Panjang, Hillview, Beauty World, KAP, Tan Kah Kee)를 Newton 거쳐 Bugis·금융가까지 약 20분에 이어줘요."
+            }
+          },
+          {
+            code: "cc", name: { en: "Circle Line — the tech, research & lifestyle orbital", ko: "서클선 — 테크·연구·라이프스타일 순환선" },
+            route: "HarbourFront ⇄ Pasir Panjang ⇄ one-north ⇄ Holland V ⇄ Serangoon",
+            body: {
+              en: "Rings the city fringe — Holland Village, the R&D/tech corridor at one-north/Buona Vista, and waterfront access at HarbourFront.",
+              ko: "시티 프린지를 도는 순환선 — Holland Village, one-north·Buona Vista R&D 코리도, HarbourFront 수변까지 커버해요."
+            }
+          },
+          {
+            code: "ew", name: { en: "East-West Line — the commuter workhorse", ko: "동서선 — 통근의 일꾼" },
+            route: "Tampines ⇄ City Hall ⇄ Tanjong Pagar ⇄ Tiong Bahru ⇄ Clementi",
+            body: {
+              en: "Traverses the whole island horizontally — eastern hubs (Tampines, Bedok) straight through City Hall, Tanjong Pagar and Tiong Bahru to the western university hub (Clementi, Jurong).",
+              ko: "섬을 동서로 관통해요 — 동부 허브(Tampines, Bedok)에서 City Hall·Tanjong Pagar·Tiong Bahru 지나 서부 대학가(Clementi, Jurong)까지."
+            }
+          },
+          {
+            code: "ns", name: { en: "North-South Line — the traditional central spine", ko: "남북선 — 전통의 중앙 척추" },
+            route: "Woodlands ⇄ Ang Mo Kio ⇄ Novena ⇄ Orchard ⇄ Raffles Place",
+            body: {
+              en: "Connects northern family towns (Woodlands, Ang Mo Kio) down the medical-and-retail spine (Novena, Orchard) to Raffles Place.",
+              ko: "북부 가족 타운(Woodlands, Ang Mo Kio)에서 의료·쇼핑 축(Novena, Orchard)을 지나 Raffles Place까지 내려와요."
+            }
+          },
+          {
+            code: "ne", name: { en: "North-East Line — the heritage & international-school line", ko: "북동선 — 헤리티지·국제학교 라인" },
+            route: "HarbourFront ⇄ Chinatown ⇄ Little India ⇄ Woodleigh ⇄ Punggol",
+            body: {
+              en: "Links HarbourFront through Chinatown, Little India and Woodleigh (Stamford American) up to the modern waterfront district of Punggol.",
+              ko: "HarbourFront에서 Chinatown·Little India·Woodleigh(Stamford American) 지나 현대적 수변 신도시 Punggol까지 이어줘요."
+            }
+          }
+        ]
+      }
+    },
+
     helperRoom: {
       title: { en: "The helper's-room rule of thumb", ko: "헬퍼룸 공식" },
       body: {

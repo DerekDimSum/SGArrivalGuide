@@ -600,6 +600,29 @@ tbody tr:last-child th, tbody tr:last-child td { border-bottom: none; }
 .c-east { grid-area: e; }
 .c-south { grid-area: s; }
 
+/* quick-start briefing page */
+.reality-list { list-style: none; padding: 0; }
+.reality-list li { padding: 0.55rem 0; border-bottom: 1px dashed var(--line); }
+.reality-list li strong { display: block; margin-bottom: 0.15rem; }
+.reality-list li p { font-size: 0.92rem; color: var(--ink-soft); margin: 0; }
+.match-table th[scope="row"] { font-size: 0.9rem; }
+.match-links { font-size: 0.9rem; white-space: normal; }
+.match-links a { font-weight: 600; }
+.transit-lines { display: grid; gap: 0.9rem; margin: 1rem 0; }
+@media (min-width: 900px) { .transit-lines { grid-template-columns: 1fr 1fr; } }
+.transit-line {
+  border: 1px solid var(--line); border-radius: var(--radius);
+  background: var(--bg-raised); padding: 0.7rem 0.9rem;
+}
+.transit-head { display: flex; align-items: center; gap: 0.2em; margin: 0 0 0.25em; }
+.transit-route { font-size: 0.82rem; color: var(--ink-soft); font-weight: 600; letter-spacing: 0.01em; margin: 0 0 0.3em; }
+.transit-body { font-size: 0.88rem; color: var(--ink-soft); margin: 0; }
+
+/* map region legend */
+.region-legend { display: flex; flex-wrap: wrap; gap: 0.4rem 1.1rem; margin: 0.2rem 0 0.6rem; font-size: 0.82rem; color: var(--ink-soft); }
+.region-key { display: inline-flex; align-items: center; gap: 0.4em; }
+.region-dot { width: 0.7em; height: 0.7em; border-radius: 50%; display: inline-block; }
+
 /* rating legend at the top of the neighbourhoods page */
 .rating-legend h4 { margin-top: 0.9rem; }
 .legend-scale, .legend-metrics { padding-left: 0; margin: 0.4rem 0; }

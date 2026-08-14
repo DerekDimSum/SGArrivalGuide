@@ -859,6 +859,51 @@
     card.classList.add("flash");
   }
 
+  // MRT line badge palette (official line colours)
+  var MRT_LINES = {
+    ns: { code: "NS", color: "#d42e12", ink: "#fff" },
+    ew: { code: "EW", color: "#009645", ink: "#fff" },
+    cc: { code: "CC", color: "#fa9e0d", ink: "#231400" },
+    dt: { code: "DT", color: "#005ec4", ink: "#fff" },
+    ne: { code: "NE", color: "#9900aa", ink: "#fff" },
+    te: { code: "TE", color: "#9d5b25", ink: "#fff" },
+    se: { code: "SE", color: "#7a8890", ink: "#fff" }
+  };
+
+  // numbered page-section heading — a page's table-of-contents anchors
+  function ovHead(n, leaf) {
+    return h("h3", { class: "ov-head" },
+      h("span", { class: "ov-num", "aria-hidden": "true", text: n }),
+      h("span", { text: t(leaf) })
+    );
+  }
+
+  function mrtBadge(code) {
+    var ln = MRT_LINES[code];
+    if (!ln) return null;
+    return h("span", {
+      class: "mrt-badge", text: ln.code,
+      style: "background:" + ln.color + ";color:" + ln.ink
+    });
+  }
+
+  // region colours — the map's pins mirror the neighbourhoods page's region grouping
+  var REGION_COLORS = {
+    central: "#b4552d",
+    west: "#2e7d4f",
+    east: "#1461c9",
+    north: "#7b4bb7",
+    south: "#0e8a8a"
+  };
+
+  function regionOfEntry(e) {
+    var region = null;
+    CONTENT.living.atlas.zones.forEach(function (z) {
+      if (z.id === e.zone) region = z.region;
+    });
+    return region;
+  }
+
   // map label layers — which kinds of labels/drawings are on the map
   var mapLayers = null;
   var addrMarker = null;
@@ -872,7 +917,7 @@
     }
     mapLayers.polys.forEach(function (rec) {
       setOn(rec.poly, mapShow.areas);
-      setOn(rec.label, mapShow.areas);
+      if (rec.label) setOn(rec.label, mapShow.areas);
     });
     mapLayers.spots.forEach(function (rec) { setOn(rec.marker, mapShow.pins); });
     mapLayers.landmarks.forEach(function (rec) { setOn(rec.marker, mapShow.landmarks); });
@@ -951,19 +996,8 @@
         color: accent, weight: 2, dashArray: "6 5",
         fillColor: accent, fillOpacity: 0.12
       }).addTo(leafletMap);
-      // label at the geographic centroid via a standalone tooltip — polygon-bound
-      // permanent tooltips anchor from the projected shape at bind time, which
-      // strands them at the map edge when the container is still sizing
-      var centroid = pts.reduce(function (acc, p) {
-        return [acc[0] + p[0] / pts.length, acc[1] + p[1] / pts.length];
-      }, [0, 0]);
-      // spread the two western labels apart so their pills don't collide at island zoom
-      var labelDir = { "holland-village": "top", "clementi": "bottom" }[area.id] || "center";
-      var label = L.tooltip({ permanent: true, direction: labelDir, className: "map-real-label", interactive: true })
-        .setLatLng(centroid)
-        .setContent(biLabel(area.short))
-        .addTo(leafletMap)
-        .on("click", function () { goToAtlas(area.id); });
+      // no standalone corridor pill — the atlas-named pins carry the labels so the
+      // map mirrors the neighbourhoods page one-to-one; polygons stay as outlines
       poly.on("click", function () { goToAtlas(area.id); });
       poly.on("mouseover", function () { poly.setStyle({ fillOpacity: 0.25, dashArray: null }); });
       poly.on("mouseout", function () { poly.setStyle({ fillOpacity: 0.12, dashArray: "6 5" }); });
@@ -976,7 +1010,7 @@
           if (e.key === "Enter" || e.key === " ") { e.preventDefault(); goToAtlas(area.id); }
         });
       }
-      mapLayers.polys.push({ cardId: area.id, poly: poly, label: label });
+      mapLayers.polys.push({ cardId: area.id, poly: poly });
     });
 
     geo.landmarks.forEach(function (lm) {
@@ -1023,8 +1057,9 @@
     (geo.spots || []).forEach(function (sp) {
       var entry = (CONTENT.living.atlas.entries || []).find(function (e) { return e.id === sp.id; });
       if (!entry) return;
+      var rc = REGION_COLORS[regionOfEntry(entry)] || accent;
       var m = L.circleMarker([sp.lat, sp.lng], {
-        radius: sp.sub ? 4 : 5.5, color: accent, weight: 1.5,
+        radius: sp.sub ? 4 : 5.5, color: rc, weight: 2,
         fillColor: "#ffffff", fillOpacity: sp.sub ? 0.7 : 0.9
       }).addTo(leafletMap);
       m.bindTooltip(biLabel(entry.name), {
@@ -1586,26 +1621,14 @@
       }
       // area guide — MRT stations, micro-enclaves, anchor hubs, local insight
       if (e.mrt || e.enclaves || e.insight) {
-        var MRT_LINES = {
-          ns: { code: "NS", color: "#d42e12", ink: "#fff" },
-          ew: { code: "EW", color: "#009645", ink: "#fff" },
-          cc: { code: "CC", color: "#fa9e0d", ink: "#231400" },
-          dt: { code: "DT", color: "#005ec4", ink: "#fff" },
-          ne: { code: "NE", color: "#9900aa", ink: "#fff" },
-          te: { code: "TE", color: "#9d5b25", ink: "#fff" },
-          se: { code: "SE", color: "#7a8890", ink: "#fff" }
-        };
         var guide = h("div", { class: "area-guide-body" });
         if (e.mrt) {
           var ml = h("ul", { class: "mrt-list" });
           e.mrt.forEach(function (m) {
             var li = h("li", {});
             (m.l || []).forEach(function (code) {
-              var ln = MRT_LINES[code];
-              if (ln) li.appendChild(h("span", {
-                class: "mrt-badge", text: ln.code,
-                style: "background:" + ln.color + ";color:" + ln.ink
-              }));
+              var b = mrtBadge(code);
+              if (b) li.appendChild(b);
             });
             li.appendChild(h("span", { text: " " + m.s }));
             ml.appendChild(li);
@@ -1709,14 +1732,6 @@
     var lv = CONTENT.living;
     var section = h("section", { id: "living", class: "section", "aria-labelledby": "living-title" },
       sectionHeader("living", lv.title, "⌂"));
-
-    // numbered page-section heading — the overview's table-of-contents anchors
-    function ovHead(n, leaf) {
-      return h("h3", { class: "ov-head" },
-        h("span", { class: "ov-num", "aria-hidden": "true", text: n }),
-        h("span", { text: t(leaf) })
-      );
-    }
 
     /* overview: island intro + district decoder + housing types + market + office */
     var ov = h("div", { id: "living-overview" },
@@ -1849,6 +1864,68 @@
     main.appendChild(section);
   }
 
+  /* ---------- quick-start briefing page ---------- */
+
+  function renderBriefing(main) {
+    var bf = CONTENT.living.briefing;
+    var section = h("section", { id: "briefing", class: "section", "aria-labelledby": "briefing-title" },
+      sectionHeader("briefing", bf.title, "✓"),
+      h("p", { class: "section-intro", text: t(bf.intro) })
+    );
+
+    /* 1 — unfiltered ground realities */
+    section.appendChild(ovHead(1, bf.realities.title));
+    section.appendChild(h("ul", { class: "reality-list" }, bf.realities.items.map(function (i) {
+      return h("li", {},
+        h("strong", { text: t(i.name) }),
+        h("p", { text: t(i.body) })
+      );
+    })));
+
+    /* 2 — quick-match matrix */
+    section.appendChild(ovHead(2, bf.matrix.title));
+    section.appendChild(h("div", { class: "table-wrap" }, h("table", { class: "data-table match-table" },
+      h("thead", {}, h("tr", {},
+        h("th", { text: t(bf.matrix.cols.priority) }),
+        h("th", { text: t(bf.matrix.cols.matches) }),
+        h("th", { text: t(bf.matrix.cols.why) })
+      )),
+      h("tbody", {}, bf.matrix.rows.map(function (r) {
+        var matches = h("td", { class: "match-links" });
+        r.matches.forEach(function (m, i) {
+          if (i) matches.appendChild(h("span", { text: " · " }));
+          matches.appendChild(h("a", { href: "#atlas-" + m.id, text: m.label }));
+        });
+        return h("tr", {},
+          h("th", { scope: "row", text: t(r.priority) }),
+          matches,
+          h("td", { class: "feat-cell", text: t(r.why) })
+        );
+      }))
+    )));
+
+    /* 3 — transit decoder */
+    section.appendChild(ovHead(3, bf.transit.title));
+    section.appendChild(h("p", { text: t(bf.transit.intro) }));
+    section.appendChild(h("div", { class: "transit-lines" }, bf.transit.lines.map(function (ln) {
+      return h("div", { class: "transit-line" },
+        h("p", { class: "transit-head" },
+          mrtBadge(ln.code),
+          h("strong", { text: " " + t(ln.name) })
+        ),
+        h("p", { class: "transit-route", text: ln.route }),
+        h("p", { class: "transit-body", text: t(ln.body) })
+      );
+    })));
+
+    section.appendChild(h("p", { class: "onward-links" },
+      h("a", { class: "btn-link", href: "#neighborhoods", text: t(CONTENT.ui.neighborhoodsLink) }),
+      h("a", { class: "btn-link", href: "#sg-map", text: t(CONTENT.ui.mapLink) })
+    ));
+
+    main.appendChild(section);
+  }
+
   /* ---------- map page ---------- */
 
   function renderMapPage(main) {
@@ -1914,6 +1991,16 @@
             applyMapLayers();
           }
         });
+      })
+    ));
+
+    /* region legend — pin colours mirror the neighbourhoods page's regions */
+    section.appendChild(h("p", { class: "region-legend" },
+      (CONTENT.living.atlas.regions || []).map(function (rg) {
+        return h("span", { class: "region-key" },
+          h("span", { class: "region-dot", style: "background:" + (REGION_COLORS[rg.id] || "#888") }),
+          h("span", { text: t(rg.title) })
+        );
       })
     ));
 
@@ -2457,6 +2544,7 @@
     renderPrimary(main);
     renderEnrichment(main);
     renderLiving(main);
+    renderBriefing(main);
     renderMapPage(main);
     renderNeighborhoods(main);
     renderAreas(main);
@@ -2496,7 +2584,7 @@
 
   // every section view, in page order (nav items may be groups pointing at these)
   var SECTION_VIEWS = ["home", "education", "edu-calculator", "schools", "edu-preschool", "edu-primary",
-    "edu-enrichment", "living", "sg-map", "neighborhoods", "areas",
+    "edu-enrichment", "living", "briefing", "sg-map", "neighborhoods", "areas",
     "community", "helper", "health", "car", "costs", "apps", "checklist"];
   function viewIds() { return SECTION_VIEWS; }
 
@@ -2596,6 +2684,7 @@
       { id: "edu-primary", label: CONTENT.education.primary.title },
       { id: "edu-enrichment", label: CONTENT.education.enrichment.title },
       { id: "living", label: navLabel("living") },
+      { id: "briefing", label: CONTENT.living.briefing.title },
       { id: "sg-map", label: CONTENT.living.map.title },
       { id: "neighborhoods", label: CONTENT.living.atlas.title },
       { id: "areas", label: CONTENT.living.areaTable.title },
