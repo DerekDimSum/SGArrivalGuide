@@ -799,32 +799,82 @@
 
   /* ---------- where to live ---------- */
 
-  function activateArea(id, scroll) {
-    document.querySelectorAll(".map-figure .area").forEach(function (g) {
-      g.classList.toggle("active", g.getAttribute("data-target") === id);
+  // one canonical card per neighbourhood: everything targets the atlas entry
+  function atlasEntryFor(idOrCardId) {
+    var hit = null;
+    CONTENT.living.atlas.entries.forEach(function (e) {
+      if (e.id === idOrCardId) hit = hit || e;
     });
-    if (scroll) {
-      var card = document.getElementById("area-" + id);
-      if (card) {
-        card.setAttribute("open", "");
-        card.scrollIntoView({ behavior: "smooth", block: "start" });
-        card.classList.remove("flash");
-        void card.offsetWidth; // restart animation
-        card.classList.add("flash");
-      }
+    if (!hit) {
+      CONTENT.living.atlas.entries.forEach(function (e) {
+        if (e.cardId === idOrCardId) hit = hit || e;
+      });
     }
+    return hit;
   }
 
-  // inject the hand-drawn schematic (content.js living.map.svg) and wire its clickable areas
-  function injectMap(host) {
-    host.innerHTML = CONTENT.living.map.svg;
-    host.querySelectorAll(".area").forEach(function (a) {
-      function go() { activateArea(a.getAttribute("data-target"), true); }
-      a.addEventListener("click", go);
-      a.addEventListener("keydown", function (e) {
-        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); }
-      });
+  function goToAtlas(idOrCardId) {
+    var e = atlasEntryFor(idOrCardId);
+    if (!e) return;
+    var card = document.getElementById("atlas-" + e.id);
+    if (!card) return;
+    if (location.hash !== "#living") applyView("living", card);
+    else card.scrollIntoView({ behavior: "smooth", block: "center" });
+    card.classList.remove("flash");
+    void card.offsetWidth;
+    card.classList.add("flash");
+  }
+
+  // tag filter shared by the map and the atlas grid
+  var atlasTags = {};
+  var mapLayers = null;
+
+  function entryMatchesTags(e) {
+    var picked = Object.keys(atlasTags);
+    if (!picked.length) return true;
+    return picked.every(function (tg) { return (e.tags || []).indexOf(tg) !== -1; });
+  }
+
+  // does any atlas entry belonging to this researched corridor match the tags?
+  function entryMatchesAnyFor(cardId) {
+    return CONTENT.living.atlas.entries.some(function (e) {
+      return (e.id === cardId || e.cardId === cardId) && entryMatchesTags(e);
     });
+  }
+
+  function applyMapTagFilter() {
+    if (!mapLayers) return;
+    mapLayers.polys.forEach(function (rec) {
+      var on = entryMatchesAnyFor(rec.cardId);
+      rec.poly.setStyle({ opacity: on ? 1 : 0.25, fillOpacity: on ? 0.12 : 0.04 });
+      var el = rec.label.getElement();
+      if (el) el.classList.toggle("map-dimmed", !on);
+    });
+    mapLayers.spots.forEach(function (rec) {
+      var e = atlasEntryFor(rec.id);
+      var on = e ? entryMatchesTags(e) : true;
+      rec.marker.setStyle({ opacity: on ? 1 : 0.2, fillOpacity: on ? (rec.sub ? 0.7 : 0.9) : 0.15 });
+      var tip = rec.marker.getTooltip() && rec.marker.getTooltip().getElement();
+      if (tip) tip.classList.toggle("map-dimmed", !on);
+    });
+  }
+
+  function applyAtlasTagFilter() {
+    var wrap = document.getElementById("living-atlas");
+    if (wrap) {
+      wrap.querySelectorAll(".atlas-card").forEach(function (card) {
+        var e = atlasEntryFor(card.id.replace("atlas-", ""));
+        card.hidden = e ? !entryMatchesTags(e) : false;
+      });
+      // hide zones whose every card is hidden
+      wrap.querySelectorAll(".zone-head").forEach(function (zh) {
+        var grid = zh.nextElementSibling;
+        var any = grid && Array.prototype.some.call(grid.querySelectorAll(".atlas-card"), function (c) { return !c.hidden; });
+        zh.hidden = !any;
+        if (grid) grid.hidden = !any;
+      });
+    }
+    applyMapTagFilter();
   }
 
   /* ---------- real map (Leaflet, self-hosted; OSM/CARTO raster tiles) ---------- */
@@ -892,6 +942,7 @@
     leafletMap.on("zoomend", syncZoomClass);
     syncZoomClass();
 
+    mapLayers = { polys: [], spots: [] };
     CONTENT.living.areas.forEach(function (area) {
       var pts = geo.areas[area.id];
       if (!pts) return;
@@ -907,23 +958,24 @@
       }, [0, 0]);
       // spread the two western labels apart so their pills don't collide at island zoom
       var labelDir = { "holland-village": "top", "clementi": "bottom" }[area.id] || "center";
-      L.tooltip({ permanent: true, direction: labelDir, className: "map-real-label", interactive: true })
+      var label = L.tooltip({ permanent: true, direction: labelDir, className: "map-real-label", interactive: true })
         .setLatLng(centroid)
         .setContent(biLabel(area.short))
         .addTo(leafletMap)
-        .on("click", function () { activateArea(area.id, true); });
-      poly.on("click", function () { activateArea(area.id, true); });
+        .on("click", function () { goToAtlas(area.id); });
+      poly.on("click", function () { goToAtlas(area.id); });
       poly.on("mouseover", function () { poly.setStyle({ fillOpacity: 0.25, dashArray: null }); });
-      poly.on("mouseout", function () { poly.setStyle({ fillOpacity: 0.12, dashArray: "6 5" }); });
+      poly.on("mouseout", function () { poly.setStyle({ fillOpacity: entryMatchesAnyFor(area.id) ? 0.12 : 0.04, dashArray: "6 5" }); });
       var el = poly.getElement();
       if (el) {
         el.setAttribute("tabindex", "0");
         el.setAttribute("role", "link");
         el.setAttribute("aria-label", t(area.name));
         el.addEventListener("keydown", function (e) {
-          if (e.key === "Enter" || e.key === " ") { e.preventDefault(); activateArea(area.id, true); }
+          if (e.key === "Enter" || e.key === " ") { e.preventDefault(); goToAtlas(area.id); }
         });
       }
+      mapLayers.polys.push({ cardId: area.id, poly: poly, label: label });
     });
 
     geo.landmarks.forEach(function (lm) {
@@ -976,14 +1028,10 @@
         offset: sp.dir === "left" ? [-8, 0] : sp.dir === "right" ? [8, 0] : sp.dir === "bottom" ? [0, 8] : [0, -8],
         className: "map-real-lm map-real-lm-minor"
       });
-      m.on("click", function () {
-        var el = document.getElementById("atlas-" + sp.id);
-        if (el) {
-          el.scrollIntoView({ behavior: "smooth", block: "center" });
-          el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash");
-        }
-      });
+      m.on("click", function () { goToAtlas(sp.id); });
+      mapLayers.spots.push({ id: sp.id, marker: m, sub: !!sp.sub });
     });
+    applyMapTagFilter();
   }
 
   /* ---------- user pins (own labels on the real map) ---------- */
@@ -1087,20 +1135,6 @@
     if (tileLayer) tileLayer.setUrl(tileUrl());
   });
 
-  function selectMapTab(which) {
-    var isReal = which === "real";
-    var realPanel = document.getElementById("map-real-panel");
-    var schPanel = document.getElementById("map-schematic-panel");
-    if (!realPanel || !schPanel) return;
-    realPanel.hidden = !isReal;
-    schPanel.hidden = isReal;
-    document.querySelectorAll(".map-tab").forEach(function (b) {
-      var sel = b.getAttribute("data-tab") === which;
-      b.classList.toggle("active", sel);
-      b.setAttribute("aria-selected", sel ? "true" : "false");
-    });
-    if (isReal) { initRealMap(); }
-  }
 
   /* ---------- priorities picker ---------- */
 
@@ -1148,7 +1182,7 @@
       results.appendChild(h("h4", { text: t(pk.resultsTitle) }));
       matches.forEach(function (r) {
         var e = r.e;
-        var href = e.cardId ? "#area-" + e.cardId : "#atlas-" + e.id;
+        var href = "#atlas-" + e.id;
         results.appendChild(h("a", { class: "match-card", href: href },
           h("span", { class: "match-head" },
             h("strong", { text: t(e.name) }),
@@ -1217,9 +1251,9 @@
     return e ? t(e.name) : row.id;
   }
   function areaRowHref(row) {
-    var e = atlasById(row.id);
-    var card = row.cardId || (e && e.cardId);
-    return card ? "#area-" + card : "#atlas-" + row.id;
+    // rows without their own atlas card fall back to the corridor's card
+    var e = atlasEntryFor(row.id) || (row.cardId && atlasEntryFor(row.cardId));
+    return "#atlas-" + (e ? e.id : row.id);
   }
 
   function haversineKm(a, b) {
@@ -1422,24 +1456,123 @@
 
   /* ---------- neighbourhood atlas ---------- */
 
+  // full deep-dive body for a researched corridor (embedded inside its atlas card)
+  function buildAreaResearch(a) {
+    var gmaps = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(a.gmapsQuery);
+    // prose renders as a paragraph; an array renders as scannable fact bullets
+    function richBody(value, verify) {
+      if (Array.isArray(value)) {
+        var ul = h("ul", { class: "card-facts" }, value.map(function (f) {
+          return h("li", { text: t(f) });
+        }));
+        if (!verify) return [ul];
+        return [ul, h("p", {}, verifyBadge())];
+      }
+      return [h("p", {}, h("span", { text: t(value) + " " }), verify ? verifyBadge() : null)];
+    }
+    var parts = [
+      { title: { en: "The pitch", ko: "한 줄 요약" }, body: a.pitch, wide: true },
+      { subAreas: true },
+      { title: { en: "Walkability check", ko: "도보 생활권 점검" }, body: a.walk },
+      { title: { en: "Kids", ko: "아이 키우기" }, body: a.kids, verify: a.kidsVerify },
+      { title: { en: "Community makeup", ko: "커뮤니티 구성" }, body: a.community },
+      { title: { en: "Property & prices", ko: "매물과 가격" }, body: a.property, verify: a.verify }
+    ];
+    var body = h("div", { class: "sub-body card-grid" });
+    parts.forEach(function (p) {
+      if (p.subAreas) {
+        (a.subAreas || []).forEach(function (sa) {
+          var block = h("div", { class: "subarea card-part wide" },
+            h("h4", { class: "subarea-name", text: t(sa.name) }));
+          richBody(sa.facts || sa.body, sa.verify).forEach(function (el) { block.appendChild(el); });
+          if (sa.take) block.appendChild(h("div", { class: "local-take" },
+            h("span", { class: "take-badge", text: t(CONTENT.ui.localTake) }),
+            h("span", { text: t(sa.take) })
+          ));
+          body.appendChild(block);
+        });
+        return;
+      }
+      if (!p.body) return;
+      var part = h("div", { class: "card-part" + (p.wide ? " wide" : "") },
+        h("h4", { text: t(p.title) }));
+      richBody(p.body, p.verify).forEach(function (el) { part.appendChild(el); });
+      body.appendChild(part);
+    });
+    body.appendChild(h("p", { class: "card-links" },
+      h("a", { class: "btn-link", href: gmaps, target: "_blank", rel: "noopener", text: t(CONTENT.ui.openInMaps) }),
+      srcLink(a.srcUrl)
+    ));
+    return body;
+  }
+
   function renderAtlas() {
     var at = CONTENT.living.atlas;
     var wrap = h("div", { id: "living-atlas" },
       h("h3", { text: t(at.title) }),
       h("p", { class: "section-intro", text: t(at.intro) })
     );
+    var tagLabels = {};
+    CONTENT.living.picker.criteria.forEach(function (c) { tagLabels[c.id] = c.label; });
+    function rowsFor(e) {
+      return (CONTENT.living.areaTable.rows || []).filter(function (r) {
+        return r.id === e.id || (e.cardId && r.cardId === e.cardId && r.id !== e.id);
+      }).filter(function (r, i, arr) {
+        // prefer the entry's own row when it exists
+        return arr.some(function (x) { return x.id === e.id; }) ? r.id === e.id : true;
+      });
+    }
+    function fmtPriceRange(rows, key) {
+      var vals = rows.map(function (r) { return r[key]; }).filter(function (v) { return v != null; });
+      if (!vals.length) return t({ en: "thin supply", ko: "매물 적음" });
+      var lo = Math.min.apply(null, vals), hi = Math.max.apply(null, vals);
+      var rough = rows.some(function (r) { return r.rough; }) ? "~" : "";
+      var s = lo === hi
+        ? rough + "S$" + lo.toLocaleString("en-US")
+        : rough + "S$" + lo.toLocaleString("en-US") + "–" + hi.toLocaleString("en-US");
+      return t(s);
+    }
     function entryCard(e) {
-      return h("article", { class: "atlas-card" + (e.researched ? " researched" : ""), id: "atlas-" + e.id },
+      var rows = rowsFor(e);
+      var card = h("article", { class: "atlas-card" + (e.researched ? " researched" : ""), id: "atlas-" + e.id },
         h("div", { class: "match-head" },
           h("strong", { text: t(e.name) }),
           h("span", { class: "match-dist", text: e.dist }),
           h("span", { class: "vibe-tag", text: t(e.vibe) })
         ),
-        h("p", { text: t(e.body) }),
-        e.researched
-          ? h("a", { class: "atlas-badge researched", href: "#area-" + e.cardId, text: t(at.researchedBadge) + " ↓" })
-          : h("span", { class: "atlas-badge", text: t(at.sketchBadge) })
+        h("p", { text: t(e.body) })
       );
+      if (rows.length) {
+        var walk = Math.max.apply(null, rows.map(function (r) { return r.walk || 0; }));
+        card.appendChild(h("p", { class: "atlas-stats" },
+          h("span", {}, h("b", { text: "3BR " }), h("span", { text: fmtPriceRange(rows, "br3") })),
+          h("span", {}, h("b", { text: "4BR " }), h("span", { text: fmtPriceRange(rows, "br4") })),
+          h("span", {}, h("b", { text: t(CONTENT.ui.statWalk) + " " }), h("span", { class: "stock-cell", text: walk ? "●●●".slice(0, walk) : "—" }))
+        ));
+        var malls = rows.map(function (r) { return r.malls; }).filter(Boolean)[0];
+        if (malls) card.appendChild(h("p", { class: "atlas-malls", text: malls }));
+      }
+      if (e.tags && e.tags.length) {
+        card.appendChild(h("p", { class: "atlas-tags" }, e.tags.map(function (tg) {
+          return tagLabels[tg] ? h("span", { class: "mini-tag", text: t(tagLabels[tg]) }) : null;
+        })));
+      }
+      var area = null;
+      if (e.researched && e.cardId) {
+        CONTENT.living.areas.forEach(function (a) { if (a.id === e.cardId) area = a; });
+      }
+      if (area) {
+        card.appendChild(h("details", { class: "atlas-research" },
+          h("summary", {},
+            h("span", { class: "atlas-badge researched", text: t(at.researchedBadge) }),
+            h("span", { class: "atlas-research-label", text: t(CONTENT.ui.fullResearch) })
+          ),
+          buildAreaResearch(area)
+        ));
+      } else {
+        card.appendChild(h("span", { class: "atlas-badge", text: t(at.sketchBadge) }));
+      }
+      return card;
     }
     at.zones.forEach(function (z) {
       var entries = at.entries.filter(function (e) { return e.zone === z.id; });
@@ -1575,151 +1708,33 @@
 
     section.appendChild(h("p", {}, h("a", { class: "btn-link", href: "#areas", text: t(lv.tableLink) })));
 
-    /* §3.4 comparison table — demoted to a collapsed reference (superseded by the
-       area table for browsing, kept for its researched commutes and HDB proxies) */
-    var cols = lv.comparison.cols;
-    var cmpBody = h("div", {},
-      h("p", { class: "table-note", text: t(lv.comparison.note) }),
-      h("div", { class: "table-wrap" }, h("table", { class: "data-table cmp-table" },
-        h("thead", {}, h("tr", {},
-          h("th", { text: t(cols.area) }), h("th", { text: t(cols.br3) }), h("th", { text: t(cols.br4) }),
-          h("th", { text: t(cols.commute) }), h("th", { text: t(cols.skis) }),
-          h("th", { text: t(cols.hdb) }), h("th", { text: t(cols.vibe) })
-        )),
-        h("tbody", {}, lv.comparison.rows.map(function (r) {
-          return h("tr", {},
-            h("th", { scope: "row" }, h("a", { href: "#area-" + r.target, text: t(r.area) })),
-            h("td", { text: t(r.br3) }),
-            h("td", { text: t(r.br4) }),
-            h("td", { text: t(r.commute) }),
-            h("td", { text: t(r.skis) }),
-            h("td", { text: t(r.hdb) }),
-            h("td", { text: t(r.vibe) })
-          );
-        }))
-      ))
-    );
-    lv.comparison.footNotes.forEach(function (n, i) {
-      cmpBody.appendChild(h("p", { class: "table-note" },
-        h("span", { text: t(n) + " " }),
-        n.verify ? verifyBadge() : null, " ",
-        srcLink(i === 0 ? lv.comparison.erpUrl : lv.comparison.skisBusUrl)
-      ));
-    });
-    var cmpDetails = sub("living-compare", lv.comparison.title, cmpBody);
-    if (!openState.hasOwnProperty("living-compare")) cmpDetails.removeAttribute("open");
-    // (appended after the deep-dive cards below — Learn → Explore → reference)
-
-    /* map */
-    var mapHost = h("div", { class: "map-host" });
-    var tabs = h("div", { class: "map-tabs", role: "tablist" },
-      h("button", {
-        class: "map-tab active", type: "button", role: "tab", dataset: { tab: "real" },
-        "aria-selected": "true", "aria-controls": "map-real-panel",
-        text: t(CONTENT.ui.mapTabReal),
-        onclick: function () { selectMapTab("real"); }
-      }),
-      h("button", {
-        class: "map-tab", type: "button", role: "tab", dataset: { tab: "schematic" },
-        "aria-selected": "false", "aria-controls": "map-schematic-panel",
-        text: t(CONTENT.ui.mapTabSchematic),
-        onclick: function () { selectMapTab("schematic"); }
+    /* map — the single interactive map; the tag bar filters both it and the atlas */
+    var tagBar = h("div", { class: "tag-bar", role: "group", "aria-label": t(CONTENT.ui.tagFilter) },
+      h("span", { class: "tag-bar-label", text: t(CONTENT.ui.tagFilter) }),
+      CONTENT.living.picker.criteria.map(function (c) {
+        return h("button", {
+          class: "tag-chip" + (atlasTags[c.id] ? " on" : ""), type: "button",
+          "aria-pressed": atlasTags[c.id] ? "true" : "false",
+          text: t(c.label),
+          onclick: function () {
+            if (atlasTags[c.id]) delete atlasTags[c.id]; else atlasTags[c.id] = true;
+            this.classList.toggle("on", !!atlasTags[c.id]);
+            this.setAttribute("aria-pressed", atlasTags[c.id] ? "true" : "false");
+            applyAtlasTagFilter();
+          }
+        });
       })
-    );
-    var realPanel = h("div", { id: "map-real-panel", class: "map-panel", role: "tabpanel" },
-      h("div", { id: "real-map", class: "real-map" }),
-      h("p", { class: "map-hint", text: t(CONTENT.ui.realMapHint) })
-    );
-    var schPanel = h("div", { id: "map-schematic-panel", class: "map-panel", role: "tabpanel", hidden: true },
-      mapHost,
-      h("p", { class: "map-hint", text: t(CONTENT.ui.mapHint) }),
-      h("p", { class: "legend-title", text: t(CONTENT.ui.mrtLegend) }),
-      h("ul", { class: "mrt-legend" }, Object.keys(lv.map.lines).map(function (key) {
-        return h("li", {},
-          h("span", { class: "legend-swatch key-" + key }),
-          h("span", { text: t(lv.map.lines[key]) })
-        );
-      }))
     );
     var mapWrap = h("figure", { class: "map-figure", id: "sg-map" },
       h("h3", { text: t(lv.map.title) }),
-      tabs, realPanel, schPanel
+      tagBar,
+      h("div", { id: "real-map", class: "real-map" }),
+      h("p", { class: "map-hint", text: t(CONTENT.ui.realMapHint) })
     );
-    injectMap(mapHost);
     section.appendChild(mapWrap);
 
-    /* neighbourhood atlas */
+    /* neighbourhood atlas — one canonical card per area */
     section.appendChild(renderAtlas());
-
-    /* area cards */
-    section.appendChild(h("h3", { id: "living-cards", text: t(lv.cardsTitle) }));
-    lv.areas.forEach(function (a) {
-      var gmaps = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(a.gmapsQuery);
-      // prose renders as a paragraph; an array renders as scannable fact bullets
-      function richBody(value, verify) {
-        if (Array.isArray(value)) {
-          var ul = h("ul", { class: "card-facts" }, value.map(function (f) {
-            return h("li", { text: t(f) });
-          }));
-          if (!verify) return [ul];
-          return [ul, h("p", {}, verifyBadge())];
-        }
-        return [h("p", {}, h("span", { text: t(value) + " " }), verify ? verifyBadge() : null)];
-      }
-
-      var parts = [
-        { title: { en: "The pitch", ko: "한 줄 요약" }, body: a.pitch, wide: true },
-        { subAreas: true },
-        { title: { en: "Walkability check", ko: "도보 생활권 점검" }, body: a.walk },
-        { title: { en: "Kids", ko: "아이 키우기" }, body: a.kids, verify: a.kidsVerify },
-        { title: { en: "Community makeup", ko: "커뮤니티 구성" }, body: a.community },
-        { title: { en: "Property & prices", ko: "매물과 가격" }, body: a.property, verify: a.verify }
-      ];
-      var body = h("div", { class: "sub-body card-grid" });
-      parts.forEach(function (p) {
-        if (p.subAreas) {
-          (a.subAreas || []).forEach(function (sa) {
-            var block = h("div", { class: "subarea card-part wide" },
-              h("h4", { class: "subarea-name", text: t(sa.name) }));
-            richBody(sa.facts || sa.body, sa.verify).forEach(function (el) { block.appendChild(el); });
-            if (sa.take) block.appendChild(h("div", { class: "local-take" },
-              h("span", { class: "take-badge", text: t(CONTENT.ui.localTake) }),
-              h("span", { text: t(sa.take) })
-            ));
-            body.appendChild(block);
-          });
-          return;
-        }
-        if (!p.body) return;
-        var part = h("div", { class: "card-part" + (p.wide ? " wide" : "") },
-          h("h4", { text: t(p.title) }));
-        richBody(p.body, p.verify).forEach(function (el) { part.appendChild(el); });
-        body.appendChild(part);
-      });
-      body.appendChild(h("p", { class: "card-links" },
-        h("a", { class: "btn-link", href: gmaps, target: "_blank", rel: "noopener", text: t(CONTENT.ui.openInMaps) }),
-        h("a", {
-          class: "btn-link", href: "#sg-map", text: t(CONTENT.ui.showOnMap),
-          onclick: function () { activateArea(a.id, false); }
-        }),
-        srcLink(a.srcUrl)
-      ));
-
-      var card = h("details", { class: "subsection area-card", id: "area-" + a.id, dataset: { key: "area-" + a.id } },
-        h("summary", {},
-          h("h3", {},
-            h("span", { text: t(a.name) }),
-            h("span", { class: "vibe-tag", text: t(a.vibe) })
-          )
-        ),
-        body
-      );
-      if (openState.hasOwnProperty("area-" + a.id) ? openState["area-" + a.id] : wideScreen()) card.setAttribute("open", "");
-      section.appendChild(card);
-    });
-
-    /* researched shortlist, as a collapsed reference after the cards */
-    section.appendChild(cmpDetails);
 
     /* §3.6 helper's-room rule */
     section.appendChild(h("aside", { class: "info-box" },
@@ -2263,10 +2278,7 @@
       window.scrollTo(0, 0);
     }
     // Leaflet can only size itself once its container is actually visible
-    if (id === "living") {
-      var realPanel = document.getElementById("map-real-panel");
-      if (realPanel && !realPanel.hidden) setTimeout(initRealMap, 50);
-    }
+    if (id === "living") setTimeout(initRealMap, 50);
   }
 
   function route() {
@@ -2277,6 +2289,11 @@
     CONTENT.nav.forEach(function (n) { if (n.id === hash && n.target) group = n; });
     if (group) { applyView(group.target); return; }
     if (viewIds().indexOf(hash) !== -1) { applyView(hash); return; }
+    // legacy deep-dive anchors (#area-<cardId>) → their canonical atlas card
+    if (hash.indexOf("area-") === 0) {
+      var legacy = atlasEntryFor(hash.slice(5));
+      if (legacy) hash = "atlas-" + legacy.id;
+    }
     var el = document.getElementById(hash);
     if (el) {
       var sec = el.closest("main section.section");
