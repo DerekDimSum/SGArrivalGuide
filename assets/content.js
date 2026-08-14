@@ -41,9 +41,13 @@ var CONTENT = {
     statWalk: { en: "walk", ko: "도보" },
     mapPageTitle: { en: "Map", ko: "지도" },
     mapPageIntro: {
-      en: "Every neighbourhood in the guide, on one interactive map. Tap a highlighted area or pin to jump to its card, use the tags to light up areas that fit you, or look up any address to see where it lands.",
-      ko: "가이드의 모든 동네를 한 장의 인터랙티브 지도에 담았어요. 하이라이트된 지역이나 핀을 누르면 해당 카드로 이동하고, 태그로 조건에 맞는 동네만 밝힐 수 있어요. 주소를 검색해 위치를 확인할 수도 있어요."
+      en: "Every neighbourhood in the guide, on one interactive map. Tap a highlighted area or pin to jump to its card, toggle which labels are drawn, or look up any address to see where it lands.",
+      ko: "가이드의 모든 동네를 한 장의 인터랙티브 지도에 담았어요. 하이라이트된 지역이나 핀을 누르면 해당 카드로 이동하고, 표시할 라벨 종류를 골라 켜고 끌 수 있어요. 주소를 검색해 위치를 확인할 수도 있어요."
     },
+    mapLayerFilter: { en: "Show on the map…", ko: "지도에 표시…" },
+    mapLayerAreas: { en: "Researched areas", ko: "조사된 지역" },
+    mapLayerPins: { en: "Neighbourhood pins", ko: "동네 핀" },
+    mapLayerLandmarks: { en: "Schools, parks & landmarks", ko: "학교·공원·랜드마크" },
     mapAddressLabel: { en: "Look up an address", ko: "주소로 찾아보기" },
     mapAddressPh: { en: "Postal code or building — e.g. 138632 or Great World City", ko: "우편번호나 건물명 — 예: 138632, Great World City" },
     mapAddressBtn: { en: "Locate", ko: "위치 보기" },
@@ -90,6 +94,7 @@ var CONTENT = {
     { id: "education", label: { en: "Education", ko: "교육" },
       desc: { en: "The class calculator, the school directory, preschool, primary paths, and enrichment.", ko: "반 배정 계산기와 학교 디렉토리, 유치원, 초등 로드맵, 사교육까지." },
       subs: [
+        { id: "education", label: { en: "Overview", ko: "개요" } },
         { id: "edu-calculator", label: { en: "When to apply", ko: "입학·지원 시기" } },
         { id: "schools", label: { en: "School directory", ko: "학교 디렉토리" } },
         { id: "edu-preschool", label: { en: "Preschool", ko: "유치원" } },
@@ -362,6 +367,27 @@ var CONTENT = {
 
   education: {
     title: { en: "Education", ko: "교육" },
+
+    /* Overview page — the lay of the land + where each sub-page takes you */
+    overview: {
+      paras: [
+        {
+          en: "Singapore runs two parallel school worlds. The local system (MOE) is rigorous, prestigious and nearly free for citizens — but for foreigners, seats are scarce, allocated after every citizen and PR, and taught in English with compulsory Mother Tongue. The international system is where most expat kids land: 30-plus schools across curricula (IB, British, American, Korean and more) at S$25k–55k a year, each with its own cutoff dates and waitlists.",
+          ko: "싱가포르의 학교는 두 개의 평행 세계예요. 로컬 시스템(MOE)은 수준 높고 명성 있고 시민권자에겐 거의 무료지만, 외국인에게는 자리가 귀하고 시민권자·영주권자 배정이 모두 끝난 뒤에야 차례가 와요. 수업은 영어이고 모국어 과목이 필수예요. 국제학교 시스템이 대부분의 외국인 아이들이 가는 곳이에요: 30여 개 학교가 IB·영국식·미국식·한국식 등 다양한 커리큘럼을 S$25k–55k/년에 운영하고, 학교마다 컷오프 날짜와 대기자 명단이 따로 있어요."
+        },
+        {
+          en: "Two things decide most school journeys here: your child's birthday (each system draws its age-cutoff line differently, so the same child can land in different grades at different schools) and how early you apply (popular schools run 6–18 month waitlists). Start with those two, then browse the directory.",
+          ko: "여기서 학교 여정을 좌우하는 건 두 가지예요: 아이의 생일(시스템마다 나이 컷오프 기준이 달라 같은 아이가 학교에 따라 다른 학년에 배정돼요), 그리고 지원 시점(인기 학교는 대기가 6–18개월이에요). 이 둘부터 확인하고 디렉토리를 둘러보세요."
+        }
+      ],
+      links: [
+        { href: "#edu-calculator", label: { en: "When would my child join — and when to apply?", ko: "우리 아이는 몇 학년? 언제 지원?" }, desc: { en: "One birthday in, every system's grade and application window out.", ko: "생일 하나면 시스템별 학년과 지원 시기가 나와요." } },
+        { href: "#schools", label: { en: "School directory", ko: "학교 디렉토리" }, desc: { en: "30 schools — curriculum, segment, fees, links — sortable and filterable.", ko: "30개 학교 — 커리큘럼, 세그먼트, 학비, 링크 — 정렬·필터 가능." } },
+        { href: "#edu-preschool", label: { en: "Preschool", ko: "유치원" }, desc: { en: "Levels by age, fee tiers, sibling notes, waitlists and documents.", ko: "연령별 과정, 학비 티어, 형제 팁, 대기와 서류." } },
+        { href: "#edu-primary", label: { en: "Primary school", ko: "초등학교" }, desc: { en: "Local vs international paths, fee bands, and the SKIS option.", ko: "로컬 vs 국제학교 경로, 학비 밴드, SKIS 옵션." } },
+        { href: "#edu-enrichment", label: { en: "Enrichment classes", ko: "사교육 클래스" }, desc: { en: "The hagwon landscape — what exists and what it costs.", ko: "학원 지형도 — 뭐가 있고 얼마인지." } }
+      ]
+    },
 
     /* Age calculator — one input, one answer per school system */
     calculator: {
@@ -1628,7 +1654,15 @@ var CONTENT = {
           { id: "skis", lat: 1.3446, lng: 103.7780, star: true, dir: "top", label: { en: "Korean School (SKIS)", ko: "한국국제학교 (SKIS)" } },
           { id: "ktown", lat: 1.2785, lng: 103.8435, dir: "left", label: { en: "K-town · Tanjong Pagar", ko: "코리아타운 · 탄종파가" } },
           { id: "office", lat: 1.2764, lng: 103.8540, dir: "right", label: { en: "Marina One (office)", ko: "마리나 원 (회사)" } },
-          { id: "changi", lat: 1.3644, lng: 103.9915, dir: "top", label: { en: "Changi Airport", ko: "창이공항" } }
+          { id: "changi", lat: 1.3644, lng: 103.9915, dir: "top", label: { en: "Changi Airport", ko: "창이공항" } },
+          { id: "botanic", lat: 1.3138, lng: 103.8159, dir: "left", minor: true, label: { en: "Botanic Gardens", ko: "보타닉 가든" } },
+          { id: "macritchie", lat: 1.3418, lng: 103.834, dir: "top", minor: true, label: { en: "MacRitchie Reservoir", ko: "맥리치 저수지" } },
+          { id: "ecp", lat: 1.3007, lng: 103.9125, dir: "bottom", minor: true, label: { en: "East Coast Park", ko: "이스트코스트 파크" } },
+          { id: "jlg", lat: 1.3399, lng: 103.7269, dir: "left", minor: true, label: { en: "Jurong Lake Gardens", ko: "주롱 레이크 가든" } },
+          { id: "nus", lat: 1.2966, lng: 103.7764, dir: "bottom", minor: true, label: { en: "NUS", ko: "NUS (싱가포르국립대)" } },
+          { id: "uwc-dover", lat: 1.301, lng: 103.77, dir: "top", minor: true, label: { en: "UWCSEA Dover", ko: "UWCSEA 도버 캠퍼스" } },
+          { id: "sas", lat: 1.4295, lng: 103.778, dir: "bottom", minor: true, label: { en: "Singapore American School", ko: "싱가포르 미국학교 (SAS)" } },
+          { id: "dempsey", lat: 1.3043, lng: 103.8098, dir: "bottom", minor: true, label: { en: "Dempsey Hill", ko: "뎀시힐" } }
         ],
         /* Atlas spots — every atlas neighbourhood without a polygon above.
            Labels come from living.atlas.entries by id (single source of truth).
@@ -1884,7 +1918,20 @@ var CONTENT = {
         en: "New-launch 3BRs (post-~2012) are compact (900–1,100 sqft) and usually have no helper's room. A live-in helper means hunting for \"3BR + utility/yard\" in pre-2012 condos (the Maplewoods, Signature Park, Sommerville Park, The Esta, One Amber, Park Infinia, Chancery Court era) — or paying for a 4BR in new stock. Search terms that matter on PropertyGuru/99.co: \"utility room\", \"yard\", \"+study\".",
         ko: "2012년 이후 신축 3BR은 콤팩트(900–1,100sqft)하고 헬퍼룸이 없는 게 보통이에요. 입주 헬퍼와 함께라면 2012년 이전 콘도(Maplewoods, Signature Park, Sommerville Park, The Esta, One Amber, Park Infinia, Chancery Court 세대)에서 '3BR + 유틸리티/야드'를 찾거나, 신축이라면 4BR로 올라가야 해요. PropertyGuru/99.co에서 통하는 검색어: \"utility room\", \"yard\", \"+study\"."
       },
-      srcUrl: "https://stackedhomes.com/editorial/shrinking-3-bedroom-new-condo-sizes-how-much-smaller-can-it-go/"
+      srcUrl: "https://stackedhomes.com/editorial/shrinking-3-bedroom-new-condo-sizes-how-much-smaller-can-it-go/",
+      shelter: {
+        en: "Related quirk — the bomb shelter: homes built since the mid-1990s include a household shelter (HS), a small reinforced-concrete room with a blast door. In many condos it doubles as the helper's room or storeroom; you can't drill into or renovate its walls. Floor plans label it \"HS\" — in older listings, that room marked \"utility\" is often the shelter.",
+        ko: "관련 상식 — 방공호(bomb shelter): 1990년대 중반 이후 지어진 집에는 가정용 대피실(HS)이 있어요. 방폭문이 달린 작은 철근콘크리트 방인데, 콘도에서는 헬퍼룸이나 창고로 많이 써요. 벽에 드릴 작업이나 개조는 불가예요. 도면에는 \"HS\"로 표기돼요 — 구축 매물의 \"utility\" 방이 사실 대피실인 경우가 많아요."
+      }
+    },
+
+    /* additional-info section head on the overview page */
+    additional: {
+      title: { en: "Additional info", ko: "참고 정보" },
+      intro: {
+        en: "Context that helps once you're actually hunting: where the market sits in 2026, the office anchor this guide's commutes are measured against, and the helper's-room / shelter quirk of Singapore floor plans.",
+        ko: "실제로 집을 알아보기 시작하면 도움이 되는 배경이에요: 2026년 시장 상황, 이 가이드의 통근 시간 기준점인 오피스 앵커, 그리고 싱가포르 도면 특유의 헬퍼룸·대피실 이야기까지."
+      }
     },
 
     /* §3.7 — decision block (guidance, not a verdict) */
@@ -2198,28 +2245,28 @@ var CONTENT = {
       },
       {
         type: { en: "Cluster house (strata landed)", ko: "클러스터 하우스" },
-        feat: { en: "Individual multi-storey houses inside a private gated estate sharing condo amenities — pool, gym, security.", ko: "게이트 단지 안의 다층 단독주택으로, 수영장·헬스장·보안 같은 콘도 시설을 공유해요." },
+        feat: { en: "Individual multi-storey houses inside a private gated estate sharing condo amenities — pool, gym, security. Best-of-both for families wanting space plus a pool, but supply is thin and concentrated in pockets (Toh Tuck/Eng Kong near Beauty World; Chestnut/Hillview).", ko: "게이트 단지 안의 다층 단독주택으로, 수영장·헬스장·보안 같은 콘도 시설을 공유해요. 공간과 수영장을 다 원하는 가족에게 최고의 절충안인데, 공급이 적고 특정 포켓에 몰려 있어요(Beauty World 근처 Toh Tuck/Eng Kong, Chestnut/Hillview)." },
         buy: "S$4M–8.5M",
         rent: "S$8,000–15,000",
         who: { en: "Families wanting house-scale floors plus condo facilities.", ko: "집의 층수와 콘도의 시설을 둘 다 원하는 가족." }
       },
       {
         type: { en: "Private condominium", ko: "민간 콘도" },
-        feat: { en: "High- or mid-rise towers with 24/7 security, pools, gyms, courts. Rents scale hard by size, age and district — prime D9/D10 3–4BR reach S$12,000–25,000+.", ko: "24시간 보안, 수영장, 헬스장, 코트를 갖춘 고·중층 타워예요. 크기·연식·구역에 따라 임대료 차이가 커요 — 프라임 D9/D10의 3–4BR은 S$12,000–25,000+까지 가요." },
+        feat: { en: "High- or mid-rise towers with 24/7 security, pools, gyms, courts — what most expat families rent (management fees are the landlord's problem). Leasehold vs freehold matters to buyers, not tenants; what matters to a tenant is build era — pre-2012 blocks have bigger units and helper's rooms. Rents scale hard by size, age and district — prime D9/D10 3–4BR reach S$12,000–25,000+.", ko: "24시간 보안, 수영장, 헬스장, 코트를 갖춘 고·중층 타워 — 외국인 가족 대부분이 임대하는 유형이에요(관리비는 집주인 부담). 99년/프리홀드 구분은 매수자 이야기고, 세입자에게 중요한 건 건축 연식이에요 — 2012년 이전 콘도가 더 넓고 헬퍼룸이 있어요. 크기·연식·구역에 따라 임대료 차이가 커요 — 프라임 D9/D10의 3–4BR은 S$12,000–25,000+까지 가요." },
         buy: "S$2M–20M+",
         rent: "S$4,500–18,000+",
         who: { en: "The dominant expat choice: secure, zero ground maintenance, deeply liquid market.", ko: "외국인의 기본 선택지: 안전하고, 관리 부담이 없고, 매물 시장이 가장 활발해요." }
       },
       {
         type: { en: "Conserved shophouse", ko: "보존 숍하우스" },
-        feat: { en: "Historic 2–3 storey heritage buildings — commercial ground floor, homes above, high ceilings and timber beams.", ko: "역사적인 2–3층 헤리티지 건물 — 1층은 상업, 위층은 주거, 높은 천장과 목조 보가 특징이에요." },
+        feat: { en: "Historic 2–3 storey heritage buildings — commercial ground floor, homes above, high ceilings and timber beams. Character living, concentrated in Katong/Joo Chiat and Emerald Hill.", ko: "역사적인 2–3층 헤리티지 건물 — 1층은 상업, 위층은 주거, 높은 천장과 목조 보가 특징이에요. Katong/Joo Chiat과 Emerald Hill에 몰려 있는 감성 주거예요." },
         buy: "S$5M–20M+",
         rent: "S$8,000–20,000",
         who: { en: "Creatives and heritage lovers — Katong, Tanjong Pagar, Emerald Hill.", ko: "크리에이티브·헤리티지 애호가 — Katong, Tanjong Pagar, Emerald Hill." }
       },
       {
         type: { en: "HDB flat (public housing)", ko: "HDB (공공주택)" },
-        feat: { en: "Government-planned high-rise, spacious and well-kept, embedded in heartland town centres with transit at the door.", ko: "정부가 계획한 고층 주거로, 넓고 관리가 잘 되어 있고, 타운 중심과 교통이 문앞이에요." },
+        feat: { en: "Government-planned high-rise where ~80% of Singaporeans live — spacious, well-kept, embedded in heartland town centres with transit at the door. Whole-flat rental to foreigners is legal (per-block quota, minimum 6-month tenancy): 3-room ≈ 700 sqft, 4-room ≈ 970, 5-room ≈ 1,200. No pool or security, but hawker centres and shops downstairs — 30–50% cheaper than condos.", ko: "싱가포르 국민의 약 80%가 사는 정부 계획 고층 주거 — 넓고 관리가 잘 되어 있고, 타운 중심과 교통이 문앞이에요. 외국인도 전체 임대가 합법이에요(동별 쿼터, 최소 6개월 계약): 3-room 약 700sqft, 4-room 약 970, 5-room 약 1,200. 수영장·보안은 없지만 호커센터·상가가 아래층이고 콘도보다 30–50% 저렴해요." },
         buy: { en: "Purchase restricted to Citizens/PRs", ko: "매수는 시민·영주권자만 가능" },
         rent: "S$3,000–5,500",
         who: { en: "Value-seekers wanting 30–50% more space per dollar near transit — minus condo facilities.", ko: "콘도 시설 대신 돈 대비 30–50% 넓은 공간을 원하는 실속파." }
@@ -2228,7 +2275,26 @@ var CONTENT = {
     note: {
       en: "Whole-island ranges, entry level to prime ceilings (Aug 2026). Where a neighbourhood sits inside these bands: see the Area table; deposits and agent fees: the renting box.",
       ko: "섬 전체 기준, 입문가부터 프라임 상단까지의 범위예요(2026년 8월). 각 동네가 범위의 어디쯤인지는 동네 표에서, 보증금·중개 수수료는 임대 박스에서 확인하세요."
-    }
+    },
+    footTitle: { en: "Also worth knowing", ko: "함께 알아두면 좋은 것" },
+    footnotes: [
+      {
+        name: { en: "Serviced apartment", ko: "서비스드 아파트" },
+        body: { en: "Furnished, minimum 7-day stays — the standard landing pad for the first 1–2 months while house-hunting.", ko: "가구 완비에 최소 7일 단위 — 집을 구하는 첫 1–2개월의 표준 베이스캠프예요." }
+      },
+      {
+        name: { en: "Executive Condominium (EC)", ko: "EC (Executive Condominium)" },
+        body: { en: "An HDB-condo hybrid in the suburbs that becomes fully private after 10 years; rents and looks like a condo. Just know the label.", ko: "외곽의 HDB-콘도 하이브리드로, 10년이 지나면 완전 민간이 돼요. 임대 경험은 콘도와 똑같아요. 라벨만 알아두면 돼요." }
+      },
+      {
+        name: { en: "Walk-up apartment", ko: "워크업 아파트" },
+        body: { en: "Older low-rise (3–4 storeys), no lift, no facilities; big square footage for the money. Common in Katong/Joo Chiat.", ko: "3–4층짜리 구옥 저층으로 엘리베이터도 시설도 없지만, 같은 돈에 평수가 넓어요. Katong/Joo Chiat에 흔해요." }
+      },
+      {
+        name: { en: "Renting landed", ko: "단독주택 임대 시" },
+        body: { en: "The tenant usually takes on garden and pool upkeep, older houses may lack central aircon, and there are no shared facilities or security.", ko: "정원·수영장 관리는 보통 세입자 몫이고, 오래된 집은 중앙 에어컨이 없을 수 있어요. 공용 시설과 보안은 없어요." }
+      }
+    ]
   },
 
   /* Healthcare — qualitative guide; fee figures are unresearched ballparks (~, verify) */

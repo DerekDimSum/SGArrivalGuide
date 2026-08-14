@@ -465,8 +465,7 @@
     monthSel.addEventListener("change", update);
     yearSel.addEventListener("change", update);
 
-    var box = h("div", { id: "edu-calculator", class: "calc-box" },
-      h("h3", { text: t(cal.title) }),
+    var box = h("div", { class: "calc-box" },
       h("p", { class: "section-intro", text: t(cal.intro) }),
       h("div", { class: "calc-inputs" },
         h("label", {}, h("span", { text: t(cal.yearLabel) }), yearSel),
@@ -684,9 +683,29 @@
     var ed = CONTENT.education;
     var section = h("section", { id: "education", class: "section", "aria-labelledby": "education-title" },
       sectionHeader("education", ed.title, "✎"));
+    ed.overview.paras.forEach(function (p) {
+      section.appendChild(h("p", { class: "edu-ov-para", text: t(p) }));
+    });
+    section.appendChild(h("div", { class: "section-cards edu-cards" }, ed.overview.links.map(function (l) {
+      return h("a", { class: "section-card", href: l.href },
+        h("span", { class: "card-title", text: t(l.label) }),
+        h("span", { class: "card-desc", text: t(l.desc) }),
+        h("span", { class: "card-arrow", "aria-hidden": "true", text: "→" })
+      );
+    })));
+    main.appendChild(section);
+  }
 
+  function renderEduCalculator(main) {
+    var section = h("section", { id: "edu-calculator", class: "section", "aria-labelledby": "edu-calculator-title" },
+      sectionHeader("edu-calculator", CONTENT.education.calculator.title, "✎"));
     section.appendChild(renderCalculator());
-    section.appendChild(h("p", {}, h("a", { class: "btn-link", href: "#schools", text: t(ed.directoryLink) })));
+    section.appendChild(h("p", {}, h("a", { class: "btn-link", href: "#schools", text: t(CONTENT.education.directoryLink) })));
+    main.appendChild(section);
+  }
+
+  function renderPreschool(main) {
+    var ed = CONTENT.education;
 
     /* preschool */
     var ps = ed.preschool;
@@ -722,7 +741,14 @@
       h("ul", {}, ps.docs.items.map(function (d) { return h("li", { text: t(d) }); })),
       h("p", {}, srcLink(ps.docs.srcUrl, CONTENT.ui.officialLink))
     );
-    section.appendChild(sub("edu-preschool", ps.title, psBody));
+    var section = h("section", { id: "edu-preschool", class: "section", "aria-labelledby": "edu-preschool-title" },
+      sectionHeader("edu-preschool", ps.title, "✿"));
+    section.appendChild(psBody);
+    main.appendChild(section);
+  }
+
+  function renderPrimary(main) {
+    var ed = CONTENT.education;
 
     /* primary */
     var pr = ed.primary;
@@ -764,7 +790,14 @@
       h("h4", { text: t(pr.skis.title) }),
       h("p", {}, h("span", { text: t(pr.skis.body) + " " }), pr.skis.verify ? verifyBadge() : null, " ", srcLink(pr.skis.url, CONTENT.ui.officialLink))
     );
-    section.appendChild(sub("edu-primary", pr.title, prBody));
+    var section = h("section", { id: "edu-primary", class: "section", "aria-labelledby": "edu-primary-title" },
+      sectionHeader("edu-primary", pr.title, "✎"));
+    section.appendChild(prBody);
+    main.appendChild(section);
+  }
+
+  function renderEnrichment(main) {
+    var ed = CONTENT.education;
 
     /* enrichment */
     var en = ed.enrichment;
@@ -780,8 +813,9 @@
       })),
       h("p", {}, h("span", { text: t(en.budget) + " " }), en.budgetVerify ? verifyBadge() : null)
     );
-    section.appendChild(sub("edu-enrichment", en.title, enBody));
-
+    var section = h("section", { id: "edu-enrichment", class: "section", "aria-labelledby": "edu-enrichment-title" },
+      sectionHeader("edu-enrichment", en.title, "★"));
+    section.appendChild(enBody);
     main.appendChild(section);
   }
 
@@ -825,57 +859,23 @@
     card.classList.add("flash");
   }
 
-  // tag filter shared by the map and the atlas grid
-  var atlasTags = {};
+  // map label layers — which kinds of labels/drawings are on the map
   var mapLayers = null;
   var addrMarker = null;
+  var mapShow = { areas: true, pins: true, landmarks: true };
 
-  function entryMatchesTags(e) {
-    var picked = Object.keys(atlasTags);
-    if (!picked.length) return true;
-    return picked.every(function (tg) { return (e.tags || []).indexOf(tg) !== -1; });
-  }
-
-  // does any atlas entry belonging to this researched corridor match the tags?
-  function entryMatchesAnyFor(cardId) {
-    return CONTENT.living.atlas.entries.some(function (e) {
-      return (e.id === cardId || e.cardId === cardId) && entryMatchesTags(e);
-    });
-  }
-
-  function applyMapTagFilter() {
-    if (!mapLayers) return;
-    mapLayers.polys.forEach(function (rec) {
-      var on = entryMatchesAnyFor(rec.cardId);
-      rec.poly.setStyle({ opacity: on ? 1 : 0.25, fillOpacity: on ? 0.12 : 0.04 });
-      var el = rec.label.getElement();
-      if (el) el.classList.toggle("map-dimmed", !on);
-    });
-    mapLayers.spots.forEach(function (rec) {
-      var e = atlasEntryFor(rec.id);
-      var on = e ? entryMatchesTags(e) : true;
-      rec.marker.setStyle({ opacity: on ? 1 : 0.2, fillOpacity: on ? (rec.sub ? 0.7 : 0.9) : 0.15 });
-      var tip = rec.marker.getTooltip() && rec.marker.getTooltip().getElement();
-      if (tip) tip.classList.toggle("map-dimmed", !on);
-    });
-  }
-
-  function applyAtlasTagFilter() {
-    var wrap = document.getElementById("living-atlas");
-    if (wrap) {
-      wrap.querySelectorAll(".atlas-card").forEach(function (card) {
-        var e = atlasEntryFor(card.id.replace("atlas-", ""));
-        card.hidden = e ? !entryMatchesTags(e) : false;
-      });
-      // hide zones whose every card is hidden
-      wrap.querySelectorAll(".zone-head").forEach(function (zh) {
-        var grid = zh.nextElementSibling;
-        var any = grid && Array.prototype.some.call(grid.querySelectorAll(".atlas-card"), function (c) { return !c.hidden; });
-        zh.hidden = !any;
-        if (grid) grid.hidden = !any;
-      });
+  function applyMapLayers() {
+    if (!mapLayers || !leafletMap) return;
+    function setOn(layer, on) {
+      if (on) { if (!leafletMap.hasLayer(layer)) leafletMap.addLayer(layer); }
+      else if (leafletMap.hasLayer(layer)) leafletMap.removeLayer(layer);
     }
-    applyMapTagFilter();
+    mapLayers.polys.forEach(function (rec) {
+      setOn(rec.poly, mapShow.areas);
+      setOn(rec.label, mapShow.areas);
+    });
+    mapLayers.spots.forEach(function (rec) { setOn(rec.marker, mapShow.pins); });
+    mapLayers.landmarks.forEach(function (rec) { setOn(rec.marker, mapShow.landmarks); });
   }
 
   /* ---------- real map (Leaflet, self-hosted; OSM/CARTO raster tiles) ---------- */
@@ -943,7 +943,7 @@
     leafletMap.on("zoomend", syncZoomClass);
     syncZoomClass();
 
-    mapLayers = { polys: [], spots: [] };
+    mapLayers = { polys: [], spots: [], landmarks: [] };
     CONTENT.living.areas.forEach(function (area) {
       var pts = geo.areas[area.id];
       if (!pts) return;
@@ -966,7 +966,7 @@
         .on("click", function () { goToAtlas(area.id); });
       poly.on("click", function () { goToAtlas(area.id); });
       poly.on("mouseover", function () { poly.setStyle({ fillOpacity: 0.25, dashArray: null }); });
-      poly.on("mouseout", function () { poly.setStyle({ fillOpacity: entryMatchesAnyFor(area.id) ? 0.12 : 0.04, dashArray: "6 5" }); });
+      poly.on("mouseout", function () { poly.setStyle({ fillOpacity: 0.12, dashArray: "6 5" }); });
       var el = poly.getElement();
       if (el) {
         el.setAttribute("tabindex", "0");
@@ -1001,18 +1001,21 @@
         });
       } else {
         marker = L.circleMarker([lm.lat, lm.lng], {
-          radius: 5, color: accent, weight: 2, fillColor: "#ffffff", fillOpacity: 1
+          radius: lm.minor ? 4.5 : 5, color: accent, weight: 2,
+          fillColor: lm.minor ? accent : "#ffffff", fillOpacity: lm.minor ? 0.35 : 1
         });
       }
       // the star/square symbols speak for themselves (legend in the caption);
-      // their names appear on hover only — K-town and Changi keep pills
+      // their names appear on hover only — the named pins keep pills. Minor
+      // landmarks (parks, campuses) declutter below zoom ~11.5 like spot pins.
       var iconic = lm.star || lm.id === "office";
       marker.addTo(leafletMap)
         .bindTooltip(biLabel(lm.label), {
           permanent: !iconic, direction: lm.dir || "top",
-          offset: lm.dir === "left" ? [-10, 0] : lm.dir === "right" ? [10, 0] : [0, -10],
-          className: "map-real-lm map-real-anchor"
+          offset: lm.dir === "left" ? [-10, 0] : lm.dir === "right" ? [10, 0] : lm.dir === "bottom" ? [0, 10] : [0, -10],
+          className: "map-real-lm " + (lm.minor ? "map-real-lm-minor map-lm-place" : "map-real-anchor")
         });
+      mapLayers.landmarks.push({ id: lm.id, marker: marker });
     });
 
     initUserPins(accent);
@@ -1032,7 +1035,7 @@
       m.on("click", function () { goToAtlas(sp.id); });
       mapLayers.spots.push({ id: sp.id, marker: m, sub: !!sp.sub });
     });
-    applyMapTagFilter();
+    applyMapLayers();
   }
 
   /* ---------- user pins (own labels on the real map) ---------- */
@@ -1632,9 +1635,17 @@
     var section = h("section", { id: "living", class: "section", "aria-labelledby": "living-title" },
       sectionHeader("living", lv.title, "⌂"));
 
+    // numbered page-section heading — the overview's table-of-contents anchors
+    function ovHead(n, leaf) {
+      return h("h3", { class: "ov-head" },
+        h("span", { class: "ov-num", "aria-hidden": "true", text: n }),
+        h("span", { text: t(leaf) })
+      );
+    }
+
     /* overview: island intro + district decoder + housing types + market + office */
     var ov = h("div", { id: "living-overview" },
-      h("h3", { text: t(lv.overviewTitle) }),
+      ovHead(1, lv.overviewTitle),
       h("p", { text: t(lv.overviewIntro) })
     );
 
@@ -1677,18 +1688,11 @@
     lv.districts.notes.forEach(function (n) { dd.appendChild(h("p", { text: t(n) })); });
     ov.appendChild(dd);
 
-    /* §3.1 housing types — full ladder + honest-prices table (was its own page) */
+    /* §3.1 housing types — the ladder first, then the merged key-features table */
     var hp = CONTENT.housingPage;
     var hb = h("div", { id: "housing" },
-      h("h3", { text: t(hp.title) }),
+      ovHead(2, hp.title),
       h("p", { text: t(hp.intro) }),
-      h("ul", { class: "apps-list htype-list" }, lv.housingTypes.items.map(function (i) {
-        return h("li", {},
-          h("strong", { text: t(i.name) }),
-          h("span", { text: " — " + t(i.body) + " " }),
-          i.url ? srcLink(i.url) : null
-        );
-      })),
       h("h4", { text: t(hp.ladderTitle) }),
       h("div", { class: "housing-ladder" }, hp.ladder.map(function (step, i) {
         return h("div", { class: "ladder-step", style: "--step:" + i },
@@ -1716,12 +1720,22 @@
       )),
       h("p", { class: "table-note", text: t(hp.note) })
     );
+    /* footnote housing labels — serviced apartments, ECs, walk-ups */
+    if (hp.footnotes) {
+      hb.appendChild(h("h4", { text: t(hp.footTitle) }));
+      hb.appendChild(h("ul", { class: "foot-list" }, hp.footnotes.map(function (f) {
+        return h("li", {},
+          h("strong", { text: t(f.name) }),
+          h("span", { text: " — " + t(f.body) })
+        );
+      })));
+    }
     ov.appendChild(hb);
     section.appendChild(ov);
 
     /* how renting works */
+    section.appendChild(ovHead(3, lv.renting.title));
     var rb = h("aside", { class: "info-box renting-box", id: "renting-box" },
-      h("h3", { text: t(lv.renting.title) }),
       h("ul", {}, lv.renting.items.map(function (i) {
         return h("li", { html: t(i) });
       })),
@@ -1729,23 +1743,26 @@
     );
     section.appendChild(rb);
 
-    /* helper's-room rule */
-    section.appendChild(h("aside", { class: "info-box" },
-      h("h3", { text: t(lv.helperRoom.title) }),
-      h("p", {}, h("span", { text: t(lv.helperRoom.body) + " " }), srcLink(lv.helperRoom.srcUrl))
-    ));
+    /* additional info: market 2026 + the office anchor + helper's room & shelter */
+    var ad = lv.additional;
+    section.appendChild(ovHead(4, ad.title));
+    section.appendChild(h("p", { text: t(ad.intro) }));
 
-    /* market context */
-    var mk = h("div", {}, h("h3", { text: t(lv.market.title) }));
+    var mk = h("div", {}, h("h4", { text: t(lv.market.title) }));
     lv.market.paras.forEach(function (p) { mk.appendChild(h("p", { text: t(p) })); });
     mk.appendChild(h("p", {}, srcLink(lv.market.srcUrl), " ", srcLink(lv.market.scarcityUrl), " ", srcLink(lv.market.hdbUrl, { en: "HDB quota tool ↗", ko: "HDB 쿼터 조회 ↗" })));
     section.appendChild(mk);
 
-    /* office anchor */
-    var office = h("aside", { class: "info-box office-box" }, h("h3", { text: t(lv.office.title) }));
+    var office = h("aside", { class: "info-box office-box" }, h("h4", { text: t(lv.office.title) }));
     lv.office.paras.forEach(function (p) { office.appendChild(h("p", { text: t(p) })); });
     office.appendChild(h("p", {}, srcLink(lv.office.srcUrl), " ", srcLink(lv.office.cclUrl, { en: "CCL Stage 6 (LTA) ↗", ko: "서클선 6단계 (LTA) ↗" })));
     section.appendChild(office);
+
+    section.appendChild(h("aside", { class: "info-box" },
+      h("h4", { text: t(lv.helperRoom.title) }),
+      h("p", {}, h("span", { text: t(lv.helperRoom.body) + " " }), srcLink(lv.helperRoom.srcUrl)),
+      h("p", { text: t(lv.helperRoom.shelter) })
+    ));
 
     /* onward links */
     section.appendChild(h("p", { class: "onward-links" },
@@ -1802,19 +1819,24 @@
       )
     ));
 
-    /* tag bar — lights up matching areas on the map and filters the neighbourhood cards */
-    section.appendChild(h("div", { class: "tag-bar", role: "group", "aria-label": t(CONTENT.ui.tagFilter) },
-      h("span", { class: "tag-bar-label", text: t(CONTENT.ui.tagFilter) }),
-      CONTENT.living.picker.criteria.map(function (c) {
+    /* label-layer toggles — choose which kinds of labels the map draws */
+    var layerDefs = [
+      { key: "areas", label: CONTENT.ui.mapLayerAreas },
+      { key: "pins", label: CONTENT.ui.mapLayerPins },
+      { key: "landmarks", label: CONTENT.ui.mapLayerLandmarks }
+    ];
+    section.appendChild(h("div", { class: "tag-bar", role: "group", "aria-label": t(CONTENT.ui.mapLayerFilter) },
+      h("span", { class: "tag-bar-label", text: t(CONTENT.ui.mapLayerFilter) }),
+      layerDefs.map(function (d) {
         return h("button", {
-          class: "tag-chip" + (atlasTags[c.id] ? " on" : ""), type: "button",
-          "aria-pressed": atlasTags[c.id] ? "true" : "false",
-          text: t(c.label),
+          class: "tag-chip" + (mapShow[d.key] ? " on" : ""), type: "button",
+          "aria-pressed": mapShow[d.key] ? "true" : "false",
+          text: t(d.label),
           onclick: function () {
-            if (atlasTags[c.id]) delete atlasTags[c.id]; else atlasTags[c.id] = true;
-            this.classList.toggle("on", !!atlasTags[c.id]);
-            this.setAttribute("aria-pressed", atlasTags[c.id] ? "true" : "false");
-            applyAtlasTagFilter();
+            mapShow[d.key] = !mapShow[d.key];
+            this.classList.toggle("on", mapShow[d.key]);
+            this.setAttribute("aria-pressed", mapShow[d.key] ? "true" : "false");
+            applyMapLayers();
           }
         });
       })
@@ -1905,20 +1927,19 @@
         h("p", {}, h("span", { text: t(i.body) + " " }), srcLink(i.url))
       ));
     });
-    main.appendChild(section);
-  }
 
-  function renderChurch(main) {
-    var c = CONTENT.church;
-    var section = h("section", { id: "church", class: "section", "aria-labelledby": "church-title" },
-      sectionHeader("church", c.title, "✝"),
-      h("p", { class: "section-intro" }, h("span", { text: t(c.intro) + " " }), srcLink(c.introUrl)));
-    c.items.forEach(function (i) {
-      section.appendChild(h("div", { class: "entry" },
-        h("h3", {}, h("span", { text: t(i.name) + " " }), i.verify ? verifyBadge() : null),
+    /* church — same page, its own anchored block (sub-nav links here) */
+    var ch = CONTENT.church;
+    var churchBlock = h("div", { id: "church", class: "church-block" },
+      h("h3", { class: "block-head" }, h("span", { class: "section-icon", "aria-hidden": "true", text: "✝ " }), h("span", { text: t(ch.title) })),
+      h("p", { class: "section-intro" }, h("span", { text: t(ch.intro) + " " }), srcLink(ch.introUrl)));
+    ch.items.forEach(function (i) {
+      churchBlock.appendChild(h("div", { class: "entry" },
+        h("h4", {}, h("span", { text: t(i.name) + " " }), i.verify ? verifyBadge() : null),
         h("p", {}, h("span", { text: t(i.body) + " " }), srcLink(i.url))
       ));
     });
+    section.appendChild(churchBlock);
     main.appendChild(section);
   }
 
@@ -2335,13 +2356,16 @@
     renderHero(main);
     renderHome(main);
     renderEducation(main);
+    renderEduCalculator(main);
     renderSchools(main);
+    renderPreschool(main);
+    renderPrimary(main);
+    renderEnrichment(main);
     renderLiving(main);
     renderMapPage(main);
     renderNeighborhoods(main);
     renderAreas(main);
     renderCommunity(main);
-    renderChurch(main);
     renderHelper(main);
     renderHealth(main);
     renderCar(main);
@@ -2376,8 +2400,9 @@
   /* ---------- view routing ---------- */
 
   // every section view, in page order (nav items may be groups pointing at these)
-  var SECTION_VIEWS = ["home", "education", "schools", "living", "sg-map", "neighborhoods", "areas",
-    "community", "church", "helper", "health", "car", "costs", "apps", "checklist"];
+  var SECTION_VIEWS = ["home", "education", "edu-calculator", "schools", "edu-preschool", "edu-primary",
+    "edu-enrichment", "living", "sg-map", "neighborhoods", "areas",
+    "community", "helper", "health", "car", "costs", "apps", "checklist"];
   function viewIds() { return SECTION_VIEWS; }
 
   // which top-level nav item owns a view (self, or the group whose subs include it)
@@ -2470,13 +2495,16 @@
     // pager sequence = section views in page order, whatever nav grouping looks like
     var items = [
       { id: "education", label: navLabel("education") },
+      { id: "edu-calculator", label: CONTENT.education.calculator.title },
       { id: "schools", label: CONTENT.education.schools.title },
+      { id: "edu-preschool", label: CONTENT.education.preschool.title },
+      { id: "edu-primary", label: CONTENT.education.primary.title },
+      { id: "edu-enrichment", label: CONTENT.education.enrichment.title },
       { id: "living", label: navLabel("living") },
       { id: "sg-map", label: CONTENT.living.map.title },
       { id: "neighborhoods", label: CONTENT.living.atlas.title },
       { id: "areas", label: CONTENT.living.areaTable.title },
       { id: "community", label: CONTENT.community.title },
-      { id: "church", label: CONTENT.church.title },
       { id: "helper", label: CONTENT.helper.title },
       { id: "health", label: CONTENT.health.title },
       { id: "car", label: CONTENT.car.title },

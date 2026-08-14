@@ -698,7 +698,35 @@ a.atlas-badge.researched:hover { background: var(--accent); color: var(--bg); }
 }
 .tag-chip:hover { border-color: var(--accent); color: var(--accent); }
 .tag-chip.on { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
-.leaflet-tooltip.map-dimmed { opacity: 0.25 !important; }
+
+/* numbered overview headings — the page's table of contents at a glance */
+.ov-head {
+  display: flex; align-items: center; gap: 0.55em;
+  font-size: 1.35rem; margin: 2.6rem 0 0.6rem;
+  padding-top: 1.4rem; border-top: 1.5px solid var(--line);
+}
+.ov-head .ov-num {
+  flex: none; display: inline-flex; align-items: center; justify-content: center;
+  width: 1.6em; height: 1.6em; border-radius: 50%;
+  background: var(--accent); color: var(--bg);
+  font-size: 0.62em; font-weight: 700;
+}
+#living-overview > .ov-head:first-child { border-top: none; padding-top: 0; margin-top: 0.6rem; }
+
+/* housing footnote labels */
+.foot-list { list-style: none; padding: 0; }
+.foot-list li {
+  font-size: 0.9rem; color: var(--ink-soft);
+  padding: 0.35rem 0; border-bottom: 1px dashed var(--line);
+}
+.foot-list li strong { color: var(--ink); }
+
+/* church block on the community page */
+.church-block { margin-top: 2.6rem; padding-top: 1.4rem; border-top: 1.5px solid var(--line); }
+.church-block .block-head { font-size: 1.35rem; }
+
+/* minor place landmarks (parks, campuses) — softer pills than area anchors */
+.leaflet-tooltip.map-lm-place { font-style: italic; font-weight: 600; opacity: 0.92; }
 
 /* real map (Leaflet) */
 .real-map {
