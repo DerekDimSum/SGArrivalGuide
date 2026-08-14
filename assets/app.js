@@ -1956,6 +1956,26 @@
       compassCell("c-south", cp.south)
     ));
 
+    /* how to read the dot ratings on every card */
+    var lg = at.ratingLegend;
+    section.appendChild(h("aside", { class: "info-box rating-legend" },
+      h("h3", { text: t(lg.title) }),
+      h("ul", { class: "legend-scale" }, lg.scale.map(function (s) {
+        return h("li", {},
+          h("span", { class: "stock-cell legend-dots", text: s.dots }),
+          h("strong", { text: t(s.name) + ": " }),
+          h("span", { text: t(s.body) })
+        );
+      })),
+      h("h4", { text: t(lg.metricsTitle) }),
+      h("ol", { class: "legend-metrics" }, lg.metrics.map(function (m) {
+        return h("li", {},
+          h("strong", { text: t(m.name) + ": " }),
+          h("span", { text: t(m.body) })
+        );
+      }))
+    ));
+
     section.appendChild(renderAtlas());
 
     /* average rent, by housing type (same data as Monthly costs) */

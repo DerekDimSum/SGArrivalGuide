@@ -600,6 +600,14 @@ tbody tr:last-child th, tbody tr:last-child td { border-bottom: none; }
 .c-east { grid-area: e; }
 .c-south { grid-area: s; }
 
+/* rating legend at the top of the neighbourhoods page */
+.rating-legend h4 { margin-top: 0.9rem; }
+.legend-scale, .legend-metrics { padding-left: 0; margin: 0.4rem 0; }
+.legend-scale { list-style: none; }
+.legend-scale li, .legend-metrics li { font-size: 0.9rem; padding: 0.18rem 0; }
+.legend-metrics { list-style: decimal inside; }
+.legend-dots { display: inline-block; min-width: 3.2em; color: var(--accent); }
+
 /* region heads — CENTRAL / WEST / EAST / NORTH / SOUTH */
 .region-head {
   margin: 3rem 0 0.2rem; padding: 0.4rem 0 0.5rem;

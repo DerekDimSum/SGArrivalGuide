@@ -1097,6 +1097,23 @@ var CONTENT = {
         east: { label: { en: "EAST", ko: "동부" }, hint: "Katong · Bedok · Tampines" },
         south: { label: { en: "SOUTH", ko: "남부" }, hint: "Sentosa Cove · Keppel Bay" }
       },
+      ratingLegend: {
+        title: { en: "The 5-point rating metric", ko: "5개 지표 읽는 법" },
+        scale: [
+          { dots: "●●●", name: { en: "High / Abundant", ko: "높음 · 풍부" }, body: { en: "Top-tier offering, dominant characteristic, or 5-minute walkability.", ko: "최상급 수준, 그 동네를 규정하는 특징, 혹은 도보 5분 생활권." } },
+          { dots: "●●○", name: { en: "Moderate / Established", ko: "보통 · 안정" }, body: { en: "Balanced mix or standard accessibility.", ko: "균형 잡힌 구성이거나 표준적인 접근성." } },
+          { dots: "●○○", name: { en: "Limited / Low", ko: "제한적 · 낮음" }, body: { en: "Rare, low-density, or car-reliant.", ko: "드물거나 저밀도이거나, 차가 있어야 하는 수준." } },
+          { dots: "—", name: { en: "None", ko: "없음" }, body: { en: "Not applicable to this zone.", ko: "이 동네에는 해당 없음." } }
+        ],
+        metricsTitle: { en: "Metrics measured", ko: "측정 지표" },
+        metrics: [
+          { name: { en: "Commute", ko: "통근" }, body: { en: "Transit speed and directness to the CBD & financial hubs.", ko: "CBD·금융가까지의 대중교통 속도와 직행성." } },
+          { name: { en: "Expat density", ko: "외국인 밀도" }, body: { en: "Social network, international dining, and community presence.", ko: "소셜 네트워크, 인터내셔널 다이닝, 커뮤니티의 존재감." } },
+          { name: { en: "Food & hawkers", ko: "맛집·호커" }, body: { en: "Concentration of authentic local hawker centres, cafes, and dining strips.", ko: "진짜 로컬 호커센터, 카페, 맛집 거리의 밀집도." } },
+          { name: { en: "Kids & family", ko: "아이·가족" }, body: { en: "Preschool density, enrichment centres, parks, and family infrastructure.", ko: "유치원 밀도, 학원, 공원, 가족 인프라." } },
+          { name: { en: "Tranquility", ko: "조용함" }, body: { en: "Low traffic/construction noise, green buffers, and evening calm.", ko: "낮은 교통·공사 소음, 녹지 완충, 저녁의 고요함." } }
+        ]
+      },
       hubDiagram: {
         title: { en: "How a heartland town is built", ko: "헤어틀랜드 타운의 구조" },
         hub: { en: "Regional hub", ko: "권역 허브" },
