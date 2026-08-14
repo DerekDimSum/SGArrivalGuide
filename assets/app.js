@@ -71,28 +71,35 @@
     return Math.round(v / 500) * 500;
   }
 
-  function fmtAmount(sgd, cur, asK) {
+  function fmtAmount(sgd, cur, suffix) {
     var v = sgd * cur.rate;
-    if (asK && cur.code === "USD") return Math.round(v / 1000) + "k";
+    if (cur.code === "USD") {
+      if (v >= 1e6) return (Math.round(v / 1e5) / 10) + "M";
+      if (suffix === "k") return Math.round(v / 1000) + "k";
+    }
+    if (cur.code === "KRW" && v >= 1e8) {
+      // Korean readers think in 억 at this magnitude
+      return Math.round(v / 1e8).toLocaleString("en-US") + "억";
+    }
     var r = niceRound(v, cur.code);
     return r.toLocaleString("en-US", { maximumFractionDigits: r < 10 ? 1 : 0 });
   }
 
-  var MONEY_RE = /S\$\s?([\d,]+(?:\.\d+)?)(k)?(?:\s?(–|-)\s?([\d,]+(?:\.\d+)?)(k)?)?(\+)?/g;
+  var MONEY_RE = /S\$\s?([\d,]+(?:\.\d+)?)([kM])?(?:\s?(–|-)\s?([\d,]+(?:\.\d+)?)([kM])?)?(\+)?/g;
+  var MONEY_MULT = { k: 1e3, M: 1e6 };
 
   function convertMoney(str) {
     var cur = activeCurrency();
     if (cur.code === CONTENT.currencies.base || !str || str.indexOf("S$") === -1) return str;
-    return str.replace(MONEY_RE, function (m, n1, k1, dash, n2, k2, plus) {
+    return str.replace(MONEY_RE, function (m, n1, s1, dash, n2, s2, plus) {
       var a = parseFloat(n1.replace(/,/g, ""));
       var b = n2 != null ? parseFloat(n2.replace(/,/g, "")) : null;
-      // "S$15–28k" means 15k–28k: a k on the upper bound implies it on the lower
-      if (k2 && !k1) k1 = "k";
-      if (k1) a *= 1000;
-      if (k2) b *= 1000;
-      var asK = !!(k1 || k2);
-      var out = cur.label + fmtAmount(a, cur, asK);
-      if (b != null) out += (dash || "–") + fmtAmount(b, cur, asK);
+      // "S$15–28k" / "S$25–120M" — a suffix on the upper bound implies it on the lower
+      if (s2 && !s1) s1 = s2;
+      if (s1) a *= MONEY_MULT[s1];
+      if (s2) b *= MONEY_MULT[s2];
+      var out = cur.label + fmtAmount(a, cur, s1);
+      if (b != null) out += (dash || "–") + fmtAmount(b, cur, s2 || s1);
       return out + (plus || "");
     });
   }
@@ -1421,9 +1428,8 @@
       h("h3", { text: t(at.title) }),
       h("p", { class: "section-intro", text: t(at.intro) })
     );
-    var grid = h("div", { class: "atlas-grid" });
-    at.entries.forEach(function (e) {
-      grid.appendChild(h("article", { class: "atlas-card" + (e.researched ? " researched" : ""), id: "atlas-" + e.id },
+    function entryCard(e) {
+      return h("article", { class: "atlas-card" + (e.researched ? " researched" : ""), id: "atlas-" + e.id },
         h("div", { class: "match-head" },
           h("strong", { text: t(e.name) }),
           h("span", { class: "match-dist", text: e.dist }),
@@ -1433,10 +1439,64 @@
         e.researched
           ? h("a", { class: "atlas-badge researched", href: "#area-" + e.cardId, text: t(at.researchedBadge) + " ↓" })
           : h("span", { class: "atlas-badge", text: t(at.sketchBadge) })
+      );
+    }
+    at.zones.forEach(function (z) {
+      var entries = at.entries.filter(function (e) { return e.zone === z.id; });
+      if (!entries.length) return;
+      wrap.appendChild(h("div", { class: "zone-head" },
+        h("h4", {}, h("span", { text: t(z.title) }), h("span", { class: "zone-d", text: " " + z.d })),
+        h("p", { class: "zone-intro", text: t(z.intro) })
       ));
+      var grid = h("div", { class: "atlas-grid" });
+      entries.forEach(function (e) { grid.appendChild(entryCard(e)); });
+      wrap.appendChild(grid);
     });
-    wrap.appendChild(grid);
+    // safety net: anything without a zone still renders
+    var orphans = at.entries.filter(function (e) { return !e.zone; });
+    if (orphans.length) {
+      var og = h("div", { class: "atlas-grid" });
+      orphans.forEach(function (e) { og.appendChild(entryCard(e)); });
+      wrap.appendChild(og);
+    }
     return wrap;
+  }
+
+  /* ---------- housing typologies page ---------- */
+
+  function renderHousing(main) {
+    var hp = CONTENT.housingPage;
+    var section = h("section", { id: "housing", class: "section", "aria-labelledby": "housing-title" },
+      sectionHeader("housing", hp.title, "☖"),
+      h("p", { class: "section-intro", text: t(hp.intro) }),
+      h("h3", { text: t(hp.ladderTitle) }),
+      h("div", { class: "housing-ladder" }, hp.ladder.map(function (step, i) {
+        return h("div", { class: "ladder-step", style: "--step:" + i },
+          h("strong", { text: t(step.name) }),
+          h("span", { class: "ladder-note", text: t(step.note) })
+        );
+      })),
+      h("div", { class: "table-wrap" }, h("table", { class: "data-table housing-table" },
+        h("thead", {}, h("tr", {},
+          h("th", { text: t(hp.cols.type) }),
+          h("th", { text: t(hp.cols.feat) }),
+          h("th", { text: t(hp.cols.buy) }),
+          h("th", { text: t(hp.cols.rent) }),
+          h("th", { text: t(hp.cols.who) })
+        )),
+        h("tbody", {}, hp.rows.map(function (r) {
+          return h("tr", {},
+            h("th", { scope: "row", text: t(r.type) }),
+            h("td", { class: "feat-cell", text: t(r.feat) }),
+            h("td", { text: t(r.buy) }),
+            h("td", { text: t(r.rent) }),
+            h("td", { class: "feat-cell", text: t(r.who) })
+          );
+        }))
+      )),
+      h("p", { class: "table-note", text: t(hp.note) })
+    );
+    main.appendChild(section);
   }
 
   function renderLiving(main) {
@@ -1498,6 +1558,7 @@
         i.url ? srcLink(i.url) : null
       );
     })));
+    ov.appendChild(h("p", {}, h("a", { class: "btn-link", href: "#housing", text: t(CONTENT.housingPage.title) + " →" })));
 
     /* §3.2 market context */
     var mk = h("div", {}, h("h3", { text: t(lv.market.title) }));
@@ -2124,6 +2185,7 @@
     renderEducation(main);
     renderSchools(main);
     renderLiving(main);
+    renderHousing(main);
     renderAreas(main);
     renderCommunity(main);
     renderChurch(main);
@@ -2161,7 +2223,7 @@
   /* ---------- view routing ---------- */
 
   // every section view, in page order (nav items may be groups pointing at these)
-  var SECTION_VIEWS = ["home", "education", "schools", "living", "areas",
+  var SECTION_VIEWS = ["home", "education", "schools", "living", "housing", "areas",
     "community", "church", "helper", "health", "car", "costs", "apps", "checklist"];
   function viewIds() { return SECTION_VIEWS; }
 
@@ -2253,6 +2315,7 @@
       { id: "education", label: navLabel("education") },
       { id: "schools", label: CONTENT.education.schools.title },
       { id: "living", label: navLabel("living") },
+      { id: "housing", label: CONTENT.housingPage.title },
       { id: "areas", label: CONTENT.living.areaTable.title },
       { id: "community", label: CONTENT.community.title },
       { id: "church", label: CONTENT.church.title },

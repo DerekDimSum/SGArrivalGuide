@@ -86,6 +86,7 @@ var CONTENT = {
       desc: { en: "How the island works, the sortable area table, maps, and a neighbourhood atlas.", ko: "싱가포르 구조 해설, 정렬 가능한 동네 표, 지도, 동네 아틀라스까지." },
       subs: [
         { id: "living-overview", label: { en: "How it works", ko: "기본 구조" } },
+        { id: "housing", label: { en: "Housing types", ko: "주거 형태" } },
         { id: "sg-map", label: { en: "Map", ko: "지도" } },
         { id: "living-atlas", label: { en: "Neighbourhoods", ko: "동네별" } },
         { id: "living-cards", label: { en: "Deep dives", ko: "상세 카드" } },
@@ -1039,34 +1040,84 @@ var CONTENT = {
     atlas: {
       title: { en: "Neighbourhood atlas", ko: "동네 아틀라스" },
       intro: {
-        en: "A wider sweep of the island. The shortlist areas link to their researched deep-dive cards below; the rest are qualitative sketches — no rent figures until they've been properly researched.",
-        ko: "섬 전체를 조금 더 넓게 훑어본 지도예요. 후보 지역은 아래의 상세 조사 카드로 이어지고, 나머지는 분위기 중심의 스케치예요 — 제대로 조사하기 전까지 시세 숫자는 싣지 않아요."
+        en: "The whole island, organised into six zones — read a zone's character first, then its neighbourhoods. Shortlist areas link to their researched deep-dive cards; the rest are qualitative sketches.",
+        ko: "섬 전체를 여섯 개 존으로 정리했어요 — 존의 성격을 먼저 읽고 동네로 들어가면 돼요. 후보 지역은 상세 조사 카드로 이어지고, 나머지는 분위기 중심 스케치예요."
       },
       researchedBadge: { en: "researched — card below", ko: "상세 조사됨 — 아래 카드" },
       sketchBadge: { en: "no researched figures yet", ko: "조사된 시세 없음" },
+      zones: [
+        {
+          id: "downtown", d: "D1 · D2 · D4 · D7",
+          title: { en: "Downtown core & financial hub", ko: "다운타운 코어 · 금융 중심" },
+          intro: {
+            en: "Singapore's vertical heart: glass towers, integrated malls and heritage shophouse rows stacked together. Life runs through air-conditioned underground networks minutes from the office — street culture comes from dining streets, not neighbourhoods.",
+            ko: "싱가포르의 수직 심장부예요. 유리 타워, 복합몰, 헤리티지 숍하우스 거리가 겹겹이 쌓여 있어요. 생활은 사무실에서 몇 분 거리의 에어컨 지하 네트워크로 흐르고, 거리의 활기는 동네가 아니라 맛집 골목에서 나와요."
+          }
+        },
+        {
+          id: "prime", d: "D9 · D10",
+          title: { en: "Central core & high-street luxury", ko: "중심 코어 · 하이스트리트 럭셔리" },
+          intro: {
+            en: "The prime shopping-and-dining belt: behind Orchard's mega-malls sit quiet, leafy residential side streets on elevated hills, and the river fringe adds promenade living at Robertson Quay.",
+            ko: "최중심 쇼핑·다이닝 벨트예요. 오차드 대형몰 뒤편 언덕엔 의외로 조용하고 푸른 주거 골목이 있고, 강변 쪽은 Robertson Quay의 산책로 라이프가 더해져요."
+          }
+        },
+        {
+          id: "west", d: "D5 · D10 · D21 · D23",
+          title: { en: "The green belt & west-central corridor", ko: "그린벨트 · 서중부 코리도" },
+          intro: {
+            en: "Low-density zoning, nature reserves and the education hubs — the corridor where this guide's researched shortlist (and the Korean family cluster) lives.",
+            ko: "저밀도 주거, 자연보호구역, 교육 허브가 모인 축이에요 — 이 가이드의 조사된 후보 지역들(그리고 한인 가족 클러스터)이 사는 코리도예요."
+          }
+        },
+        {
+          id: "east", d: "D15 · D16",
+          title: { en: "The coastal & cultural east", ko: "해안 · 문화의 동부" },
+          intro: {
+            en: "The relaxed coastal alternative to the glass towers: beach-park weekends, Peranakan heritage streets — and since the TEL, direct trains into the CBD.",
+            ko: "유리 타워의 느긋한 해안 대안이에요. 주말은 바닷가 공원, 거리는 페라나칸 헤리티지 — 그리고 TEL 개통 후로는 CBD 직행 지하철까지."
+          }
+        },
+        {
+          id: "fringe", d: "D3 · D8 · D11 · D12 · D20",
+          title: { en: "Heritage enclaves & city fringe", ko: "헤리티지 동네 · 시티 프린지" },
+          intro: {
+            en: "Five to ten minutes off the core with deep character: Art Deco Tiong Bahru, Little India's colour, the Novena medical hub, Thomson's nature-and-supper strip.",
+            ko: "중심에서 5–10분 거리, 개성이 진한 동네들이에요. 아르데코의 Tiong Bahru, 컬러풀한 Little India, 노베나 의료 허브, 자연과 야식의 Thomson까지."
+          }
+        },
+        {
+          id: "heartlands", d: "D18 · D19 · D22 · D25",
+          title: { en: "The heartlands & regional centres", ko: "헤어틀랜드 · 권역 중심지" },
+          intro: {
+            en: "Master-planned towns where most Singaporeans live — each self-contained, with an MRT-and-bus interchange, malls, hawker centres and clinics at its core. The island's best space per dollar.",
+            ko: "대부분의 싱가포르인이 사는 계획도시들이에요 — 각 타운이 MRT·버스 인터체인지, 몰, 호커센터, 클리닉을 중심에 둔 자족 도시예요. 돈 대비 공간은 섬에서 최고예요."
+          }
+        }
+      ],
       entries: [
         {
-          id: "beauty-world", cardId: "bukit-timah",
+          id: "beauty-world", zone: "west", cardId: "bukit-timah",
           name: { en: "Beauty World / Upper Bukit Timah", ko: "Beauty World · Upper Bukit Timah" },
           dist: "D21", vibe: { en: "Leafy", ko: "숲세권" }, researched: true,
           tags: ["korean", "skis", "schools", "families", "quiet", "mrt", "helper-room", "landed"],
           body: {
-            en: "The Korean node — SKIS walkable, Sol Mart and Korean restaurants at Bukit Timah Plaza, nature reserve at the back door.",
-            ko: "한인 거점 — SKIS 도보권, Bukit Timah Plaza의 Sol Mart와 한식당들, 뒷문이 자연보호구역이에요."
+            en: "The Korean node — SKIS walkable, Sol Mart and Korean restaurants at Bukit Timah Plaza, nature reserve at the back door — and Chun Tin Road / Lorong Kilat keep a late-night Korean-food and supper culture going.",
+            ko: "한인 거점 — SKIS 도보권, Bukit Timah Plaza의 Sol Mart와 한식당들, 뒷문이 자연보호구역이에요. Chun Tin Road·Lorong Kilat에는 심야 한식·야식 문화가 살아 있어요."
           }
         },
         {
-          id: "kap-sixth", cardId: "bukit-timah",
+          id: "kap-sixth", zone: "west", cardId: "bukit-timah",
           name: { en: "KAP / Sixth Avenue / Tan Kah Kee", ko: "KAP · Sixth Avenue · Tan Kah Kee" },
           dist: "D10/D21", vibe: { en: "Prestige", ko: "명문가" }, researched: true,
           tags: ["schools", "quiet", "landed", "families", "skis", "mrt"],
           body: {
-            en: "The prestige end of the corridor: elite local schools, landed enclaves, a handful of condos around the DTL stations.",
-            ko: "코리도의 명문가 구간: 명문 로컬 학교들, 단독주택 단지, DTL역 주변의 소수 콘도들."
+            en: "The prestige end of the corridor: elite local schools, landed enclaves, a handful of condos around the DTL stations — and it sits right on the Rail Corridor trail and Rifle Range Nature Park for outdoorsy weekends.",
+            ko: "코리도의 명문가 구간: 명문 로컬 학교들, 단독주택 단지, DTL역 주변의 소수 콘도들. Rail Corridor 트레일과 Rifle Range 자연공원이 바로 옆이라 야외 활동에도 좋아요."
           }
         },
         {
-          id: "hillview", cardId: "bukit-timah",
+          id: "hillview", zone: "west", cardId: "bukit-timah",
           name: { en: "Hillview", ko: "Hillview" },
           dist: "D23", vibe: { en: "Tucked-away", ko: "아늑" }, researched: true,
           tags: ["value", "quiet", "skis", "families", "amenities", "landed"],
@@ -1076,7 +1127,7 @@ var CONTENT = {
           }
         },
         {
-          id: "clementi-bv", cardId: "clementi",
+          id: "clementi-bv", zone: "west", cardId: "clementi",
           name: { en: "Clementi / Buona Vista / West Coast", ko: "Clementi · Buona Vista · West Coast" },
           dist: "D5", vibe: { en: "Practical", ko: "실속" }, researched: true,
           tags: ["value", "hdb", "mrt", "families", "schools"],
@@ -1086,7 +1137,7 @@ var CONTENT = {
           }
         },
         {
-          id: "holland-v", cardId: "holland-village",
+          id: "holland-v", zone: "west", cardId: "holland-village",
           name: { en: "Holland Village / Farrer", ko: "Holland Village · Farrer" },
           dist: "D10", vibe: { en: "Sociable", ko: "사교" }, researched: true,
           tags: ["expat", "families", "amenities", "mrt", "schools", "city", "br4"],
@@ -1096,7 +1147,7 @@ var CONTENT = {
           }
         },
         {
-          id: "east-coast", cardId: "east-coast",
+          id: "east-coast", zone: "east", cardId: "east-coast",
           name: { en: "East Coast / Katong", ko: "East Coast · Katong" },
           dist: "D15", vibe: { en: "Breezy", ko: "여유" }, researched: true,
           tags: ["beach", "families", "commute", "mrt", "city", "helper-room", "value", "br4", "landed"],
@@ -1106,7 +1157,7 @@ var CONTENT = {
           }
         },
         {
-          id: "newton-novena", cardId: "newton",
+          id: "newton-novena", zone: "fringe", cardId: "newton",
           name: { en: "Newton / Novena", ko: "Newton · Novena" },
           dist: "D11", vibe: { en: "Central", ko: "도심" }, researched: true,
           tags: ["commute", "mrt", "city", "schools", "helper-room", "amenities", "br4"],
@@ -1116,37 +1167,37 @@ var CONTENT = {
           }
         },
         {
-          id: "river-valley",
+          id: "river-valley", zone: "prime",
           name: { en: "River Valley / Robertson Quay", ko: "River Valley · Robertson Quay" },
           dist: "D9", vibe: { en: "Riverside", ko: "리버사이드" },
           tags: ["city", "commute", "mrt", "amenities"],
           body: {
-            en: "Between Orchard and the river, west of Fort Canning: a dense condo belt with quay-side dining. It splits into Robertson Quay (riverside restaurants, strollable promenade), the Great World pocket (mall + TEL station), and the older boutique condos up Institution Hill / Mohamed Sultan. Couples and young families who want town living without living on Orchard Road.",
-            ko: "오차드와 강 사이, Fort Canning 서쪽의 촘촘한 콘도 벨트예요. Robertson Quay(강변 레스토랑, 산책로), Great World 포켓(몰 + TEL역), 그리고 Institution Hill·Mohamed Sultan 쪽 구축 부티크 콘도로 나뉘어요. 오차드 한복판은 아니면서 시내 생활을 원하는 커플·젊은 가족의 선택지예요."
+            en: "Between Orchard and the river, west of Fort Canning: a dense condo belt with quay-side dining. It splits into Robertson Quay (riverside restaurants, strollable promenade), the Great World pocket (mall + TEL station), and the older boutique condos up Institution Hill / Mohamed Sultan. Couples and young families who want town living without living on Orchard Road. The stock is modern high-density (RiverGate, Martin Modern, Rivière), and the pedestrianised river promenade — alfresco dining, dog-friendly cafes — makes it one of the most walkable expat pockets.",
+            ko: "오차드와 강 사이, Fort Canning 서쪽의 촘촘한 콘도 벨트예요. Robertson Quay(강변 레스토랑, 산책로), Great World 포켓(몰 + TEL역), 그리고 Institution Hill·Mohamed Sultan 쪽 구축 부티크 콘도로 나뉘어요. 오차드 한복판은 아니면서 시내 생활을 원하는 커플·젊은 가족의 선택지예요. 매물은 현대식 고밀도(RiverGate, Martin Modern, Rivière)이고, 보행자 전용 강변 산책로 — 야외 다이닝, 반려견 동반 카페 — 덕분에 가장 걷기 좋은 외국인 동네로 꼽혀요."
           }
         },
         {
-          id: "orchard-tanglin",
+          id: "orchard-tanglin", zone: "prime",
           name: { en: "Orchard / Tanglin", ko: "Orchard · Tanglin" },
           dist: "D9/D10", vibe: { en: "Polished", ko: "럭셔리" },
           tags: ["city", "commute", "amenities", "expat", "mrt"],
           body: {
-            en: "The retail spine and the embassy belt behind it. Luxury condos and serviced apartments; the Tanglin end is quieter, greener and borders the Botanic Gardens. Convenience is absolute — neighbourhood feel is not the point.",
-            ko: "쇼핑 중심축과 그 뒤의 대사관 벨트예요. 럭셔리 콘도와 서비스드 아파트가 많고, Tanglin 쪽 끝은 더 조용하고 푸르며 보타닉 가든과 맞닿아 있어요. 편의성은 절대적이지만, 동네 감성은 이곳의 포인트가 아니에요."
+            en: "The retail spine and the embassy belt behind it. Luxury condos and serviced apartments; the Tanglin end is quieter, greener and borders the Botanic Gardens. Convenience is absolute — neighbourhood feel is not the point. The Tanglin end borders the Botanic Gardens and Dempsey Hill's dining-and-gallery cluster; legacy names like Ardmore Park anchor the luxury stock.",
+            ko: "쇼핑 중심축과 그 뒤의 대사관 벨트예요. 럭셔리 콘도와 서비스드 아파트가 많고, Tanglin 쪽 끝은 더 조용하고 푸르며 보타닉 가든과 맞닿아 있어요. 편의성은 절대적이지만, 동네 감성은 이곳의 포인트가 아니에요. Tanglin 쪽 끝은 보타닉 가든과 Dempsey Hill 다이닝·갤러리 클러스터에 닿고, Ardmore Park 같은 전통 명가가 럭셔리 스톡을 지켜요."
           }
         },
         {
-          id: "tiong-bahru",
+          id: "tiong-bahru", zone: "fringe",
           name: { en: "Tiong Bahru / Queenstown", ko: "Tiong Bahru · Queenstown" },
           dist: "D3", vibe: { en: "Heritage-hip", ko: "힙한 구도심" },
           tags: ["city", "hdb", "mrt", "value", "commute"],
           body: {
-            en: "Pre-war walk-ups, indie cafes and a famous wet market, ringed by ordinary HDB estates — the Redhill/Queenstown corridor on the EWL is one of the practical value plays close to town (and where the Holland Close/Ghim Moh HDB hack sits administratively).",
-            ko: "전전(戰前) 워크업과 인디 카페, 유명한 재래시장이 있는 동네를 평범한 HDB 단지들이 둘러싸요. EWL의 Redhill·Queenstown 구간은 도심 가까운 실속 카드 중 하나예요(Holland Close·Ghim Moh HDB 꿀팁도 행정상 여기 소속이에요)."
+            en: "Pre-war walk-ups, indie cafes and a famous wet market, ringed by ordinary HDB estates — the Redhill/Queenstown corridor on the EWL is one of the practical value plays close to town (and where the Holland Close/Ghim Moh HDB hack sits administratively). The 1930s Art Deco walk-ups make it a favourite of expats in creative and design fields.",
+            ko: "전전(戰前) 워크업과 인디 카페, 유명한 재래시장이 있는 동네를 평범한 HDB 단지들이 둘러싸요. EWL의 Redhill·Queenstown 구간은 도심 가까운 실속 카드 중 하나예요(Holland Close·Ghim Moh HDB 꿀팁도 행정상 여기 소속이에요). 1930년대 아르데코 워크업 덕분에 크리에이티브·디자인 업계 외국인들이 특히 좋아해요."
           }
         },
         {
-          id: "tanjong-rhu",
+          id: "tanjong-rhu", zone: "east",
           name: { en: "Tanjong Rhu / Mountbatten", ko: "Tanjong Rhu · Mountbatten" },
           dist: "D15", vibe: { en: "Waterfront-quiet", ko: "조용한 수변" },
           tags: ["quiet", "beach", "amenities", "commute"],
@@ -1156,7 +1207,7 @@ var CONTENT = {
           }
         },
         {
-          id: "thomson",
+          id: "thomson", zone: "fringe",
           name: { en: "Thomson / Upper Thomson", ko: "Thomson · Upper Thomson" },
           dist: "D20/D26", vibe: { en: "Local-green", ko: "로컬 그린" },
           tags: ["quiet", "landed", "value", "families", "mrt"],
@@ -1166,7 +1217,7 @@ var CONTENT = {
           }
         },
         {
-          id: "serangoon",
+          id: "serangoon", zone: "heartlands",
           name: { en: "Serangoon Gardens / Kovan", ko: "Serangoon Gardens · Kovan" },
           dist: "D19", vibe: { en: "Villagey", ko: "동네 감성" },
           tags: ["landed", "value", "families", "hdb", "quiet"],
@@ -1176,7 +1227,7 @@ var CONTENT = {
           }
         },
         {
-          id: "pasir-panjang",
+          id: "pasir-panjang", zone: "west",
           name: { en: "Pasir Panjang / Kent Ridge", ko: "Pasir Panjang · Kent Ridge" },
           dist: "D5", vibe: { en: "Hillside", ko: "언덕 동네" },
           tags: ["quiet", "value", "mrt"],
@@ -1186,7 +1237,7 @@ var CONTENT = {
           }
         },
         {
-          id: "bishan-amk",
+          id: "bishan-amk", zone: "heartlands",
           name: { en: "Bishan / Ang Mo Kio", ko: "Bishan · Ang Mo Kio" },
           dist: "D20", vibe: { en: "Heartland-prime", ko: "중심 주거지" },
           tags: ["hdb", "value", "families", "mrt", "schools"],
@@ -1196,17 +1247,17 @@ var CONTENT = {
           }
         },
         {
-          id: "tampines",
+          id: "tampines", zone: "heartlands",
           name: { en: "Tampines / Pasir Ris", ko: "Tampines · Pasir Ris" },
           dist: "D18", vibe: { en: "East-hub", ko: "동부 허브" },
           tags: ["hdb", "value", "families", "mrt", "schools"],
           body: {
-            en: "The east's own regional centre: three malls at one interchange, big HDB estates, beach-adjacent Pasir Ris — and the orbit of UWCSEA East and Overseas Family School.",
-            ko: "동부의 자체 중심지예요: 환승역 하나에 몰 세 개, 대형 HDB 단지, 바닷가의 Pasir Ris — 그리고 UWCSEA East와 Overseas Family School 생활권이에요."
+            en: "The east's own regional centre: three malls at one interchange, big HDB estates, beach-adjacent Pasir Ris — and the orbit of UWCSEA East and Overseas Family School. Our Tampines Hub anchors civic life, and Changi Business Park/Airport are a short hop.",
+            ko: "동부의 자체 중심지예요: 환승역 하나에 몰 세 개, 대형 HDB 단지, 바닷가의 Pasir Ris — 그리고 UWCSEA East와 Overseas Family School 생활권이에요. Our Tampines Hub가 생활의 중심이고, Changi Business Park·공항이 지척이에요."
           }
         },
         {
-          id: "woodlands",
+          id: "woodlands", zone: "heartlands",
           name: { en: "Woodlands", ko: "Woodlands" },
           dist: "D25", vibe: { en: "Frontier", ko: "북부 관문" },
           tags: ["value", "quiet", "expat"],
@@ -1216,7 +1267,7 @@ var CONTENT = {
           }
         },
         {
-          id: "sentosa",
+          id: "sentosa", zone: "downtown",
           name: { en: "Sentosa Cove / HarbourFront", ko: "Sentosa Cove · HarbourFront" },
           dist: "D4", vibe: { en: "Resort", ko: "리조트" },
           tags: ["beach", "amenities", "landed", "quiet"],
@@ -1226,13 +1277,83 @@ var CONTENT = {
           }
         },
         {
-          id: "bukit-batok",
+          id: "bukit-batok", zone: "heartlands",
           name: { en: "Bukit Batok / Bukit Panjang", ko: "Bukit Batok · Bukit Panjang" },
           dist: "D23", vibe: { en: "Heartland-green", ko: "자연 옆 주거지" },
           tags: ["hdb", "value", "quiet", "families"],
           body: {
             en: "The HDB heartland wrapped around Hillview's condo pocket — nature parks, new DTL access, and some of the cheapest family-sized flats near the Korean school's orbit.",
             ko: "Hillview 콘도 포켓을 둘러싼 HDB 주거지대예요 — 자연공원, DTL 접근성, 그리고 한국학교 생활권에서 가장 저렴한 축에 드는 가족형 HDB가 있어요."
+          }
+        },
+        {
+          id: "marina-bay", zone: "downtown",
+          name: { en: "Marina Bay / Raffles Place", ko: "Marina Bay · Raffles Place" },
+          dist: "D1", vibe: { en: "Skyline", ko: "스카이라인" },
+          tags: ["city", "commute", "amenities"],
+          body: {
+            en: "The postcard skyline, largely on reclaimed land: ultra-modern towers (Marina One Residences, The Sail, Marina Bay Residences) with concierge lobbies and bay views, linked underground to offices and malls. Quiet on weekends, minimal street culture — built for a five-minute walk to a CBD desk.",
+            ko: "엽서 속 그 스카이라인이에요(대부분 매립지). 초현대식 타워(Marina One Residences, The Sail, Marina Bay Residences)가 컨시어지 로비와 베이 전망을 갖추고 지하로 오피스·몰과 이어져요. 주말은 조용하고 동네 감성은 거의 없어요 — 회사까지 도보 5분을 위한 동네예요."
+          }
+        },
+        {
+          id: "tanjong-pagar", zone: "downtown",
+          name: { en: "Tanjong Pagar / Shenton Way", ko: "Tanjong Pagar · Shenton Way (K-타운)" },
+          dist: "D2", vibe: { en: "Work-live-play", ko: "직주근접" },
+          tags: ["city", "commute", "korean", "amenities"],
+          body: {
+            en: "The true work-live-play CBD — skyscraper homes (Wallich Residence, Altez, Icon, V on Shenton) across the street from conserved shophouse rows packed with Korean BBQ, izakayas, cocktail bars and specialty coffee. This is K-town's home turf; high-energy and extremely walkable, favoured by young finance and tech expats.",
+            ko: "진짜 '직주근접' CBD예요 — 고층 주거 타워(Wallich Residence, Altez, Icon, V on Shenton) 길 건너에 한국 BBQ·이자카야·칵테일 바·스페셜티 커피가 빼곡한 숍하우스 거리가 있어요. K-타운의 본거지이고, 에너지가 넘치고 걸어 다니기 좋아서 젊은 금융·테크 외국인들이 좋아해요."
+          }
+        },
+        {
+          id: "bugis-rochor", zone: "downtown",
+          name: { en: "Bugis / Rochor / Beach Road", ko: "Bugis · Rochor · Beach Road" },
+          dist: "D7", vibe: { en: "Arts-fringe", ko: "아트 프린지" },
+          tags: ["city", "commute", "mrt", "amenities"],
+          body: {
+            en: "The arts-and-heritage gateway beside Kampong Glam — Haji Lane cafes and street art next to premium integrated towers (DUO Residences, South Beach, Midtown Modern) sitting on Downtown Line interchanges. Fast-paced city-fringe living.",
+            ko: "Kampong Glam 옆의 예술·헤리티지 관문이에요 — Haji Lane의 카페와 스트리트 아트 곁에 다운타운선 환승역 위 프리미엄 복합 타워(DUO Residences, South Beach, Midtown Modern)가 서 있어요. 빠른 템포의 시티 프린지 라이프예요."
+          }
+        },
+        {
+          id: "little-india-balestier", zone: "fringe",
+          name: { en: "Little India / Farrer Park / Balestier", ko: "Little India · Farrer Park · Balestier" },
+          dist: "D8/12", vibe: { en: "Colourful", ko: "컬러풀" },
+          tags: ["city", "mrt", "value"],
+          body: {
+            en: "Vibrant and culturally intense: spice markets, the 24-hour Mustafa Centre, medical hubs and heritage shophouses, with condos integrated above MRT stations (City Square Residences). Balestier adds heritage eateries and retro walk-ups giving way to mid-tier condos.",
+            ko: "생기 넘치고 문화적 밀도가 높은 동네예요. 향신료 시장, 24시간 Mustafa Centre, 메디컬 허브, 헤리티지 숍하우스 — 그리고 MRT역 위에 통합된 콘도(City Square Residences)까지. Balestier 쪽은 전통 맛집과 레트로 워크업이 중가 콘도로 바뀌는 중이에요."
+          }
+        },
+        {
+          id: "bedok-siglap", zone: "east",
+          name: { en: "Bedok / Siglap / Bayshore", ko: "Bedok · Siglap · Bayshore" },
+          dist: "D16", vibe: { en: "Suburban-coastal", ko: "근교 해안" },
+          tags: ["beach", "quiet", "families", "landed", "value"],
+          body: {
+            en: "Quiet, breezy and suburban — sprawling coastal condo complexes (Bayshore Park, Costa Del Sol) and landed enclaves; weekends run on cycling and jogging along the coast. The calmer continuation of the East Coast.",
+            ko: "조용하고 바람 잘 드는 근교예요 — 해안가의 대형 콘도 단지(Bayshore Park, Costa Del Sol)와 단독주택 동네가 있고, 주말은 해안 자전거·조깅으로 흘러가요. East Coast의 한층 차분한 연장선이에요."
+          }
+        },
+        {
+          id: "punggol-sengkang", zone: "heartlands",
+          name: { en: "Punggol / Sengkang", ko: "Punggol · Sengkang" },
+          dist: "D19", vibe: { en: "New-town", ko: "신도시" },
+          tags: ["hdb", "value", "families", "quiet"],
+          body: {
+            en: "Singapore's young waterfront new towns: brand-new high-rise HDB, riverside cycling tracks and modern malls (Waterway Point, Compass One). Excellent space for the money; a long way from the international-school belt.",
+            ko: "싱가포르의 젊은 수변 신도시예요. 갓 지은 고층 HDB, 강변 자전거길, 현대적인 몰(Waterway Point, Compass One)이 있어요. 돈 대비 공간은 훌륭하지만 국제학교 벨트에서는 멀어요."
+          }
+        },
+        {
+          id: "jurong-lakeside", zone: "heartlands",
+          name: { en: "Jurong East / Lakeside", ko: "Jurong East · Lakeside" },
+          dist: "D22", vibe: { en: "Second CBD", ko: "제2 도심" },
+          tags: ["hdb", "value", "mrt", "amenities", "families"],
+          body: {
+            en: "The west's regional centre — four interlinked malls (JEM, Westgate, IMM, Jurong Point further out), hospitals and tech parks, with Jurong Lake Gardens for green weekends. A practical base for west-side workplaces; CIS's Lakeside campus is here.",
+            ko: "서부의 권역 중심지예요 — 몰 네 개가 이어져 있고(JEM, Westgate, IMM, 조금 더 가면 Jurong Point), 병원과 테크 파크, 주말엔 Jurong Lake Gardens까지. 서부 직장인에게 실용적인 베이스이고, CIS Lakeside 캠퍼스가 여기 있어요."
           }
         }
       ]
@@ -1329,7 +1450,14 @@ var CONTENT = {
         { id: "tampines", district: "D18", lat: 1.3530, lng: 103.9440, br3: 4500, br4: 6500, rough: true, walk: 3, malls: "Tampines Mall · Century Square · Tampines 1", condo: 2, hdb: 3, landed: 1 },
         { id: "woodlands", district: "D25", lat: 1.4360, lng: 103.7860, br3: 3800, br4: 5500, rough: true, walk: 2, malls: "Causeway Point", condo: 1, hdb: 3, landed: 1 },
         { id: "sentosa", district: "D4", lat: 1.2490, lng: 103.8300, br3: 9000, br4: 14000, rough: true, walk: 1, malls: "Quayside Isle · VivoCity (HarbourFront side)", condo: 2, hdb: 0, landed: 2 },
-        { id: "bukit-batok", district: "D23", lat: 1.3590, lng: 103.7500, br3: 4200, br4: 6000, rough: true, walk: 2, malls: "West Mall (Sol Mart) · Hillion Mall", condo: 2, hdb: 3, landed: 1 }
+        { id: "bukit-batok", district: "D23", lat: 1.3590, lng: 103.7500, br3: 4200, br4: 6000, rough: true, walk: 2, malls: "West Mall (Sol Mart) · Hillion Mall", condo: 2, hdb: 3, landed: 1 },
+        { id: "marina-bay", district: "D1", lat: 1.2815, lng: 103.8540, br3: 12000, br4: 18000, rough: true, walk: 3, malls: "Marina Bay Link Mall · Suntec City", condo: 3, hdb: 0, landed: 0 },
+        { id: "tanjong-pagar", district: "D2", lat: 1.2765, lng: 103.8460, br3: 8500, br4: 13000, rough: true, walk: 3, malls: "Guoco Tower · 100AM · Icon Village", condo: 3, hdb: 1, landed: 0 },
+        { id: "bugis-rochor", district: "D7", lat: 1.3000, lng: 103.8560, br3: 7500, br4: 11000, rough: true, walk: 3, malls: "Bugis Junction · Bugis+ · Duo Galleria", condo: 3, hdb: 1, landed: 0 },
+        { id: "little-india-balestier", district: "D8/12", lat: 1.3130, lng: 103.8560, br3: 5500, br4: 8000, rough: true, walk: 3, malls: "City Square Mall · Mustafa Centre (24h)", condo: 2, hdb: 2, landed: 0 },
+        { id: "bedok-siglap", district: "D16", lat: 1.3210, lng: 103.9350, br3: 5000, br4: 7500, rough: true, walk: 2, malls: "Siglap Centre · Bedok Mall", condo: 2, hdb: 2, landed: 2 },
+        { id: "punggol-sengkang", district: "D19", lat: 1.4040, lng: 103.9020, br3: 4000, br4: 5800, rough: true, walk: 2, malls: "Waterway Point · Compass One", condo: 2, hdb: 3, landed: 0 },
+        { id: "jurong-lakeside", district: "D22", lat: 1.3350, lng: 103.7430, br3: 4800, br4: 7000, rough: true, walk: 3, malls: "JEM · Westgate · IMM", condo: 2, hdb: 3, landed: 0 }
       ]
     },
 
@@ -1493,7 +1621,14 @@ var CONTENT = {
           { id: "tampines",       lat: 1.3530, lng: 103.9440, dir: "right" },
           { id: "woodlands",      lat: 1.4370, lng: 103.7880, dir: "top" },
           { id: "sentosa",        lat: 1.2530, lng: 103.8320, dir: "bottom" },
-          { id: "bukit-batok",    lat: 1.3520, lng: 103.7455, dir: "bottom" }
+          { id: "bukit-batok",    lat: 1.3520, lng: 103.7455, dir: "bottom" },
+          { id: "marina-bay",     lat: 1.2815, lng: 103.8540, sub: true },
+          { id: "tanjong-pagar",  lat: 1.2765, lng: 103.8460, sub: true },
+          { id: "bugis-rochor",   lat: 1.3000, lng: 103.8560, dir: "right" },
+          { id: "little-india-balestier", lat: 1.3130, lng: 103.8560, sub: true },
+          { id: "bedok-siglap",   lat: 1.3210, lng: 103.9350, dir: "top" },
+          { id: "punggol-sengkang", lat: 1.4040, lng: 103.9020, dir: "top" },
+          { id: "jurong-lakeside", lat: 1.3350, lng: 103.7430, dir: "bottom" }
         ]
       },
       /* Hand-drawn schematic (map.svg) — coordinates and paths are verbatim; do not edit them.
@@ -2060,6 +2195,93 @@ var CONTENT = {
         url: "https://www.jazhelpers.com.sg/guides/how-long-hiring-a-helper-takes"
       }
     ]
+  },
+
+  /* Housing typologies page — the ladder + honest whole-island price ranges */
+  housingPage: {
+    title: { en: "Housing types & honest prices", ko: "주거 형태와 솔직한 가격" },
+    intro: {
+      en: "Singapore's housing ladder, from public flats to the apex of landed living — with real whole-island ranges, entry level to prime ceilings. Purchase prices are shown for context only: foreign buyers face steep additional stamp duty, so almost every newcomer rents.",
+      ko: "공공주택부터 단독주택의 정점까지, 싱가포르 주거 사다리를 실제 시장 범위(입문가부터 최상단까지)와 함께 정리했어요. 매매가는 감 잡기용이에요 — 외국인 매수자는 무거운 추가 인지세를 내기 때문에, 새로 오는 사람은 거의 다 임대로 시작해요."
+    },
+    ladderTitle: { en: "The ladder at a glance", ko: "사다리 한눈에 보기" },
+    ladder: [
+      { name: { en: "Good Class Bungalow (GCB)", ko: "GCB (최상급 단독)" }, note: { en: "apex status · ≥1,400 sqm plot", ko: "정점 · 부지 1,400㎡ 이상" } },
+      { name: { en: "Detached bungalow", ko: "단독 방갈로" }, note: { en: "standalone land · ≥400 sqm plot", ko: "독립 부지 · 400㎡ 이상" } },
+      { name: { en: "Semi-detached", ko: "세미디" }, note: { en: "shares 1 party wall · ≥200 sqm", ko: "벽 1면 공유 · 200㎡ 이상" } },
+      { name: { en: "Terrace house", ko: "테라스 하우스" }, note: { en: "shares 2 walls (corner units: 1)", ko: "벽 2면 공유 (코너는 1면)" } },
+      { name: { en: "Private condominium", ko: "민간 콘도" }, note: { en: "full amenities — pool, gym, security", ko: "풀 시설 — 수영장·헬스장·보안" } },
+      { name: { en: "HDB flat", ko: "HDB (공공주택)" }, note: { en: "high-density, no facilities, spacious", ko: "고밀도·시설 없음·평수는 넉넉" } }
+    ],
+    cols: {
+      type: { en: "Typology", ko: "형태" },
+      feat: { en: "Key features", ko: "핵심 특징" },
+      buy: { en: "Purchase range", ko: "매매가 범위" },
+      rent: { en: "Monthly rent (mid–upper)", ko: "월세 (중~상단)" },
+      who: { en: "Who it suits", ko: "어울리는 사람" }
+    },
+    rows: [
+      {
+        type: { en: "Good Class Bungalow (GCB)", ko: "GCB (최상급 단독)" },
+        feat: { en: "The apex of Singapore real estate — only 39 gazetted prime zones. Plots ≥1,400 sqm with a 40% max site-coverage rule preserving sprawling gardens, private pools and long driveways.", ko: "싱가포르 부동산의 정점 — 지정된 프라임 구역 39곳에만 존재해요. 부지 1,400㎡ 이상에 건폐율 40% 제한이 있어 넓은 정원, 개인 수영장, 긴 진입로가 지켜져요." },
+        buy: "S$25M–120M+",
+        rent: "S$35,000–100,000+",
+        who: { en: "C-suite, ultra-high-net-worth families, founders, diplomats. Ultimate privacy.", ko: "최고 경영진, 초고액 자산가, 창업자, 외교관. 프라이버시의 끝." }
+      },
+      {
+        type: { en: "Detached bungalow (non-GCB)", ko: "단독 방갈로 (비GCB)" },
+        feat: { en: "A standalone house on its own plot (≥400 sqm) outside GCB zones — no shared walls, often 2–3 storeys with a lap pool and yard.", ko: "GCB 구역 밖의 독립 부지(400㎡ 이상) 단독주택 — 공유 벽이 없고, 보통 2–3층에 랩풀과 마당이 있어요." },
+        buy: "S$10M–35M",
+        rent: "S$20,000–45,000+",
+        who: { en: "Senior executives and established families wanting standalone land and privacy.", ko: "독립된 땅과 프라이버시를 원하는 고위 임원·자리 잡은 가족." }
+      },
+      {
+        type: { en: "Semi-detached (Semi-D)", ko: "세미디" },
+        feat: { en: "A pair of homes sharing one party wall, plots ≥200 sqm — open on three sides for side gardens and a driveway.", ko: "벽 한 면을 공유하는 한 쌍의 주택, 부지 200㎡ 이상 — 삼면이 열려 있어 옆마당과 진입로가 나와요." },
+        buy: "S$5M–15M",
+        rent: "S$12,000–22,000+",
+        who: { en: "Large families wanting landed living without full-bungalow overhead.", ko: "방갈로급 부담 없이 단독주택 생활을 원하는 대가족." }
+      },
+      {
+        type: { en: "Terrace house", ko: "테라스 하우스" },
+        feat: { en: "A row of connected houses sharing two party walls; corner units get an open side garden and bigger footprint.", ko: "벽 두 면을 공유하는 연립형 주택. 코너 유닛은 옆마당이 열려 있고 면적도 커요." },
+        buy: "S$3.5M–9M",
+        rent: "S$7,500–15,000",
+        who: { en: "The entry point to landed living — long-stay expat families wanting multi-level space.", ko: "단독주택 생활의 입문 — 다층 공간을 원하는 장기 체류 외국인 가족." }
+      },
+      {
+        type: { en: "Cluster house (strata landed)", ko: "클러스터 하우스" },
+        feat: { en: "Individual multi-storey houses inside a private gated estate sharing condo amenities — pool, gym, security.", ko: "게이트 단지 안의 다층 단독주택으로, 수영장·헬스장·보안 같은 콘도 시설을 공유해요." },
+        buy: "S$4M–8.5M",
+        rent: "S$8,000–15,000",
+        who: { en: "Families wanting house-scale floors plus condo facilities.", ko: "집의 층수와 콘도의 시설을 둘 다 원하는 가족." }
+      },
+      {
+        type: { en: "Private condominium", ko: "민간 콘도" },
+        feat: { en: "High- or mid-rise towers with 24/7 security, pools, gyms, courts. Rents scale hard by size, age and district — prime D9/D10 3–4BR reach S$12,000–25,000+.", ko: "24시간 보안, 수영장, 헬스장, 코트를 갖춘 고·중층 타워예요. 크기·연식·구역에 따라 임대료 차이가 커요 — 프라임 D9/D10의 3–4BR은 S$12,000–25,000+까지 가요." },
+        buy: "S$2M–20M+",
+        rent: "S$4,500–18,000+",
+        who: { en: "The dominant expat choice: secure, zero ground maintenance, deeply liquid market.", ko: "외국인의 기본 선택지: 안전하고, 관리 부담이 없고, 매물 시장이 가장 활발해요." }
+      },
+      {
+        type: { en: "Conserved shophouse", ko: "보존 숍하우스" },
+        feat: { en: "Historic 2–3 storey heritage buildings — commercial ground floor, homes above, high ceilings and timber beams.", ko: "역사적인 2–3층 헤리티지 건물 — 1층은 상업, 위층은 주거, 높은 천장과 목조 보가 특징이에요." },
+        buy: "S$5M–20M+",
+        rent: "S$8,000–20,000",
+        who: { en: "Creatives and heritage lovers — Katong, Tanjong Pagar, Emerald Hill.", ko: "크리에이티브·헤리티지 애호가 — Katong, Tanjong Pagar, Emerald Hill." }
+      },
+      {
+        type: { en: "HDB flat (public housing)", ko: "HDB (공공주택)" },
+        feat: { en: "Government-planned high-rise, spacious and well-kept, embedded in heartland town centres with transit at the door.", ko: "정부가 계획한 고층 주거로, 넓고 관리가 잘 되어 있고, 타운 중심과 교통이 문앞이에요." },
+        buy: { en: "Purchase restricted to Citizens/PRs", ko: "매수는 시민·영주권자만 가능" },
+        rent: "S$3,000–5,500",
+        who: { en: "Value-seekers wanting 30–50% more space per dollar near transit — minus condo facilities.", ko: "콘도 시설 대신 돈 대비 30–50% 넓은 공간을 원하는 실속파." }
+      }
+    ],
+    note: {
+      en: "Whole-island ranges, entry level to prime ceilings (Aug 2026). Where a neighbourhood sits inside these bands: see the Area table; deposits and agent fees: the renting box.",
+      ko: "섬 전체 기준, 입문가부터 프라임 상단까지의 범위예요(2026년 8월). 각 동네가 범위의 어디쯤인지는 동네 표에서, 보증금·중개 수수료는 임대 박스에서 확인하세요."
+    }
   },
 
   /* Healthcare — qualitative guide; fee figures are unresearched ballparks (~, verify) */

@@ -565,6 +565,29 @@ tbody tr:last-child th, tbody tr:last-child td { border-bottom: none; }
 
 /* ---------- neighbourhood atlas ---------- */
 
+/* housing ladder */
+.housing-ladder { margin: 0.8rem 0 1.6rem; max-width: 46em; }
+.ladder-step {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 1rem;
+  padding: 0.55rem 1rem; margin-bottom: 4px;
+  background: color-mix(in srgb, var(--accent) calc(26% - var(--step) * 4%), var(--bg-raised));
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+.ladder-step strong { font-size: 0.95rem; }
+.ladder-note { font-size: 0.78rem; color: var(--ink-soft); text-align: right; }
+.housing-table .feat-cell { white-space: normal; min-width: 18em; font-size: 0.88rem; }
+.housing-table td { white-space: normal; }
+.housing-table th[scope="row"] { min-width: 10em; }
+
+.zone-head { margin: 1.8rem 0 0.2rem; }
+.zone-head h4 {
+  margin: 0 0 0.15em; font-size: 1.12rem;
+  color: var(--accent);
+}
+.zone-head .zone-d { font-size: 0.78rem; font-weight: 700; color: var(--ink-soft); letter-spacing: 0.04em; }
+.zone-intro { color: var(--ink-soft); font-size: 0.92rem; margin: 0; }
+
 .atlas-grid { display: grid; grid-template-columns: 1fr; gap: 0.8rem; margin: 1rem 0 1.6rem; }
 @media (min-width: 700px) { .atlas-grid { grid-template-columns: 1fr 1fr; } }
 .atlas-card {
