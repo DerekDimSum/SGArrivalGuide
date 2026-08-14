@@ -39,6 +39,17 @@ var CONTENT = {
     tagFilter: { en: "Show me areas with…", ko: "이런 동네만 보기…" },
     fullResearch: { en: "Full research — prices, schools, community", ko: "상세 조사 — 시세, 학교, 커뮤니티" },
     statWalk: { en: "walk", ko: "도보" },
+    mapPageTitle: { en: "Map", ko: "지도" },
+    mapPageIntro: {
+      en: "Every neighbourhood in the guide, on one interactive map. Tap a highlighted area or pin to jump to its card, use the tags to light up areas that fit you, or look up any address to see where it lands.",
+      ko: "가이드의 모든 동네를 한 장의 인터랙티브 지도에 담았어요. 하이라이트된 지역이나 핀을 누르면 해당 카드로 이동하고, 태그로 조건에 맞는 동네만 밝힐 수 있어요. 주소를 검색해 위치를 확인할 수도 있어요."
+    },
+    mapAddressLabel: { en: "Look up an address", ko: "주소로 찾아보기" },
+    mapAddressPh: { en: "Postal code or building — e.g. 138632 or Great World City", ko: "우편번호나 건물명 — 예: 138632, Great World City" },
+    mapAddressBtn: { en: "Locate", ko: "위치 보기" },
+    mapAddressErr: { en: "No match — try a 6-digit postal code or a building name.", ko: "결과가 없어요 — 6자리 우편번호나 건물명으로 검색해 보세요." },
+    neighborhoodsLink: { en: "Browse the neighbourhoods →", ko: "동네별 가이드 보기 →" },
+    mapLink: { en: "Open the interactive map →", ko: "인터랙티브 지도 열기 →" },
     searchLabel: { en: "Search", ko: "검색" },
     searchPlaceholder: { en: "Search the guide… (fees, areas, visas)", ko: "가이드 검색… (학비, 동네, 비자)" },
     searchEmpty: { en: "No matches", ko: "결과가 없어요" },
@@ -88,12 +99,10 @@ var CONTENT = {
     { id: "living", label: { en: "Where to live", ko: "어디에 살까" },
       desc: { en: "How the island works, the sortable area table, maps, and a neighbourhood atlas.", ko: "싱가포르 구조 해설, 정렬 가능한 동네 표, 지도, 동네 아틀라스까지." },
       subs: [
-        { id: "living-overview", label: { en: "How it works", ko: "기본 구조" } },
-        { id: "housing", label: { en: "Housing types", ko: "주거 형태" } },
+        { id: "living", label: { en: "Overview", ko: "개요" } },
         { id: "sg-map", label: { en: "Map", ko: "지도" } },
-        { id: "living-atlas", label: { en: "Neighbourhoods", ko: "동네별" } },
-        { id: "areas", label: { en: "Find your area", ko: "내게 맞는 동네" } },
-        { id: "renting-box", label: { en: "Renting", ko: "임대 절차" } }
+        { id: "neighborhoods", label: { en: "Neighbourhoods", ko: "동네별 가이드" } },
+        { id: "areas", label: { en: "Find your area", ko: "내게 맞는 동네" } }
       ] },
     { id: "social", target: "community", label: { en: "Social", ko: "한인 생활" },
       desc: { en: "The Korean community network and Korean churches — the fastest ways in.", ko: "한인 커뮤니티 네트워크와 한인 교회 — 가장 빠른 정착 지름길이에요." },
@@ -1040,24 +1049,39 @@ var CONTENT = {
     /* Neighbourhood atlas — the 7 researched sub-areas plus qualitative profiles.
        Entries WITHOUT `researched: true` deliberately carry no figures. */
     atlas: {
-      title: { en: "Neighbourhood atlas", ko: "동네 아틀라스" },
+      title: { en: "Neighbourhoods — a regional guide", ko: "동네별 가이드 — 권역으로 보기" },
       intro: {
-        en: "The whole island, organised into six zones — read a zone's character first, then its neighbourhoods. Shortlist areas link to their researched deep-dive cards; the rest are qualitative sketches.",
-        ko: "섬 전체를 여섯 개 존으로 정리했어요 — 존의 성격을 먼저 읽고 동네로 들어가면 돼요. 후보 지역은 상세 조사 카드로 이어지고, 나머지는 분위기 중심 스케치예요."
+        en: "The whole island, organised into seven regions (A–G) — read a region's character first, then its neighbourhoods. Every card carries indicative prices and housing-stock ratings; researched corridors expand into their full deep-dive.",
+        ko: "섬 전체를 일곱 개 권역(A–G)으로 정리했어요 — 권역의 성격을 먼저 읽고 동네로 들어가면 돼요. 모든 카드에 대략적인 시세와 주거 형태 지표가 있고, 조사가 끝난 지역은 상세 조사까지 펼쳐 볼 수 있어요."
+      },
+      compass: {
+        title: { en: "The island at a glance", ko: "섬 한눈에 보기" },
+        north: { label: { en: "NORTH", ko: "북부" }, hint: "Woodlands · Yishun" },
+        west: { label: { en: "WEST", ko: "서부" }, hint: "Jurong · Clementi · Bukit Timah" },
+        central: { label: { en: "CENTRAL", ko: "중부" }, hint: "CBD · Orchard · River Valley" },
+        east: { label: { en: "EAST", ko: "동부" }, hint: "Katong · Bedok · Tampines" },
+        south: { label: { en: "SOUTH", ko: "남부" }, hint: "Sentosa Cove" }
+      },
+      hubDiagram: {
+        title: { en: "How a heartland town is built", ko: "헤어틀랜드 타운의 구조" },
+        hub: { en: "Regional hub", ko: "권역 허브" },
+        hubItems: { en: "MRT interchange + mall + bus interchange", ko: "MRT 환승역 + 몰 + 버스 인터체인지" },
+        nbhd: { en: "Each neighbourhood", ko: "각 동네" },
+        nbhdItems: { en: "hawker centre + supermarket + clinics", ko: "호커센터 + 슈퍼마켓 + 클리닉" }
       },
       researchedBadge: { en: "researched — card below", ko: "상세 조사됨 — 아래 카드" },
       sketchBadge: { en: "no researched figures yet", ko: "조사된 시세 없음" },
       zones: [
         {
-          id: "downtown", d: "D1 · D2 · D4 · D7",
-          title: { en: "Downtown core & financial hub", ko: "다운타운 코어 · 금융 중심" },
+          id: "downtown", letter: "A", d: "D01 · 02 · 06 · 07",
+          title: { en: "The financial & high-rise downtown core", ko: "금융 · 하이라이즈 다운타운 코어" },
           intro: {
             en: "Singapore's vertical heart: glass towers, integrated malls and heritage shophouse rows stacked together. Life runs through air-conditioned underground networks minutes from the office — street culture comes from dining streets, not neighbourhoods.",
             ko: "싱가포르의 수직 심장부예요. 유리 타워, 복합몰, 헤리티지 숍하우스 거리가 겹겹이 쌓여 있어요. 생활은 사무실에서 몇 분 거리의 에어컨 지하 네트워크로 흐르고, 거리의 활기는 동네가 아니라 맛집 골목에서 나와요."
           }
         },
         {
-          id: "prime", d: "D9 · D10",
+          id: "prime", letter: "B", d: "D09",
           title: { en: "Central core & high-street luxury", ko: "중심 코어 · 하이스트리트 럭셔리" },
           intro: {
             en: "The prime shopping-and-dining belt: behind Orchard's mega-malls sit quiet, leafy residential side streets on elevated hills, and the river fringe adds promenade living at Robertson Quay.",
@@ -1065,15 +1089,15 @@ var CONTENT = {
           }
         },
         {
-          id: "west", d: "D5 · D10 · D21 · D23",
-          title: { en: "The green belt & west-central corridor", ko: "그린벨트 · 서중부 코리도" },
+          id: "west", letter: "C", d: "D05 · 10 · 21 · 23",
+          title: { en: "The elite green belt & western academic corridor", ko: "엘리트 그린벨트 · 서부 아카데믹 코리도" },
           intro: {
-            en: "Low-density zoning, nature reserves and the education hubs — the corridor where this guide's researched shortlist (and the Korean family cluster) lives.",
-            ko: "저밀도 주거, 자연보호구역, 교육 허브가 모인 축이에요 — 이 가이드의 조사된 후보 지역들(그리고 한인 가족 클러스터)이 사는 코리도예요."
+            en: "Low-density zoning, nature reserves and the education hubs — from embassy-belt Tanglin and the UNESCO-listed Botanic Gardens through the Bukit Timah corridor to the NUS/UWCSEA academic west. The corridor where this guide's researched shortlist (and the Korean family cluster) lives.",
+            ko: "저밀도 주거, 자연보호구역, 교육 허브가 모인 축이에요 — 대사관 벨트 Tanglin과 유네스코 등재 보타닉 가든에서 부킷 티마 코리도를 지나 NUS·UWCSEA의 아카데믹 서부까지. 이 가이드의 조사된 후보 지역들(그리고 한인 가족 클러스터)이 사는 코리도예요."
           }
         },
         {
-          id: "east", d: "D15 · D16",
+          id: "east", letter: "D", d: "D15 · 16",
           title: { en: "The coastal & cultural east", ko: "해안 · 문화의 동부" },
           intro: {
             en: "The relaxed coastal alternative to the glass towers: beach-park weekends, Peranakan heritage streets — and since the TEL, direct trains into the CBD.",
@@ -1081,7 +1105,7 @@ var CONTENT = {
           }
         },
         {
-          id: "fringe", d: "D3 · D8 · D11 · D12 · D20",
+          id: "fringe", letter: "E", d: "D03 · 08 · 11 · 12 · 20",
           title: { en: "Heritage enclaves & city fringe", ko: "헤리티지 동네 · 시티 프린지" },
           intro: {
             en: "Five to ten minutes off the core with deep character: Art Deco Tiong Bahru, Little India's colour, the Novena medical hub, Thomson's nature-and-supper strip.",
@@ -1089,11 +1113,20 @@ var CONTENT = {
           }
         },
         {
-          id: "heartlands", d: "D18 · D19 · D22 · D25",
+          id: "heartlands", letter: "F", d: "D18 · 19 · 22 · 23 · 25",
           title: { en: "The heartlands & regional centres", ko: "헤어틀랜드 · 권역 중심지" },
           intro: {
             en: "Master-planned towns where most Singaporeans live — each self-contained, with an MRT-and-bus interchange, malls, hawker centres and clinics at its core. The island's best space per dollar.",
             ko: "대부분의 싱가포르인이 사는 계획도시들이에요 — 각 타운이 MRT·버스 인터체인지, 몰, 호커센터, 클리닉을 중심에 둔 자족 도시예요. 돈 대비 공간은 섬에서 최고예요."
+          },
+          hub: true
+        },
+        {
+          id: "sentosa", letter: "G", d: "D04",
+          title: { en: "Island waterfront resort living", ko: "아일랜드 워터프런트 리조트 라이프" },
+          intro: {
+            en: "An oceanfront enclave off the mainland grid — resort pace, yacht berths, and the one spot on the map with its own foreign-ownership rules.",
+            ko: "본섬 그리드에서 떨어진 오션프런트 동네예요 — 리조트의 속도, 요트 정박지, 그리고 지도에서 유일하게 외국인 소유 규정이 다른 곳이에요."
           }
         }
       ],
@@ -1134,8 +1167,8 @@ var CONTENT = {
           dist: "D5", vibe: { en: "Practical", ko: "실속" }, researched: true,
           tags: ["value", "hdb", "mrt", "families", "schools"],
           body: {
-            en: "Authentically local heartland with the island's best HDB play, hawker food, and West Coast Park's playgrounds.",
-            ko: "진짜 로컬 동네 — 섬에서 가장 쏠쏠한 HDB 선택지, 호커 음식, West Coast Park의 놀이터들."
+            en: "Singapore's academic hub — NUS, Singapore Polytechnic and UWCSEA's Dover campus — and an authentically local heartland with the island's best HDB play. High-rise condos (The Trilinq, Parc Clematis) sit alongside big HDB estates, hawker food, and West Coast Park's playgrounds and coastline.",
+            ko: "싱가포르의 아카데믹 허브예요 — NUS, Singapore Polytechnic, UWCSEA Dover 캠퍼스 — 그리고 섬에서 가장 쏠쏠한 HDB 선택지가 있는 진짜 로컬 동네. 고층 콘도(The Trilinq, Parc Clematis)와 대형 HDB 단지, 호커 음식, West Coast Park의 놀이터와 해안선이 함께 있어요."
           }
         },
         {
@@ -1154,8 +1187,8 @@ var CONTENT = {
           dist: "D15", vibe: { en: "Breezy", ko: "여유" }, researched: true,
           tags: ["beach", "families", "commute", "mrt", "city", "helper-room", "value", "br4", "landed"],
           body: {
-            en: "Beach-park living with heritage food streets and the best CBD commute since the TEL opened.",
-            ko: "바닷가 공원 라이프에 헤리티지 맛집 거리, TEL 개통 이후 CBD 통근 최강."
+            en: "The cultural heartland of Peranakan heritage — pastel shophouses, Katong laksa, specialty roasters — with a 15 km beach park out front. Mid-rise freehold condos (Silversea, Amber Park), walk-up shophouses and landed enclaves; the TEL stations (Marine Parade, Tanjong Katong) give a direct train into the CBD. A favourite of active expat families.",
+            ko: "페라나칸 헤리티지의 본고장이에요 — 파스텔 숍하우스, 카통 락사, 스페셜티 로스터리 — 그리고 집 앞에 15km 해변 공원까지. 중층 프리홀드 콘도(Silversea, Amber Park), 워크업 숍하우스, 단독주택 동네가 섞여 있고, TEL역(Marine Parade, Tanjong Katong)으로 CBD 직행이에요. 활동적인 외국인 가족들이 특히 좋아해요."
           }
         },
         {
@@ -1269,13 +1302,13 @@ var CONTENT = {
           }
         },
         {
-          id: "sentosa", zone: "downtown",
+          id: "sentosa", zone: "sentosa",
           name: { en: "Sentosa Cove / HarbourFront", ko: "Sentosa Cove · HarbourFront" },
           dist: "D4", vibe: { en: "Resort", ko: "리조트" },
           tags: ["beach", "amenities", "landed", "quiet"],
           body: {
-            en: "Marina-side villas and condos on the resort island, plus the HarbourFront/Keppel Bay towers opposite. Waterfront living with a holiday feel — and a daily reminder that the island gate adds time to every trip.",
-            ko: "리조트 섬의 마리나 빌라·콘도, 그리고 맞은편 HarbourFront·Keppel Bay 타워들이에요. 휴양지 감성의 수변 생활이 가능하지만, 섬 게이트 때문에 모든 이동에 시간이 조금씩 더 든다는 점은 매일 체감하게 돼요."
+            en: "Ultra-luxury oceanfront condos and deep-water bungalows with private yacht berths (W Residences, The Oceanfront), plus the HarbourFront/Keppel Bay towers opposite. Landed rents routinely run ~S$30,000–60,000+ a month. Two things set it apart: it is the only place in Singapore where non-resident foreigners may buy landed homes (with Land Dealings Approval Unit sign-off), and the island gate adds time to every mainland trip — a resort sanctuary 15 minutes from the CBD, chosen by yacht owners and resort-lifestyle buyers.",
+            ko: "프라이빗 요트 정박지가 딸린 초호화 오션프런트 콘도와 수변 방갈로(W Residences, The Oceanfront), 그리고 맞은편 HarbourFront·Keppel Bay 타워들이에요. 단독주택 월세는 ~S$30,000–60,000+ 수준이 보통이에요. 특별한 점 두 가지: 싱가포르에서 유일하게 비거주 외국인이 단독주택을 매입할 수 있는 곳이고(Land Dealings Approval Unit 승인 필요), 섬 게이트 때문에 본섬 이동마다 시간이 조금씩 더 들어요 — CBD에서 15분 거리의 리조트 안식처로, 요트 오너와 리조트 라이프를 원하는 사람들이 선택해요."
           }
         },
         {

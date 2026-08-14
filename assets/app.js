@@ -818,7 +818,7 @@
     if (!e) return;
     var card = document.getElementById("atlas-" + e.id);
     if (!card) return;
-    if (location.hash !== "#living") applyView("living", card);
+    if (currentView !== "neighborhoods") applyView("neighborhoods", card);
     else card.scrollIntoView({ behavior: "smooth", block: "center" });
     card.classList.remove("flash");
     void card.offsetWidth;
@@ -828,6 +828,7 @@
   // tag filter shared by the map and the atlas grid
   var atlasTags = {};
   var mapLayers = null;
+  var addrMarker = null;
 
   function entryMatchesTags(e) {
     var picked = Object.keys(atlasTags);
@@ -1508,10 +1509,7 @@
 
   function renderAtlas() {
     var at = CONTENT.living.atlas;
-    var wrap = h("div", { id: "living-atlas" },
-      h("h3", { text: t(at.title) }),
-      h("p", { class: "section-intro", text: t(at.intro) })
-    );
+    var wrap = h("div", { id: "living-atlas" });
     var tagLabels = {};
     CONTENT.living.picker.criteria.forEach(function (c) { tagLabels[c.id] = c.label; });
     function rowsFor(e) {
@@ -1543,11 +1541,24 @@
         h("p", { text: t(e.body) })
       );
       if (rows.length) {
-        var walk = Math.max.apply(null, rows.map(function (r) { return r.walk || 0; }));
+        function maxOf(key) {
+          return Math.max.apply(null, rows.map(function (r) { return r[key] || 0; }));
+        }
+        function dotSpan(labelLeaf, key) {
+          var v = maxOf(key);
+          return h("span", {}, h("b", { text: t(labelLeaf) + " " }),
+            h("span", { class: "stock-cell", text: v ? "●●●".slice(0, v) : "—" }));
+        }
         card.appendChild(h("p", { class: "atlas-stats" },
           h("span", {}, h("b", { text: "3BR " }), h("span", { text: fmtPriceRange(rows, "br3") })),
-          h("span", {}, h("b", { text: "4BR " }), h("span", { text: fmtPriceRange(rows, "br4") })),
-          h("span", {}, h("b", { text: t(CONTENT.ui.statWalk) + " " }), h("span", { class: "stock-cell", text: walk ? "●●●".slice(0, walk) : "—" }))
+          h("span", {}, h("b", { text: "4BR " }), h("span", { text: fmtPriceRange(rows, "br4") }))
+        ));
+        var tcols = CONTENT.living.areaTable.cols;
+        card.appendChild(h("p", { class: "atlas-stats" },
+          dotSpan(CONTENT.ui.statWalk, "walk"),
+          dotSpan(tcols.condo, "condo"),
+          dotSpan(tcols.hdb, "hdb"),
+          dotSpan(tcols.landed, "landed")
         ));
         var malls = rows.map(function (r) { return r.malls; }).filter(Boolean)[0];
         if (malls) card.appendChild(h("p", { class: "atlas-malls", text: malls }));
@@ -1577,10 +1588,29 @@
     at.zones.forEach(function (z) {
       var entries = at.entries.filter(function (e) { return e.zone === z.id; });
       if (!entries.length) return;
-      wrap.appendChild(h("div", { class: "zone-head" },
-        h("h4", {}, h("span", { text: t(z.title) }), h("span", { class: "zone-d", text: " " + z.d })),
+      var head = h("div", { class: "zone-head" },
+        h("h4", {},
+          z.letter ? h("span", { class: "zone-letter", text: z.letter }) : null,
+          h("span", { text: t(z.title) }),
+          h("span", { class: "zone-d", text: " " + z.d })
+        ),
         h("p", { class: "zone-intro", text: t(z.intro) })
-      ));
+      );
+      if (z.hub && at.hubDiagram) {
+        var hd = at.hubDiagram;
+        head.appendChild(h("div", { class: "hub-diagram", "aria-label": t(hd.title) },
+          h("div", { class: "hub-node" },
+            h("strong", { text: t(hd.hub) }),
+            h("span", { text: t(hd.hubItems) })
+          ),
+          h("div", { class: "hub-arrow", "aria-hidden": "true", text: "→" }),
+          h("div", { class: "hub-node" },
+            h("strong", { text: t(hd.nbhd) }),
+            h("span", { text: t(hd.nbhdItems) })
+          )
+        ));
+      }
+      wrap.appendChild(head);
       var grid = h("div", { class: "atlas-grid" });
       entries.forEach(function (e) { grid.appendChild(entryCard(e)); });
       wrap.appendChild(grid);
@@ -1596,41 +1626,6 @@
   }
 
   /* ---------- housing typologies page ---------- */
-
-  function renderHousing(main) {
-    var hp = CONTENT.housingPage;
-    var section = h("section", { id: "housing", class: "section", "aria-labelledby": "housing-title" },
-      sectionHeader("housing", hp.title, "☖"),
-      h("p", { class: "section-intro", text: t(hp.intro) }),
-      h("h3", { text: t(hp.ladderTitle) }),
-      h("div", { class: "housing-ladder" }, hp.ladder.map(function (step, i) {
-        return h("div", { class: "ladder-step", style: "--step:" + i },
-          h("strong", { text: t(step.name) }),
-          h("span", { class: "ladder-note", text: t(step.note) })
-        );
-      })),
-      h("div", { class: "table-wrap" }, h("table", { class: "data-table housing-table" },
-        h("thead", {}, h("tr", {},
-          h("th", { text: t(hp.cols.type) }),
-          h("th", { text: t(hp.cols.feat) }),
-          h("th", { text: t(hp.cols.buy) }),
-          h("th", { text: t(hp.cols.rent) }),
-          h("th", { text: t(hp.cols.who) })
-        )),
-        h("tbody", {}, hp.rows.map(function (r) {
-          return h("tr", {},
-            h("th", { scope: "row", text: t(r.type) }),
-            h("td", { class: "feat-cell", text: t(r.feat) }),
-            h("td", { text: t(r.buy) }),
-            h("td", { text: t(r.rent) }),
-            h("td", { class: "feat-cell", text: t(r.who) })
-          );
-        }))
-      )),
-      h("p", { class: "table-note", text: t(hp.note) })
-    );
-    main.appendChild(section);
-  }
 
   function renderLiving(main) {
     var lv = CONTENT.living;
@@ -1682,34 +1677,133 @@
     lv.districts.notes.forEach(function (n) { dd.appendChild(h("p", { text: t(n) })); });
     ov.appendChild(dd);
 
-    /* §3.1 housing types */
-    ov.appendChild(h("h3", { text: t(lv.housingTypes.title) }));
-    ov.appendChild(h("ul", { class: "apps-list htype-list" }, lv.housingTypes.items.map(function (i) {
-      return h("li", {},
-        h("strong", { text: t(i.name) }),
-        h("span", { text: " — " + t(i.body) + " " }),
-        i.url ? srcLink(i.url) : null
-      );
-    })));
-    ov.appendChild(h("p", {}, h("a", { class: "btn-link", href: "#housing", text: t(CONTENT.housingPage.title) + " →" })));
+    /* §3.1 housing types — full ladder + honest-prices table (was its own page) */
+    var hp = CONTENT.housingPage;
+    var hb = h("div", { id: "housing" },
+      h("h3", { text: t(hp.title) }),
+      h("p", { text: t(hp.intro) }),
+      h("ul", { class: "apps-list htype-list" }, lv.housingTypes.items.map(function (i) {
+        return h("li", {},
+          h("strong", { text: t(i.name) }),
+          h("span", { text: " — " + t(i.body) + " " }),
+          i.url ? srcLink(i.url) : null
+        );
+      })),
+      h("h4", { text: t(hp.ladderTitle) }),
+      h("div", { class: "housing-ladder" }, hp.ladder.map(function (step, i) {
+        return h("div", { class: "ladder-step", style: "--step:" + i },
+          h("strong", { text: t(step.name) }),
+          h("span", { class: "ladder-note", text: t(step.note) })
+        );
+      })),
+      h("div", { class: "table-wrap" }, h("table", { class: "data-table housing-table" },
+        h("thead", {}, h("tr", {},
+          h("th", { text: t(hp.cols.type) }),
+          h("th", { text: t(hp.cols.feat) }),
+          h("th", { text: t(hp.cols.buy) }),
+          h("th", { text: t(hp.cols.rent) }),
+          h("th", { text: t(hp.cols.who) })
+        )),
+        h("tbody", {}, hp.rows.map(function (r) {
+          return h("tr", {},
+            h("th", { scope: "row", text: t(r.type) }),
+            h("td", { class: "feat-cell", text: t(r.feat) }),
+            h("td", { text: t(r.buy) }),
+            h("td", { text: t(r.rent) }),
+            h("td", { class: "feat-cell", text: t(r.who) })
+          );
+        }))
+      )),
+      h("p", { class: "table-note", text: t(hp.note) })
+    );
+    ov.appendChild(hb);
+    section.appendChild(ov);
 
-    /* §3.2 market context */
+    /* how renting works */
+    var rb = h("aside", { class: "info-box renting-box", id: "renting-box" },
+      h("h3", { text: t(lv.renting.title) }),
+      h("ul", {}, lv.renting.items.map(function (i) {
+        return h("li", { html: t(i) });
+      })),
+      h("p", {}, srcLink(lv.renting.srcUrl))
+    );
+    section.appendChild(rb);
+
+    /* helper's-room rule */
+    section.appendChild(h("aside", { class: "info-box" },
+      h("h3", { text: t(lv.helperRoom.title) }),
+      h("p", {}, h("span", { text: t(lv.helperRoom.body) + " " }), srcLink(lv.helperRoom.srcUrl))
+    ));
+
+    /* market context */
     var mk = h("div", {}, h("h3", { text: t(lv.market.title) }));
     lv.market.paras.forEach(function (p) { mk.appendChild(h("p", { text: t(p) })); });
     mk.appendChild(h("p", {}, srcLink(lv.market.srcUrl), " ", srcLink(lv.market.scarcityUrl), " ", srcLink(lv.market.hdbUrl, { en: "HDB quota tool ↗", ko: "HDB 쿼터 조회 ↗" })));
-    ov.appendChild(mk);
+    section.appendChild(mk);
 
-    /* §3.3 office anchor */
+    /* office anchor */
     var office = h("aside", { class: "info-box office-box" }, h("h3", { text: t(lv.office.title) }));
     lv.office.paras.forEach(function (p) { office.appendChild(h("p", { text: t(p) })); });
     office.appendChild(h("p", {}, srcLink(lv.office.srcUrl), " ", srcLink(lv.office.cclUrl, { en: "CCL Stage 6 (LTA) ↗", ko: "서클선 6단계 (LTA) ↗" })));
-    ov.appendChild(office);
-    section.appendChild(ov);
+    section.appendChild(office);
 
-    section.appendChild(h("p", {}, h("a", { class: "btn-link", href: "#areas", text: t(lv.tableLink) })));
+    /* onward links */
+    section.appendChild(h("p", { class: "onward-links" },
+      h("a", { class: "btn-link", href: "#sg-map", text: t(CONTENT.ui.mapLink) }),
+      h("a", { class: "btn-link", href: "#neighborhoods", text: t(CONTENT.ui.neighborhoodsLink) }),
+      h("a", { class: "btn-link", href: "#areas", text: t(lv.tableLink) })
+    ));
 
-    /* map — the single interactive map; the tag bar filters both it and the atlas */
-    var tagBar = h("div", { class: "tag-bar", role: "group", "aria-label": t(CONTENT.ui.tagFilter) },
+    main.appendChild(section);
+  }
+
+  /* ---------- map page ---------- */
+
+  function renderMapPage(main) {
+    var lv = CONTENT.living;
+    var section = h("section", { id: "sg-map", class: "section", "aria-labelledby": "sg-map-title" },
+      sectionHeader("sg-map", lv.map.title, "✦"),
+      h("p", { class: "section-intro", text: t(CONTENT.ui.mapPageIntro) })
+    );
+
+    /* address / postal-code lookup — same OneMap service as the commute anchors */
+    var addrIn = h("input", {
+      type: "text", class: "addr-input", id: "map-addr-input",
+      placeholder: t(CONTENT.ui.mapAddressPh), "aria-label": t(CONTENT.ui.mapAddressLabel)
+    });
+    var addrStatus = h("span", { class: "addr-status", role: "status" });
+    function locate() {
+      var q = addrIn.value.trim();
+      if (!q) return;
+      addrStatus.textContent = "…";
+      geocodeSG(q).then(function (pt) {
+        if (!pt) { addrStatus.textContent = t(CONTENT.ui.mapAddressErr); return; }
+        addrStatus.textContent = "";
+        initRealMap();
+        if (typeof L !== "undefined" && leafletMap) {
+          if (addrMarker) leafletMap.removeLayer(addrMarker);
+          addrMarker = L.circleMarker([pt.lat, pt.lng], {
+            radius: 8, color: "#1461c9", weight: 2.5, fillColor: "#ffffff", fillOpacity: 0.9
+          }).addTo(leafletMap).bindTooltip(pt.name, {
+            permanent: true, direction: "top", offset: [0, -10],
+            className: "map-real-lm map-addr-label"
+          });
+          leafletMap.setView([pt.lat, pt.lng], 13.5, { animate: true });
+        }
+      }).catch(function () { addrStatus.textContent = t(CONTENT.ui.mapAddressErr); });
+    }
+    addrIn.addEventListener("keydown", function (e) { if (e.key === "Enter") locate(); });
+    section.appendChild(h("div", { class: "addr-lookup" },
+      h("label", { class: "addr-label", for: "map-addr-input", text: t(CONTENT.ui.mapAddressLabel) }),
+      h("div", { class: "addr-row" },
+        addrIn,
+        h("button", { class: "map-add-pin addr-btn", type: "button", text: t(CONTENT.ui.mapAddressBtn), onclick: locate }),
+        addrStatus
+      )
+    ));
+
+    /* tag bar — lights up matching areas on the map and filters the neighbourhood cards */
+    section.appendChild(h("div", { class: "tag-bar", role: "group", "aria-label": t(CONTENT.ui.tagFilter) },
       h("span", { class: "tag-bar-label", text: t(CONTENT.ui.tagFilter) }),
       CONTENT.living.picker.criteria.map(function (c) {
         return h("button", {
@@ -1724,33 +1818,76 @@
           }
         });
       })
-    );
-    var mapWrap = h("figure", { class: "map-figure", id: "sg-map" },
-      h("h3", { text: t(lv.map.title) }),
-      tagBar,
-      h("div", { id: "real-map", class: "real-map" }),
-      h("p", { class: "map-hint", text: t(CONTENT.ui.realMapHint) })
-    );
-    section.appendChild(mapWrap);
-
-    /* neighbourhood atlas — one canonical card per area */
-    section.appendChild(renderAtlas());
-
-    /* §3.6 helper's-room rule */
-    section.appendChild(h("aside", { class: "info-box" },
-      h("h3", { text: t(lv.helperRoom.title) }),
-      h("p", {}, h("span", { text: t(lv.helperRoom.body) + " " }), srcLink(lv.helperRoom.srcUrl))
     ));
 
-    /* renting box */
-    var rb = h("aside", { class: "info-box renting-box", id: "renting-box" },
-      h("h3", { text: t(lv.renting.title) }),
-      h("ul", {}, lv.renting.items.map(function (i) {
-        return h("li", { html: t(i) });
-      })),
-      h("p", {}, srcLink(lv.renting.srcUrl))
+    section.appendChild(h("figure", { class: "map-figure" },
+      h("div", { id: "real-map", class: "real-map" }),
+      h("p", { class: "map-hint", text: t(CONTENT.ui.realMapHint) })
+    ));
+
+    section.appendChild(h("p", { class: "onward-links" },
+      h("a", { class: "btn-link", href: "#neighborhoods", text: t(CONTENT.ui.neighborhoodsLink) }),
+      h("a", { class: "btn-link", href: "#areas", text: t(lv.tableLink) })
+    ));
+
+    main.appendChild(section);
+  }
+
+  /* ---------- neighbourhoods page ---------- */
+
+  function renderNeighborhoods(main) {
+    var lv = CONTENT.living;
+    var at = lv.atlas;
+    var section = h("section", { id: "neighborhoods", class: "section", "aria-labelledby": "neighborhoods-title" },
+      sectionHeader("neighborhoods", at.title, "⌂"),
+      h("p", { class: "section-intro", text: t(at.intro) })
     );
-    section.appendChild(rb);
+
+    /* compass — where the regions sit on the island */
+    var cp = at.compass;
+    function compassCell(cls, part) {
+      return h("div", { class: "compass-cell " + cls },
+        h("strong", { text: t(part.label) }),
+        h("span", { text: part.hint })
+      );
+    }
+    section.appendChild(h("div", { class: "compass", "aria-label": t(cp.title) },
+      compassCell("c-north", cp.north),
+      compassCell("c-west", cp.west),
+      compassCell("c-central", cp.central),
+      compassCell("c-east", cp.east),
+      compassCell("c-south", cp.south)
+    ));
+
+    section.appendChild(renderAtlas());
+
+    /* average rent, by housing type (same data as Monthly costs) */
+    var rent = CONTENT.costs.rent;
+    var rentBlock = h("div", { id: "rent-ranges" },
+      h("h3", { text: t(rent.title) }),
+      h("p", { text: t(rent.intro) }),
+      h("div", { class: "table-wrap" }, h("table", { class: "data-table" },
+        h("thead", {}, h("tr", {},
+          h("th", { text: t(rent.cols.type) }),
+          h("th", { text: t(rent.cols.range) }),
+          h("th", { text: t(rent.cols.note) })
+        )),
+        h("tbody", {}, rent.rows.map(function (r) {
+          return h("tr", { class: r.rough ? "row-rough" : null },
+            h("th", { scope: "row", text: t(r.type) }),
+            h("td", { text: t(r.range) }),
+            h("td", { text: t(r.note) })
+          );
+        }))
+      )),
+      h("p", { class: "table-note", text: t(rent.note) })
+    );
+    section.appendChild(rentBlock);
+
+    section.appendChild(h("p", { class: "onward-links" },
+      h("a", { class: "btn-link", href: "#sg-map", text: t(CONTENT.ui.mapLink) }),
+      h("a", { class: "btn-link", href: "#areas", text: t(lv.tableLink) })
+    ));
 
     main.appendChild(section);
   }
@@ -2200,7 +2337,8 @@
     renderEducation(main);
     renderSchools(main);
     renderLiving(main);
-    renderHousing(main);
+    renderMapPage(main);
+    renderNeighborhoods(main);
     renderAreas(main);
     renderCommunity(main);
     renderChurch(main);
@@ -2238,7 +2376,7 @@
   /* ---------- view routing ---------- */
 
   // every section view, in page order (nav items may be groups pointing at these)
-  var SECTION_VIEWS = ["home", "education", "schools", "living", "housing", "areas",
+  var SECTION_VIEWS = ["home", "education", "schools", "living", "sg-map", "neighborhoods", "areas",
     "community", "church", "helper", "health", "car", "costs", "apps", "checklist"];
   function viewIds() { return SECTION_VIEWS; }
 
@@ -2273,12 +2411,14 @@
     updateSubNav(owner, id);
     if (targetEl) {
       if (targetEl.tagName === "DETAILS") targetEl.setAttribute("open", "");
-      requestAnimationFrame(function () { targetEl.scrollIntoView({ block: "start" }); });
+      // instant, not smooth: a smooth scroll started during the section swap gets
+      // cancelled by the layout shift, stranding the page at the top
+      requestAnimationFrame(function () { targetEl.scrollIntoView({ block: "start", behavior: "instant" }); });
     } else if (!noScroll) {
       window.scrollTo(0, 0);
     }
     // Leaflet can only size itself once its container is actually visible
-    if (id === "living") setTimeout(initRealMap, 50);
+    if (id === "sg-map") setTimeout(initRealMap, 50);
   }
 
   function route() {
@@ -2332,7 +2472,8 @@
       { id: "education", label: navLabel("education") },
       { id: "schools", label: CONTENT.education.schools.title },
       { id: "living", label: navLabel("living") },
-      { id: "housing", label: CONTENT.housingPage.title },
+      { id: "sg-map", label: CONTENT.living.map.title },
+      { id: "neighborhoods", label: CONTENT.living.atlas.title },
       { id: "areas", label: CONTENT.living.areaTable.title },
       { id: "community", label: CONTENT.community.title },
       { id: "church", label: CONTENT.church.title },

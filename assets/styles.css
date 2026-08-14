@@ -580,6 +580,62 @@ tbody tr:last-child th, tbody tr:last-child td { border-bottom: none; }
 .housing-table td { white-space: normal; }
 .housing-table th[scope="row"] { min-width: 10em; }
 
+/* compass — the island's regions at a glance */
+.compass {
+  display: grid; gap: 0.5rem; margin: 1.2rem 0 1.8rem;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-areas: ". n ." "w c e" ". s .";
+  max-width: 640px;
+}
+.compass-cell {
+  border: 1.5px dashed var(--line); border-radius: var(--radius);
+  padding: 0.55rem 0.8rem; text-align: center;
+  display: flex; flex-direction: column; gap: 0.15rem;
+}
+.compass-cell strong { font-size: 0.78rem; letter-spacing: 0.12em; color: var(--accent); }
+.compass-cell span { font-size: 0.78rem; color: var(--ink-soft); }
+.c-north { grid-area: n; }
+.c-west { grid-area: w; }
+.c-central { grid-area: c; border-style: solid; border-color: var(--accent); background: var(--accent-soft); }
+.c-east { grid-area: e; }
+.c-south { grid-area: s; }
+
+/* zone letters + heartland hub diagram */
+.zone-letter {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 1.5em; height: 1.5em; margin-right: 0.45em;
+  border-radius: 50%; background: var(--accent); color: var(--bg);
+  font-size: 0.72em; font-weight: 700;
+}
+.hub-diagram {
+  display: flex; align-items: stretch; gap: 0.6rem; flex-wrap: wrap;
+  margin: 0.7rem 0 0.2rem;
+}
+.hub-node {
+  border: 1.5px solid var(--line); border-radius: var(--radius);
+  background: var(--bg-raised); padding: 0.45rem 0.8rem;
+  display: flex; flex-direction: column; gap: 0.1rem;
+}
+.hub-node strong { font-size: 0.8rem; }
+.hub-node span { font-size: 0.78rem; color: var(--ink-soft); }
+.hub-arrow { align-self: center; color: var(--ink-soft); font-weight: 700; }
+
+/* address lookup on the map page */
+.addr-lookup { margin: 0.2rem 0 1rem; }
+.addr-label { display: block; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-soft); margin-bottom: 0.35rem; }
+.addr-row { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+.addr-input {
+  font-family: var(--font-body); font-size: 0.95rem;
+  flex: 1 1 260px; max-width: 420px; padding: 0.45em 0.7em;
+  border: 1.5px solid var(--line); border-radius: 999px;
+  background: var(--bg-raised); color: var(--ink);
+}
+.addr-input:focus-visible { outline: 3px solid var(--focus); outline-offset: 1px; }
+.addr-status { font-size: 0.82rem; color: var(--ink-soft); }
+.leaflet-tooltip.map-addr-label { border-color: #1461c9; font-weight: 700; }
+
+.onward-links { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 1.6rem 0 0.4rem; }
+
 .zone-head { margin: 1.8rem 0 0.2rem; }
 .zone-head h4 {
   margin: 0 0 0.15em; font-size: 1.12rem;
