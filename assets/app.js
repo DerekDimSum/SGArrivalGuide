@@ -1451,18 +1451,34 @@
     );
 
     /* §3.0 district decoder */
+    var pv = lv.districts.postalVisual;
     var dd = h("div", {},
       h("h3", { text: t(lv.districts.title) }),
       h("p", { text: t(lv.districts.intro) }),
-      h("p", { text: t(lv.districts.postal) }),
+      h("h4", { text: t(lv.districts.postalTitle) }),
+      h("div", { class: "postal-visual", "aria-hidden": "true" },
+        h("div", { class: "pv-group" },
+          h("div", { class: "pv-digits", text: pv.sectorDigits }),
+          h("div", { class: "pv-label", text: t(pv.sector) }),
+          h("div", { class: "pv-sub", text: t(pv.sectorSub) })
+        ),
+        h("div", { class: "pv-group" },
+          h("div", { class: "pv-digits", text: pv.deliveryDigits }),
+          h("div", { class: "pv-label", text: t(pv.delivery) }),
+          h("div", { class: "pv-sub", text: t(pv.deliverySub) })
+        )
+      ),
+      h("div", {}, lv.districts.postalParas.map(function (p) { return h("p", { text: t(p) }); })),
       h("div", { class: "table-wrap" }, h("table", { class: "data-table" },
         h("thead", {}, h("tr", {},
-          h("th", { text: t(lv.districts.cols.d) }), h("th", { text: t(lv.districts.cols.name) }),
+          h("th", { text: t(lv.districts.cols.d) }), h("th", { text: t(lv.districts.cols.sectors) }),
+          h("th", { text: t(lv.districts.cols.name) }),
           h("th", { text: t(lv.districts.cols.sub) }), h("th", { text: t(lv.districts.cols.rel) })
         )),
         h("tbody", {}, lv.districts.rows.map(function (r) {
           return h("tr", {},
             h("th", { scope: "row", text: r.d }),
+            h("td", { class: "sector-cell", text: r.sectors || "—" }),
             h("td", { text: t(r.name) }),
             h("td", { text: t(r.sub) }),
             h("td", { text: t(r.rel) })

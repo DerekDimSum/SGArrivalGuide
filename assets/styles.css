@@ -334,6 +334,27 @@ tbody tr:last-child th, tbody tr:last-child td { border-bottom: none; }
 .subarea { margin: 1.2rem 0; }
 .subarea-name { color: var(--accent); }
 
+/* postal-code visual breakdown */
+.postal-visual {
+  display: flex; gap: 1.2rem; flex-wrap: wrap;
+  margin: 0.8rem 0 1rem;
+}
+.postal-visual .pv-group {
+  flex: 1 1 220px; max-width: 320px;
+  background: var(--bg-raised);
+  border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 0.8rem 1rem;
+  box-shadow: var(--shadow);
+}
+.postal-visual .pv-digits {
+  font-family: var(--font-head); font-size: 2rem; font-weight: 700;
+  letter-spacing: 0.18em; color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+.postal-visual .pv-label { font-weight: 700; margin-top: 0.2rem; }
+.postal-visual .pv-sub { font-size: 0.82rem; color: var(--ink-soft); }
+.sector-cell { font-variant-numeric: tabular-nums; white-space: nowrap; }
+
 /* deep-dive cards: fact bullets + two-column layout at desktop widths */
 .card-facts { padding-left: 1.15em; margin: 0.4em 0 0.8em; }
 .card-facts li { margin: 0.35em 0; }

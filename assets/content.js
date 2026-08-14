@@ -837,28 +837,52 @@ var CONTENT = {
         en: "Property listings and agents speak in postal districts (D1–D28) — an old classification the market still runs on. Analysts group them into three bands: CCR (Core Central: D9/D10/D11 plus the CBD — priciest), RCR (city fringe) and OCR (suburbs). Government statistics use URA planning-area names instead, which mostly overlap.",
         ko: "부동산 매물과 에이전트들은 우편 구역(D1–D28) 단위로 이야기해요 — 오래된 분류지만 시장은 여전히 이걸로 돌아가요. 분석에서는 이걸 세 구간으로 묶어요: CCR(핵심 중심부: D9·D10·D11 + CBD — 가장 비쌈), RCR(시티 프린지), OCR(외곽). 정부 통계는 URA 계획구역 이름을 따로 쓰는데, 범위는 대체로 겹쳐요."
       },
-      postal: {
-        en: "The neat part: every building in Singapore has its own unique six-digit postal code, and the first two digits are the postal sector — exactly what the D1–D28 districts group together. 018936 → sector 01 → D1, and that specific code is Marina One and nothing else. It's why taxis, deliveries and forms only ever ask for six digits — and why this guide's address lookups work with just a postcode.",
-        ko: "재미있는 부분: 싱가포르의 모든 건물에는 고유한 6자리 우편번호가 있고, 앞 두 자리가 우편 섹터예요 — D1–D28 구역이 묶는 게 바로 이 섹터들이에요. 018936 → 섹터 01 → D1이고, 이 번호는 오직 Marina One 한 건물만 가리켜요. 그래서 택시·배달·서류가 6자리만 물어보는 거고, 이 가이드의 주소 검색도 우편번호만으로 동작해요."
+      postalTitle: { en: "Reading a postal code", ko: "우편번호 읽는 법" },
+      postalVisual: {
+        sectorDigits: "2 3",
+        deliveryDigits: "8 8 5 3",
+        sector: { en: "Sector code", ko: "섹터 코드" },
+        sectorSub: { en: "first 2 digits → the neighbourhood (grouped into D1–D28)", ko: "앞 2자리 → 동네 (D1–D28로 묶여요)" },
+        delivery: { en: "Delivery point", ko: "배달 지점" },
+        deliverySub: { en: "last 4 digits → one specific building", ko: "뒤 4자리 → 건물 딱 하나" }
       },
+      postalParas: [
+        {
+          en: "Singapore's six-digit postal codes (introduced 1 July 1995) are among the most granular in the world: almost every individual building and house has its own unique code.",
+          ko: "싱가포르의 6자리 우편번호(1995년 7월 1일 도입)는 세계에서 가장 정밀한 축에 들어요: 거의 모든 건물과 주택 하나하나가 고유한 번호를 가져요."
+        },
+        {
+          en: "The first two digits are the postal sector — Singapore has 80 of them, grouped into the districts D1–D28 that listings speak in. Sectors 22–23 are D9 (Orchard, River Valley); 01–06 are D1 (Raffles Place, Marina).",
+          ko: "앞 두 자리가 우편 섹터예요 — 싱가포르에 80개가 있고, 이걸 묶은 게 매물 시장이 쓰는 D1–D28 구역이에요. 섹터 22–23은 D9(오차드, River Valley), 01–06은 D1(Raffles Place, Marina)이에요."
+        },
+        {
+          en: "The last four digits are the delivery point — the exact block, tower or house. HDB codes even embed the block number: Block 335 Smith Street is 050335, Block 12 Orchard Road is 230012. Private and landed buildings are numbered sequentially along their street.",
+          ko: "뒤 네 자리는 배달 지점 — 정확히 그 블록·타워·주택이에요. HDB는 아예 블록 번호가 코드에 들어가요: Smith Street 335동은 050335, Orchard Road 12동은 230012. 민간 건물과 단독주택은 도로를 따라 순차 번호가 붙어요."
+        },
+        {
+          en: "The practical payoff: type just the six digits into Google Maps or Grab and you arrive at the right door — no street name needed (SingPost's OCR machines sort mail the same way). Only caveat: very large multi-tower complexes can carry several codes, one per tower or lobby.",
+          ko: "실전 효과: Google Maps나 Grab에 6자리만 입력하면 정확한 입구 앞에 도착해요 — 도로명이 필요 없어요(SingPost의 OCR 분류기도 같은 방식으로 우편을 분류해요). 유일한 예외: 아주 큰 다동(多棟) 단지는 타워·로비별로 번호가 여러 개일 수 있어요."
+        }
+      ],
       cols: {
         d: { en: "District", ko: "구역" },
+        sectors: { en: "Postal sectors", ko: "우편 섹터" },
         name: { en: "Name", ko: "이름" },
         sub: { en: "Sub-areas that matter", ko: "눈여겨볼 동네" },
         rel: { en: "For this guide", ko: "이 가이드에서는" }
       },
       rows: [
-        { d: "D10", name: "Bukit Timah / Holland / Tanglin", sub: { en: "Holland Village, Farrer Road, Sixth Avenue, Tan Kah Kee, the landed Avenues/Namly belt", ko: "Holland Village, Farrer Road, Sixth Avenue, Tan Kah Kee, 단독주택 벨트(Avenues/Namly)" }, rel: { en: "Shortlist (cards 1b, 4)", ko: "후보 (카드 1b, 4)" } },
-        { d: "D21", name: "Upper Bukit Timah", sub: { en: "Beauty World, King Albert Park, Toh Tuck/Eng Kong, Hume", ko: "Beauty World, King Albert Park, Toh Tuck/Eng Kong, Hume" }, rel: { en: "Shortlist (card 1a) — SKIS + the Korean node", ko: "후보 (카드 1a) — SKIS + 한인 거점" } },
-        { d: "D23", name: "Hillview / Bukit Batok / Bukit Panjang", sub: { en: "Hillview is the upscale pocket of a heartland district", ko: "Hillview는 서민형 구역 속의 고급 포켓이에요" }, rel: { en: "Shortlist (card 1c)", ko: "후보 (카드 1c)" } },
-        { d: "D5", name: "Clementi / Buona Vista / West Coast", sub: { en: "Clementi, Dover, one-north, Pasir Panjang", ko: "Clementi, Dover, one-north, Pasir Panjang" }, rel: { en: "Shortlist (card 2)", ko: "후보 (카드 2)" } },
-        { d: "D15", name: "Katong / Marine Parade", sub: { en: "Katong/Joo Chiat, Amber–Meyer, Marine Parade, Tanjong Rhu", ko: "Katong/Joo Chiat, Amber–Meyer, Marine Parade, Tanjong Rhu" }, rel: { en: "Shortlist (card 3)", ko: "후보 (카드 3)" } },
-        { d: "D11", name: "Newton / Novena / Thomson", sub: { en: "Newton, Novena, Chancery", ko: "Newton, Novena, Chancery" }, rel: { en: "Shortlist (card 5)", ko: "후보 (카드 5)" } },
-        { d: "D9", name: "Orchard / River Valley", sub: { en: "Robertson Quay, Emerald Hill", ko: "Robertson Quay, Emerald Hill" }, rel: { en: "Couples more than families", ko: "가족보다는 커플 취향" } },
-        { d: "D16", name: "Bedok / Upper East Coast", sub: { en: "Siglap, Frankel — the quieter landed continuation of D15", ko: "Siglap, Frankel — D15에서 이어지는 조용한 주택가" }, rel: { en: "Adjacent option", ko: "인접 대안" } },
-        { d: "D1/D2", name: "CBD / Tanjong Pagar", sub: { en: "Marina One (the office) is D1; K-town is D2", ko: "Marina One(회사)은 D1, K-타운은 D2" }, rel: { en: "Work + play, not toddler territory", ko: "일과 외식의 동네 — 유아 육아 지역은 아님" } },
-        { d: "D3", name: "Queenstown / Tiong Bahru", sub: { en: "The Holland Close/Ghim Moh HDB hack lives here administratively", ko: "Holland Close/Ghim Moh HDB 꿀팁이 행정상 여기 소속이에요" }, rel: { en: "Budget lever", ko: "예산 조절 카드" } },
-        { d: "D25", name: "Woodlands", sub: { en: "American school orbit", ko: "미국학교 생활권" }, rel: { en: "Off-shortlist", ko: "후보 외" } }
+        { d: "D10", sectors: "24–27", name: "Bukit Timah / Holland / Tanglin", sub: { en: "Holland Village, Farrer Road, Sixth Avenue, Tan Kah Kee, the landed Avenues/Namly belt", ko: "Holland Village, Farrer Road, Sixth Avenue, Tan Kah Kee, 단독주택 벨트(Avenues/Namly)" }, rel: { en: "Shortlist (cards 1b, 4)", ko: "후보 (카드 1b, 4)" } },
+        { d: "D21", sectors: "58–59", name: "Upper Bukit Timah", sub: { en: "Beauty World, King Albert Park, Toh Tuck/Eng Kong, Hume", ko: "Beauty World, King Albert Park, Toh Tuck/Eng Kong, Hume" }, rel: { en: "Shortlist (card 1a) — SKIS + the Korean node", ko: "후보 (카드 1a) — SKIS + 한인 거점" } },
+        { d: "D23", sectors: "65–68", name: "Hillview / Bukit Batok / Bukit Panjang", sub: { en: "Hillview is the upscale pocket of a heartland district", ko: "Hillview는 서민형 구역 속의 고급 포켓이에요" }, rel: { en: "Shortlist (card 1c)", ko: "후보 (카드 1c)" } },
+        { d: "D5", sectors: "11–13", name: "Clementi / Buona Vista / West Coast", sub: { en: "Clementi, Dover, one-north, Pasir Panjang", ko: "Clementi, Dover, one-north, Pasir Panjang" }, rel: { en: "Shortlist (card 2)", ko: "후보 (카드 2)" } },
+        { d: "D15", sectors: "42–45", name: "Katong / Marine Parade", sub: { en: "Katong/Joo Chiat, Amber–Meyer, Marine Parade, Tanjong Rhu", ko: "Katong/Joo Chiat, Amber–Meyer, Marine Parade, Tanjong Rhu" }, rel: { en: "Shortlist (card 3)", ko: "후보 (카드 3)" } },
+        { d: "D11", sectors: "28–30", name: "Newton / Novena / Thomson", sub: { en: "Newton, Novena, Chancery", ko: "Newton, Novena, Chancery" }, rel: { en: "Shortlist (card 5)", ko: "후보 (카드 5)" } },
+        { d: "D9", sectors: "22–23", name: "Orchard / River Valley", sub: { en: "Robertson Quay, Emerald Hill", ko: "Robertson Quay, Emerald Hill" }, rel: { en: "Couples more than families", ko: "가족보다는 커플 취향" } },
+        { d: "D16", sectors: "46–48", name: "Bedok / Upper East Coast", sub: { en: "Siglap, Frankel — the quieter landed continuation of D15", ko: "Siglap, Frankel — D15에서 이어지는 조용한 주택가" }, rel: { en: "Adjacent option", ko: "인접 대안" } },
+        { d: "D1/D2", sectors: "01–08", name: "CBD / Tanjong Pagar", sub: { en: "Marina One (the office) is D1; K-town is D2", ko: "Marina One(회사)은 D1, K-타운은 D2" }, rel: { en: "Work + play, not toddler territory", ko: "일과 외식의 동네 — 유아 육아 지역은 아님" } },
+        { d: "D3", sectors: "14–16", name: "Queenstown / Tiong Bahru", sub: { en: "The Holland Close/Ghim Moh HDB hack lives here administratively", ko: "Holland Close/Ghim Moh HDB 꿀팁이 행정상 여기 소속이에요" }, rel: { en: "Budget lever", ko: "예산 조절 카드" } },
+        { d: "D25", sectors: "72–73", name: "Woodlands", sub: { en: "American school orbit", ko: "미국학교 생활권" }, rel: { en: "Off-shortlist", ko: "후보 외" } }
       ],
       notes: [
         {
