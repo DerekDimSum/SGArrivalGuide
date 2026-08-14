@@ -600,6 +600,33 @@ tbody tr:last-child th, tbody tr:last-child td { border-bottom: none; }
 .c-east { grid-area: e; }
 .c-south { grid-area: s; }
 
+/* region heads — CENTRAL / WEST / EAST / NORTH / SOUTH */
+.region-head {
+  margin: 3rem 0 0.2rem; padding: 0.4rem 0 0.5rem;
+  border-bottom: 2.5px solid var(--accent);
+  font-size: 1.05rem; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--accent);
+}
+.region-head:first-of-type { margin-top: 1.6rem; }
+
+/* MRT line badges + station list */
+.mrt-list { list-style: none; padding: 0; margin: 0.3em 0 0.8em; }
+.mrt-list li { font-size: 0.85rem; padding: 0.16em 0; display: flex; align-items: center; flex-wrap: wrap; gap: 0.15em; }
+.mrt-badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 2em; padding: 0.05em 0.4em; margin-right: 0.25em;
+  border-radius: 999px; font-size: 0.72em; font-weight: 700; letter-spacing: 0.04em;
+}
+.area-guide-body h5 {
+  font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.06em; color: var(--ink-soft); margin: 0.9em 0 0.25em;
+}
+.enclave-list { list-style: none; padding: 0; margin: 0.3em 0 0.8em; }
+.enclave-list li { font-size: 0.85rem; padding: 0.25em 0; }
+.enclave-list li strong { color: var(--ink); }
+.atlas-ratings { border-top: 1px dashed var(--line); padding-top: 0.5em; }
+.area-guide .local-take { margin-top: 0.7em; }
+
 /* zone letters + heartland hub diagram */
 .zone-letter {
   display: inline-flex; align-items: center; justify-content: center;

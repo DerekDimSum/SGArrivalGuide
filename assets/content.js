@@ -48,6 +48,15 @@ var CONTENT = {
     mapLayerAreas: { en: "Researched areas", ko: "조사된 지역" },
     mapLayerPins: { en: "Neighbourhood pins", ko: "동네 핀" },
     mapLayerLandmarks: { en: "Schools, parks & landmarks", ko: "학교·공원·랜드마크" },
+    areaGuide: { en: "Area guide — MRT, enclaves & local insight", ko: "동네 가이드 — MRT · 세부 구역 · 현지 팁" },
+    mrtLabel: { en: "MRT", ko: "MRT" },
+    enclavesTitle: { en: "Micro-enclaves", ko: "세부 구역" },
+    hubsLabel: { en: "Anchor hubs", ko: "생활 거점" },
+    ratingCommute: { en: "Commute", ko: "통근" },
+    ratingExpat: { en: "Expat density", ko: "외국인 밀도" },
+    ratingFood: { en: "Food & hawkers", ko: "맛집·호커" },
+    ratingKids: { en: "Kids & family", ko: "아이·가족" },
+    ratingQuiet: { en: "Tranquility", ko: "조용함" },
     mapAddressLabel: { en: "Look up an address", ko: "주소로 찾아보기" },
     mapAddressPh: { en: "Postal code or building — e.g. 138632 or Great World City", ko: "우편번호나 건물명 — 예: 138632, Great World City" },
     mapAddressBtn: { en: "Locate", ko: "위치 보기" },
@@ -1086,7 +1095,7 @@ var CONTENT = {
         west: { label: { en: "WEST", ko: "서부" }, hint: "Jurong · Clementi · Bukit Timah" },
         central: { label: { en: "CENTRAL", ko: "중부" }, hint: "CBD · Orchard · River Valley" },
         east: { label: { en: "EAST", ko: "동부" }, hint: "Katong · Bedok · Tampines" },
-        south: { label: { en: "SOUTH", ko: "남부" }, hint: "Sentosa Cove" }
+        south: { label: { en: "SOUTH", ko: "남부" }, hint: "Sentosa Cove · Keppel Bay" }
       },
       hubDiagram: {
         title: { en: "How a heartland town is built", ko: "헤어틀랜드 타운의 구조" },
@@ -1097,9 +1106,16 @@ var CONTENT = {
       },
       researchedBadge: { en: "researched — card below", ko: "상세 조사됨 — 아래 카드" },
       sketchBadge: { en: "no researched figures yet", ko: "조사된 시세 없음" },
+      regions: [
+        { id: "central", title: { en: "Central region", ko: "중부 권역" } },
+        { id: "west", title: { en: "West region", ko: "서부 권역" } },
+        { id: "east", title: { en: "East region", ko: "동부 권역" } },
+        { id: "north", title: { en: "North & heartland region", ko: "북부 · 헤어틀랜드 권역" } },
+        { id: "south", title: { en: "South region", ko: "남부 권역" } }
+      ],
       zones: [
         {
-          id: "downtown", letter: "A", d: "D01 · 02 · 06 · 07",
+          id: "downtown", letter: "A", region: "central", d: "D01 · 02 · 07",
           title: { en: "The financial & high-rise downtown core", ko: "금융 · 하이라이즈 다운타운 코어" },
           intro: {
             en: "Singapore's vertical heart: glass towers, integrated malls and heritage shophouse rows stacked together. Life runs through air-conditioned underground networks minutes from the office — street culture comes from dining streets, not neighbourhoods.",
@@ -1107,7 +1123,7 @@ var CONTENT = {
           }
         },
         {
-          id: "prime", letter: "B", d: "D09",
+          id: "prime", letter: "B", region: "central", d: "D09 · 10",
           title: { en: "Central core & high-street luxury", ko: "중심 코어 · 하이스트리트 럭셔리" },
           intro: {
             en: "The prime shopping-and-dining belt: behind Orchard's mega-malls sit quiet, leafy residential side streets on elevated hills, and the river fringe adds promenade living at Robertson Quay.",
@@ -1115,7 +1131,7 @@ var CONTENT = {
           }
         },
         {
-          id: "west", letter: "C", d: "D05 · 10 · 21 · 23",
+          id: "west", letter: "C", region: "west", d: "D05 · 10 · 21 · 23",
           title: { en: "The elite green belt & western academic corridor", ko: "엘리트 그린벨트 · 서부 아카데믹 코리도" },
           intro: {
             en: "Low-density zoning, nature reserves and the education hubs — from embassy-belt Tanglin and the UNESCO-listed Botanic Gardens through the Bukit Timah corridor to the NUS/UWCSEA academic west. The corridor where this guide's researched shortlist (and the Korean family cluster) lives.",
@@ -1123,7 +1139,7 @@ var CONTENT = {
           }
         },
         {
-          id: "east", letter: "D", d: "D15 · 16",
+          id: "east", letter: "D", region: "east", d: "D15 · 16",
           title: { en: "The coastal & cultural east", ko: "해안 · 문화의 동부" },
           intro: {
             en: "The relaxed coastal alternative to the glass towers: beach-park weekends, Peranakan heritage streets — and since the TEL, direct trains into the CBD.",
@@ -1131,16 +1147,16 @@ var CONTENT = {
           }
         },
         {
-          id: "fringe", letter: "E", d: "D03 · 08 · 11 · 12 · 20",
-          title: { en: "Heritage enclaves & city fringe", ko: "헤리티지 동네 · 시티 프린지" },
+          id: "fringe", letter: "E", region: "central", d: "D03 · 08 · 11 · 12 · 13 · 20",
+          title: { en: "Heritage enclaves, medical hub & central fringe", ko: "헤리티지 동네 · 메디컬 허브 · 센트럴 프린지" },
           intro: {
             en: "Five to ten minutes off the core with deep character: Art Deco Tiong Bahru, Little India's colour, the Novena medical hub, Thomson's nature-and-supper strip.",
             ko: "중심에서 5–10분 거리, 개성이 진한 동네들이에요. 아르데코의 Tiong Bahru, 컬러풀한 Little India, 노베나 의료 허브, 자연과 야식의 Thomson까지."
           }
         },
         {
-          id: "heartlands", letter: "F", d: "D18 · 19 · 22 · 23 · 25",
-          title: { en: "The heartlands & regional centres", ko: "헤어틀랜드 · 권역 중심지" },
+          id: "heartlands", letter: "F", region: "north", d: "D18 · 19 · 22 · 23 · 25",
+          title: { en: "Master-planned townships & regional hubs", ko: "계획도시 타운 · 권역 허브" },
           intro: {
             en: "Master-planned towns where most Singaporeans live — each self-contained, with an MRT-and-bus interchange, malls, hawker centres and clinics at its core. The island's best space per dollar.",
             ko: "대부분의 싱가포르인이 사는 계획도시들이에요 — 각 타운이 MRT·버스 인터체인지, 몰, 호커센터, 클리닉을 중심에 둔 자족 도시예요. 돈 대비 공간은 섬에서 최고예요."
@@ -1148,8 +1164,8 @@ var CONTENT = {
           hub: true
         },
         {
-          id: "sentosa", letter: "G", d: "D04",
-          title: { en: "Island waterfront resort living", ko: "아일랜드 워터프런트 리조트 라이프" },
+          id: "sentosa", letter: "G", region: "south", d: "D04",
+          title: { en: "Island waterfront & Keppel Bay", ko: "아일랜드 워터프런트 · 케포베이" },
           intro: {
             en: "An oceanfront enclave off the mainland grid — resort pace, yacht berths, and the one spot on the map with its own foreign-ownership rules.",
             ko: "본섬 그리드에서 떨어진 오션프런트 동네예요 — 리조트의 속도, 요트 정박지, 그리고 지도에서 유일하게 외국인 소유 규정이 다른 곳이에요."
@@ -1159,6 +1175,21 @@ var CONTENT = {
       entries: [
         {
           id: "beauty-world", zone: "west", cardId: "bukit-timah",
+          mrt: [
+            { l: ["dt"], s: "Beauty World · King Albert Park" }
+          ],
+          ratings: { commute: 2, expat: 2, food: 3, kids: 3, quiet: 2 },
+          rent3: "S$5,500–7,000", rent4: "S$8,500–12,000",
+          hubs: "Beauty World Centre · Bukit Timah Plaza · The LINQ",
+          enclaves: [
+            { name: "Chun Tin & Lorong Kilat", body: { en: "Shophouse streets of Korean BBQ, specialty cafes and late-night supper spots.", ko: "한국 BBQ, 스페셜티 카페, 심야 야식집이 이어지는 숍하우스 거리." } },
+            { name: "Bukit Timah Plaza node", body: { en: "Walkable to SKIS and Sol Mart, ringed by quiet condo developments.", ko: "SKIS와 Sol Mart 도보권 — 주변은 조용한 콘도 단지들이에요." } },
+            { name: "Jalan Jurong Kechil", body: { en: "Low-rise condos and cluster housing bordering the nature trails.", ko: "자연 트레일과 맞닿은 저층 콘도·클러스터하우스 구역." } }
+          ],
+          insight: {
+            en: "The DTL from Beauty World runs a direct, roughly 20-minute connection into Bugis and the financial district.",
+            ko: "Beauty World에서 DTL로 Bugis·금융가까지 약 20분 직행이에요."
+          },
           name: { en: "Beauty World / Upper Bukit Timah", ko: "Beauty World · Upper Bukit Timah" },
           dist: "D21", vibe: { en: "Leafy", ko: "숲세권" }, researched: true,
           tags: ["korean", "skis", "schools", "families", "quiet", "mrt", "helper-room", "landed"],
@@ -1169,6 +1200,22 @@ var CONTENT = {
         },
         {
           id: "kap-sixth", zone: "west", cardId: "bukit-timah",
+          mrt: [
+            { l: ["dt"], s: "King Albert Park · Sixth Avenue · Tan Kah Kee" },
+            { l: ["dt", "cc"], s: "Botanic Gardens" }
+          ],
+          ratings: { commute: 2, expat: 2, food: 2, kids: 3, quiet: 3 },
+          rent3: "S$6,800–9,000", rent4: "S$10,000–16,000+ (landed S$15k–35k+)",
+          hubs: "KAP Mall · Guthrie House · Coronation Plaza",
+          enclaves: [
+            { name: "King Albert Park & Blackmore", body: { en: "Quiet pocket sitting right on the Rail Corridor trail and Rifle Range Nature Park.", ko: "Rail Corridor 트레일과 Rifle Range 자연공원에 바로 붙은 조용한 포켓." } },
+            { name: "Sixth Avenue", body: { en: "Landed-housing avenue with neighbourhood anchors (Cold Storage at Guthrie House) and casual dining.", ko: "단독주택 거리 — Guthrie House의 Cold Storage 같은 동네 앵커와 캐주얼 다이닝." } },
+            { name: "Tan Kah Kee / Coronation", body: { en: "Epicentre of elite local schools (Hwa Chong, Nanyang Primary) and Coronation Plaza retail.", ko: "명문 로컬 학교(Hwa Chong, Nanyang Primary)의 진앙지 — Coronation Plaza 상권." } }
+          ],
+          insight: {
+            en: "Bukit Timah Road jams hard during the 7–8 AM school drop-off window near the big local school clusters.",
+            ko: "로컬 명문학교 클러스터 근처 Bukit Timah Road는 등교 시간(오전 7–8시) 정체가 심해요."
+          },
           name: { en: "KAP / Sixth Avenue / Tan Kah Kee", ko: "KAP · Sixth Avenue · Tan Kah Kee" },
           dist: "D10/D21", vibe: { en: "Prestige", ko: "명문가" }, researched: true,
           tags: ["schools", "quiet", "landed", "families", "skis", "mrt"],
@@ -1179,6 +1226,20 @@ var CONTENT = {
         },
         {
           id: "hillview", zone: "west", cardId: "bukit-timah",
+          mrt: [
+            { l: ["dt"], s: "Hillview · Cashew" }
+          ],
+          ratings: { commute: 2, expat: 1, food: 1, kids: 3, quiet: 3 },
+          rent3: "S$4,400–5,500", rent4: "S$6,800–8,500",
+          hubs: "HillV2 (CS Fresh) · The Rail Mall",
+          enclaves: [
+            { name: "Hillview Rise", body: { en: "The condo strip anchored by the HillV2 lifestyle mall.", ko: "HillV2 라이프스타일 몰을 중심으로 한 콘도 스트립." } },
+            { name: "Dairy Farm edge", body: { en: "Newer low-density builds bordering Dairy Farm Nature Park.", ko: "Dairy Farm 자연공원과 맞닿은 신축 저밀도 단지." } }
+          ],
+          insight: {
+            en: "Delivers a much lower rent per square foot than Sixth Avenue while sitting on the very same Downtown line.",
+            ko: "같은 다운타운선인데 Sixth Avenue보다 평당 임대료가 확연히 낮아요."
+          },
           name: { en: "Hillview", ko: "Hillview" },
           dist: "D23", vibe: { en: "Tucked-away", ko: "아늑" }, researched: true,
           tags: ["value", "quiet", "skis", "families", "amenities", "landed"],
@@ -1189,6 +1250,23 @@ var CONTENT = {
         },
         {
           id: "clementi-bv", zone: "west", cardId: "clementi",
+          mrt: [
+            { l: ["ew"], s: "Clementi · Dover" },
+            { l: ["ew", "cc"], s: "Buona Vista" },
+            { l: ["cc"], s: "one-north · Kent Ridge · Haw Par Villa" }
+          ],
+          ratings: { commute: 2, expat: 2, food: 3, kids: 3, quiet: 2 },
+          rent3: "S$6,000–7,500", rent4: "S$9,500–13,000",
+          hubs: "Clementi Mall · The Star Vista · 321 Clementi",
+          enclaves: [
+            { name: "Clementi Central", body: { en: "High-density HDB town centre — major hawker market, mall, bus interchange.", ko: "고밀도 HDB 타운 센터 — 대형 호커 시장, 몰, 버스 인터체인지." } },
+            { name: "Dover / Singapore Poly pocket", body: { en: "Educational belt around UWCSEA Dover and quiet condos.", ko: "UWCSEA Dover를 낀 교육 벨트와 조용한 콘도들." } },
+            { name: "West Coast highway belt", body: { en: "Condos with coastal access via West Coast Park (Parc Clematis, The Trilinq).", ko: "West Coast Park로 이어지는 해안 접근형 콘도(Parc Clematis, The Trilinq)." } }
+          ],
+          insight: {
+            en: "West Coast Park is the west's weekend anchor — big adventure playgrounds, BBQ pits and sea views.",
+            ko: "West Coast Park가 서부의 주말 앵커예요 — 대형 모험 놀이터, BBQ장, 바다 전망까지."
+          },
           name: { en: "Clementi / Buona Vista / West Coast", ko: "Clementi · Buona Vista · West Coast" },
           dist: "D5", vibe: { en: "Practical", ko: "실속" }, researched: true,
           tags: ["value", "hdb", "mrt", "families", "schools"],
@@ -1199,6 +1277,22 @@ var CONTENT = {
         },
         {
           id: "holland-v", zone: "west", cardId: "holland-village",
+          mrt: [
+            { l: ["cc"], s: "Holland Village · Farrer Road" },
+            { l: ["ew"], s: "Commonwealth (10 min walk)" }
+          ],
+          ratings: { commute: 2, expat: 3, food: 2, kids: 3, quiet: 2 },
+          rent3: "~S$8,000–10,500", rent4: "~S$13,000–18,000+",
+          hubs: "Holland Village enclave · One Holland Village · Chip Bee Gardens",
+          enclaves: [
+            { name: "Holland V core", body: { en: "Shophouse pedestrian precinct (Lorong Mambong) — outdoor dining, craft beer bars.", ko: "숍하우스 보행자 구역(Lorong Mambong) — 야외 다이닝과 크래프트 비어 바." } },
+            { name: "Chip Bee Gardens", body: { en: "Preserved low-rise colonial estate across the road — artisanal bakeries, art galleries.", ko: "길 건너 보존된 저층 콜로니얼 단지 — 아르티장 베이커리와 갤러리." } },
+            { name: "Leedon / Farrer Road corridor", body: { en: "High-density luxury condos on expansive plots (D'Leedon, Leedon Residence).", ko: "넓은 부지의 고밀도 럭셔리 콘도(D'Leedon, Leedon Residence)." } }
+          ],
+          insight: {
+            en: "The Circle line from Holland Village reaches the one-north tech hubs in two stops and HarbourFront in about 15 minutes.",
+            ko: "Holland Village역에서 서클선으로 one-north 테크 허브까지 두 정거장, HarbourFront까지 약 15분이에요."
+          },
           name: { en: "Holland Village / Farrer", ko: "Holland Village · Farrer" },
           dist: "D10", vibe: { en: "Sociable", ko: "사교" }, researched: true,
           tags: ["expat", "families", "amenities", "mrt", "schools", "city", "br4"],
@@ -1209,6 +1303,21 @@ var CONTENT = {
         },
         {
           id: "east-coast", zone: "east", cardId: "east-coast",
+          mrt: [
+            { l: ["te"], s: "Tanjong Katong · Marine Parade · Marine Terrace" }
+          ],
+          ratings: { commute: 3, expat: 3, food: 3, kids: 3, quiet: 2 },
+          rent3: "~S$6,000–8,500", rent4: "~S$8,500–14,000",
+          hubs: "i12 Katong · Parkway Parade · Katong V",
+          enclaves: [
+            { name: "Meyer & Amber Road", body: { en: "High-rise luxury strip with sea views and pedestrian underpasses to East Coast Park.", ko: "바다 전망의 하이라이즈 럭셔리 스트립 — 지하보도로 East Coast Park 직결." } },
+            { name: "Joo Chiat & Katong core", body: { en: "Low-rise shophouse living, boutique cafes, Peranakan heritage eateries.", ko: "저층 숍하우스 주거, 부티크 카페, 페라나칸 전통 맛집." } },
+            { name: "Telok Kurau & Frankel estate", body: { en: "Leafy low-rise landed-and-boutique-condo sanctuary set back from the commercial noise.", ko: "상업지 소음에서 물러난 푸른 저층 단독·부티크 콘도 단지." } }
+          ],
+          insight: {
+            en: "The TEL stations (Marine Parade, Tanjong Katong) put Marina Bay and Orchard about 15 minutes away by direct train.",
+            ko: "TEL역(Marine Parade, Tanjong Katong)에서 Marina Bay·Orchard까지 직행 약 15분이에요."
+          },
           name: { en: "East Coast / Katong", ko: "East Coast · Katong" },
           dist: "D15", vibe: { en: "Breezy", ko: "여유" }, researched: true,
           tags: ["beach", "families", "commute", "mrt", "city", "helper-room", "value", "br4", "landed"],
@@ -1219,6 +1328,22 @@ var CONTENT = {
         },
         {
           id: "newton-novena", zone: "fringe", cardId: "newton",
+          mrt: [
+            { l: ["ns", "dt"], s: "Newton" },
+            { l: ["ns"], s: "Novena" }
+          ],
+          ratings: { commute: 3, expat: 2, food: 3, kids: 3, quiet: 2 },
+          rent3: "~S$7,200–9,500", rent4: "~S$9,500–14,500",
+          hubs: "United Square · Velocity · Square 2 · Newton Food Centre",
+          enclaves: [
+            { name: "Novena Square hub", body: { en: "Maximum convenience — direct MRT access, Velocity and Square 2, medical towers.", ko: "편의성 최고 구간 — MRT 직결, Velocity·Square 2, 메디컬 타워." } },
+            { name: "United Square belt", body: { en: "The preschool-tuition-enrichment mall belt; extremely popular with young families.", ko: "유치원·과외·학원 몰 벨트 — 어린 자녀 가족들에게 인기 최고예요." } },
+            { name: "Newton Circus fringe", body: { en: "Residential condo pockets around the famous open-air Newton Food Centre.", ko: "유명한 야외 호커 Newton Food Centre를 둘러싼 콘도 포켓." } }
+          ],
+          insight: {
+            en: "Older Novena/Newton condos often give 1,800+ sq ft 3BRs with dedicated helper quarters — dramatically more space than new launches.",
+            ko: "Novena·Newton의 구축 콘도는 3BR이 1,800sqft를 넘고 전용 헬퍼룸까지 있는 경우가 많아요 — 신축과는 차원이 다른 공간이에요."
+          },
           name: { en: "Newton / Novena", ko: "Newton · Novena" },
           dist: "D11", vibe: { en: "Central", ko: "도심" }, researched: true,
           tags: ["commute", "mrt", "city", "schools", "helper-room", "amenities", "br4"],
@@ -1229,6 +1354,24 @@ var CONTENT = {
         },
         {
           id: "river-valley", zone: "prime",
+          mrt: [
+            { l: ["te"], s: "Great World · Havelock" },
+            { l: ["dt"], s: "Fort Canning" },
+            { l: ["ns"], s: "Somerset (10–12 min walk uphill)" }
+          ],
+          ratings: { commute: 3, expat: 3, food: 2, kids: 2, quiet: 2 },
+          rent3: "~S$8,500–11,000", rent4: "~S$13,000–18,000+",
+          hubs: "Great World (TEL) · UE Square · Valley Point · Robertson Walk",
+          enclaves: [
+            { name: "Robertson Promenade", body: { en: "High-energy riverfront dining (RiverGate, Martin Modern), dog-friendly promenades, an active alfresco culture.", ko: "활기찬 강변 다이닝(RiverGate, Martin Modern), 반려견 친화 산책로, 야외 카페 문화." } },
+            { name: "Kim Seng / Great World pocket", body: { en: "Direct TEL connection (Rivière, Miramar) around an integrated family mall; the quieter residential end.", ko: "TEL 직결(Rivière, Miramar)에 가족형 몰이 통합된, 좀 더 조용한 주거 구간." } },
+            { name: "Fort Canning / Clemenceau gateway", body: { en: "Mixed-use convenience node (UE Square Residences, Aspen Heights, Robertson Blue) at the foot of Fort Canning Park — Fort Canning MRT, a 24-hour Cold Storage, preschools and gyms.", ko: "Fort Canning 공원 초입의 복합 편의 노드(UE Square Residences, Aspen Heights, Robertson Blue) — Fort Canning역, 24시간 Cold Storage, 유치원, 피트니스까지." } },
+            { name: "Oxley / Killiney ridge", body: { en: "Elevated quiet slope toward Somerset — conserved shophouses, legacy boutique condos (Belle Vue Residences, Oxley Edge), old-school kopitiams on Killiney Road.", ko: "Somerset로 이어지는 조용한 언덕 — 보존 숍하우스, 구축 부티크 콘도(Belle Vue Residences, Oxley Edge), Killiney Road의 전통 코피티암." } }
+          ],
+          insight: {
+            en: "Units facing the Robertson Quay promenade hear cafe-and-bistro chatter until about 11 PM on weekends; high floors facing north or east toward Fort Canning are the quiet stacks.",
+            ko: "Robertson Quay 산책로를 바로 마주보는 유닛은 주말 밤 11시까지 카페 소음이 올라와요. Fort Canning 방향(북·동향) 고층 스택이 조용한 라인이에요."
+          },
           name: { en: "River Valley / Robertson Quay", ko: "River Valley · Robertson Quay" },
           dist: "D9", vibe: { en: "Riverside", ko: "리버사이드" },
           tags: ["city", "commute", "mrt", "amenities"],
@@ -1239,6 +1382,24 @@ var CONTENT = {
         },
         {
           id: "orchard-tanglin", zone: "prime",
+          mrt: [
+            { l: ["ns", "te"], s: "Orchard" },
+            { l: ["te"], s: "Orchard Boulevard · Napier" },
+            { l: ["ns"], s: "Somerset" }
+          ],
+          ratings: { commute: 3, expat: 3, food: 2, kids: 2, quiet: 3 },
+          rent3: "~S$9,500–14,000", rent4: "~S$15,000–28,000+",
+          hubs: "ION Orchard · Paragon · Tanglin Mall · Dempsey Hill",
+          enclaves: [
+            { name: "Ardmore, Claymore & Scotts", body: { en: "Ultra-exclusive high-rise enclave — Ardmore Park, Nouvel 18.", ko: "초고급 하이라이즈 구역 — Ardmore Park, Nouvel 18." } },
+            { name: "Cairnhill & Emerald Hill", body: { en: "Elevated residential ridge behind Orchard Road — high-end condos beside conserved Peranakan shophouse lanes.", ko: "오차드 뒤편의 고지대 주거 능선 — 고급 콘도와 보존된 페라나칸 숍하우스 골목." } },
+            { name: "Tanglin / Nassim embassy belt", body: { en: "Low-rise luxury condos, GCBs and embassies, with direct access to the UNESCO Botanic Gardens.", ko: "저층 럭셔리 콘도, GCB, 대사관 벨트 — 유네스코 보타닉 가든이 바로 옆이에요." } },
+            { name: "Dempsey Hill", body: { en: "Former British barracks turned lifestyle dining, galleries and gourmet grocers (Huber's).", ko: "옛 영국군 막사를 개조한 라이프스타일 다이닝·갤러리·고메 그로서리(Huber's)." } }
+          ],
+          insight: {
+            en: "Tanglin Mall is the expat families' community anchor — international grocers, children's boutiques and family cafes.",
+            ko: "Tanglin Mall이 외국인 가족들의 커뮤니티 앵커예요 — 인터내셔널 그로서리, 아동 전문숍, 가족 카페가 모여 있어요."
+          },
           name: { en: "Orchard / Tanglin", ko: "Orchard · Tanglin" },
           dist: "D9/D10", vibe: { en: "Polished", ko: "럭셔리" },
           tags: ["city", "commute", "amenities", "expat", "mrt"],
@@ -1249,6 +1410,21 @@ var CONTENT = {
         },
         {
           id: "tiong-bahru", zone: "fringe",
+          mrt: [
+            { l: ["ew"], s: "Tiong Bahru · Redhill · Queenstown" },
+            { l: ["te"], s: "Havelock (eastern edge)" }
+          ],
+          ratings: { commute: 3, expat: 2, food: 3, kids: 2, quiet: 2 },
+          rent3: "~S$6,500–8,000", rent4: "~S$9,000–12,000",
+          hubs: "Tiong Bahru Plaza · Anchorpoint · Tiong Bahru Market",
+          enclaves: [
+            { name: "Tiong Bahru heritage core", body: { en: "Low-rise pre-war walk-ups, indie bookshops, bakery strips and the famous wet market.", ko: "전전(戰前) 저층 워크업, 인디 서점, 베이커리 거리, 유명 재래시장." } },
+            { name: "Redhill / Alexandra corridor", body: { en: "High-rise modern condos and new HDB along the East-West line.", ko: "동서선 라인의 현대식 고층 콘도와 신축 HDB." } }
+          ],
+          insight: {
+            en: "The pre-war walk-ups have no lifts and no parking lots — factor in stairs and street parking before falling for the charm.",
+            ko: "전전 워크업엔 엘리베이터도 전용 주차장도 없어요 — 감성에 반하기 전에 계단과 노상 주차를 계산하세요."
+          },
           name: { en: "Tiong Bahru / Queenstown", ko: "Tiong Bahru · Queenstown" },
           dist: "D3", vibe: { en: "Heritage-hip", ko: "힙한 구도심" },
           tags: ["city", "hdb", "mrt", "value", "commute"],
@@ -1258,7 +1434,45 @@ var CONTENT = {
           }
         },
         {
+          id: "woodleigh", zone: "fringe",
+          name: { en: "Woodleigh / Bidadari / Potong Pasir", ko: "Woodleigh · Bidadari · Potong Pasir" },
+          dist: "D13", vibe: { en: "New-parkside", ko: "신흥 공원세권" },
+          tags: ["schools", "families", "mrt", "value", "quiet"],
+          mrt: [
+            { l: ["ne"], s: "Woodleigh · Potong Pasir" }
+          ],
+          ratings: { commute: 2, expat: 2, food: 2, kids: 3, quiet: 2 },
+          rent3: "~S$5,500–7,200", rent4: "~S$7,800–10,500",
+          hubs: "The Woodleigh Mall · The Poiz Centre",
+          enclaves: [
+            { name: "Woodleigh / Bidadari Park", body: { en: "Master-planned parkland living around The Woodleigh Mall, Alkaff Lake and brand-new condos (Park Colonial, The Woodleigh Residences).", ko: "The Woodleigh Mall, Alkaff Lake, 신축 콘도(Park Colonial, The Woodleigh Residences)를 둘러싼 계획형 공원 주거지." } },
+            { name: "Stamford American (SAIS) orbit", body: { en: "Condo clusters catering heavily to SAIS faculty and expat families.", ko: "SAIS 교직원과 외국인 가족 수요가 몰리는 콘도 클러스터." } }
+          ],
+          insight: {
+            en: "With Stamford American International School right at Woodleigh MRT, this is a dense pocket for American and international families chasing the shortest possible school run.",
+            ko: "Stamford American 국제학교가 Woodleigh역 바로 앞이라, 통학 시간을 최소화하려는 미국계·국제 가족들이 밀집한 포켓이에요."
+          },
+          body: {
+            en: "A rapidly growing central-fringe corridor of brand-new master-planned parkland, international schooling and fresh retail — Bidadari's lakes and lawns wrapped by just-built condos.",
+            ko: "빠르게 성장 중인 센트럴 프린지 코리도예요 — 갓 계획된 공원(Bidadari의 호수와 잔디밭), 국제학교, 새 리테일이 신축 콘도들과 함께 자라나고 있어요."
+          }
+        },
+        {
           id: "tanjong-rhu", zone: "east",
+          mrt: [
+            { l: ["te"], s: "Tanjong Rhu · Katong Park" },
+            { l: ["cc"], s: "Stadium · Mountbatten" }
+          ],
+          ratings: { commute: 3, expat: 2, food: 1, kids: 2, quiet: 3 },
+          rent3: "~S$6,500–8,000", rent4: "~S$9,000–12,500",
+          hubs: "Kallang Wave Mall · Leisure Park Kallang",
+          enclaves: [
+            { name: "Tanjong Rhu promenade", body: { en: "High-density condo belt (Waterford Residence, Camelot) overlooking the Kallang Basin.", ko: "Kallang Basin을 내려다보는 고밀도 콘도 벨트(Waterford Residence, Camelot)." } }
+          ],
+          insight: {
+            en: "Exceptionally quiet with almost no street-level shops — residents run groceries at Kallang Wave Mall or drive to Katong.",
+            ko: "거리 상점이 거의 없을 만큼 조용해요 — 장보기는 Kallang Wave Mall이나 Katong까지 이동이 필요해요."
+          },
           name: { en: "Tanjong Rhu / Mountbatten", ko: "Tanjong Rhu · Mountbatten" },
           dist: "D15", vibe: { en: "Waterfront-quiet", ko: "조용한 수변" },
           tags: ["quiet", "beach", "amenities", "commute"],
@@ -1269,6 +1483,22 @@ var CONTENT = {
         },
         {
           id: "thomson", zone: "fringe",
+          mrt: [
+            { l: ["te"], s: "Upper Thomson · Bright Hill · Springleaf" },
+            { l: ["cc", "te"], s: "Caldecott" },
+            { l: ["cc"], s: "Marymount" }
+          ],
+          ratings: { commute: 2, expat: 1, food: 3, kids: 3, quiet: 3 },
+          rent3: "~S$5,500–7,000", rent4: "~S$8,000–11,000",
+          hubs: "Thomson Plaza · Upper Thomson food strip",
+          enclaves: [
+            { name: "Upper Thomson food strip", body: { en: "Shophouses packed with late-night roti prata, ice cream parlours and cafes.", ko: "심야 로티 프라타, 아이스크림 가게, 카페가 빼곡한 숍하우스 거리." } },
+            { name: "Sin Ming & Longhaus", body: { en: "Quiet pockets mixing low-density landed housing with newer TEL-side condos.", ko: "저밀도 단독주택과 TEL역 신축 콘도가 섞인 조용한 포켓." } }
+          ],
+          insight: {
+            en: "Direct backyard access to the MacRitchie Reservoir trails — the trail runners' and hikers' home turf.",
+            ko: "MacRitchie 저수지 트레일이 사실상 뒷마당이에요 — 트레일 러너와 하이커들의 홈그라운드."
+          },
           name: { en: "Thomson / Upper Thomson", ko: "Thomson · Upper Thomson" },
           dist: "D20/D26", vibe: { en: "Local-green", ko: "로컬 그린" },
           tags: ["quiet", "landed", "value", "families", "mrt"],
@@ -1279,6 +1509,22 @@ var CONTENT = {
         },
         {
           id: "serangoon", zone: "heartlands",
+          mrt: [
+            { l: ["ne", "cc"], s: "Serangoon" },
+            { l: ["ne"], s: "Kovan" },
+            { l: ["cc"], s: "Lorong Chuan (closest to the French school)" }
+          ],
+          ratings: { commute: 2, expat: 2, food: 3, kids: 3, quiet: 3 },
+          rent3: "~S$5,000–6,500", rent4: "~S$7,000–10,000",
+          hubs: "myVillage · Chomp Chomp Food Centre · NEX",
+          enclaves: [
+            { name: "Serangoon Gardens Circus", body: { en: "The village centre — Chomp Chomp Food Centre, myVillage mall, local bistros.", ko: "빌리지 센터 — Chomp Chomp 호커센터, myVillage 몰, 동네 비스트로." } },
+            { name: "French school (LFS) orbit", body: { en: "Residential streets heavily favoured by French expat families.", ko: "프랑스계 외국인 가족들이 유독 선호하는 주거 골목들." } }
+          ],
+          insight: {
+            en: "The Gardens sit back from the MRT lines — daily transit means feeder buses or a car to Serangoon or Lorong Chuan stations.",
+            ko: "Gardens는 MRT에서 살짝 떨어져 있어요 — Serangoon이나 Lorong Chuan역까지 피더버스나 차가 필요해요."
+          },
           name: { en: "Serangoon Gardens / Kovan", ko: "Serangoon Gardens · Kovan" },
           dist: "D19", vibe: { en: "Villagey", ko: "동네 감성" },
           tags: ["landed", "value", "families", "hdb", "quiet"],
@@ -1289,6 +1535,20 @@ var CONTENT = {
         },
         {
           id: "pasir-panjang", zone: "west",
+          mrt: [
+            { l: ["cc"], s: "Pasir Panjang · Labrador Park · Haw Par Villa" }
+          ],
+          ratings: { commute: 2, expat: 2, food: 2, kids: 2, quiet: 3 },
+          rent3: "~S$5,500–7,000", rent4: "~S$8,000–11,000",
+          hubs: "Pasir Panjang Food Centre · Alexandra Retail Centre (ARC)",
+          enclaves: [
+            { name: "Pasir Panjang Hill", body: { en: "Low-density leafy slope of low-rise freehold condos.", ko: "저층 프리홀드 콘도가 모인 푸른 저밀도 언덕." } },
+            { name: "Labrador Park edge", body: { en: "Modern condos near Mapletree Business City and its retail.", ko: "Mapletree Business City와 리테일 인근의 현대식 콘도." } }
+          ],
+          insight: {
+            en: "Highly convenient for executives at Mapletree Business City, Science Park or NUS.",
+            ko: "Mapletree Business City·Science Park·NUS 근무자에게 특히 편리해요."
+          },
           name: { en: "Pasir Panjang / Kent Ridge", ko: "Pasir Panjang · Kent Ridge" },
           dist: "D5", vibe: { en: "Hillside", ko: "언덕 동네" },
           tags: ["quiet", "value", "mrt"],
@@ -1299,6 +1559,22 @@ var CONTENT = {
         },
         {
           id: "bishan-amk", zone: "heartlands",
+          mrt: [
+            { l: ["ns", "cc"], s: "Bishan" },
+            { l: ["ns"], s: "Ang Mo Kio" },
+            { l: ["te"], s: "Bright Hill · Mayflower" }
+          ],
+          ratings: { commute: 3, expat: 1, food: 3, kids: 3, quiet: 2 },
+          rent3: "~S$5,000–6,500", rent4: "~S$7,000–9,500",
+          hubs: "Junction 8 · AMK Hub · Bishan-Ang Mo Kio Park",
+          enclaves: [
+            { name: "Bishan Central", body: { en: "High-density town centre — Junction 8, the Red-line interchange, strong local school clusters.", ko: "고밀도 타운 센터 — Junction 8, 남북선 환승, 손꼽히는 로컬 학군." } },
+            { name: "Bishan Park fringe", body: { en: "Condos lining the expansive river parkland.", ko: "드넓은 강변 공원을 따라 늘어선 콘도들." } }
+          ],
+          insight: {
+            en: "Bishan-Ang Mo Kio Park is one of Singapore's largest urban parks — a naturalised river, dog runs and dining inside the park.",
+            ko: "Bishan-Ang Mo Kio Park는 싱가포르 최대급 도시공원이에요 — 자연형 하천, 도그런, 공원 안 레스토랑까지."
+          },
           name: { en: "Bishan / Ang Mo Kio", ko: "Bishan · Ang Mo Kio" },
           dist: "D20", vibe: { en: "Heartland-prime", ko: "중심 주거지" },
           tags: ["hdb", "value", "families", "mrt", "schools"],
@@ -1309,6 +1585,22 @@ var CONTENT = {
         },
         {
           id: "tampines", zone: "heartlands",
+          mrt: [
+            { l: ["ew", "dt"], s: "Tampines" },
+            { l: ["dt"], s: "Tampines East · Tampines West" },
+            { l: ["ew"], s: "Pasir Ris" }
+          ],
+          ratings: { commute: 2, expat: 2, food: 3, kids: 3, quiet: 2 },
+          rent3: "~S$4,500–5,800", rent4: "~S$6,500–8,500",
+          hubs: "Tampines Mall · Century Square · Tampines 1 · Our Tampines Hub",
+          enclaves: [
+            { name: "Tampines Central", body: { en: "Three major malls around one MRT interchange, plus Our Tampines Hub.", ko: "환승역 하나를 둘러싼 대형 몰 세 개와 Our Tampines Hub." } },
+            { name: "Pasir Ris coastal", body: { en: "Resort-style town with beach parks and mangrove trails near Overseas Family School.", ko: "비치 파크와 맹그로브 트레일이 있는 리조트풍 타운 — Overseas Family School 인근." } }
+          ],
+          insight: {
+            en: "Highly convenient for executives working at Changi Business Park or the airport.",
+            ko: "Changi Business Park·공항 근무자에게 아주 편리해요."
+          },
           name: { en: "Tampines / Pasir Ris", ko: "Tampines · Pasir Ris" },
           dist: "D18", vibe: { en: "East-hub", ko: "동부 허브" },
           tags: ["hdb", "value", "families", "mrt", "schools"],
@@ -1319,6 +1611,22 @@ var CONTENT = {
         },
         {
           id: "woodlands", zone: "heartlands",
+          mrt: [
+            { l: ["ns", "te"], s: "Woodlands" },
+            { l: ["te"], s: "Woodlands North · Woodlands South" },
+            { l: ["ns"], s: "Admiralty · Marsiling" }
+          ],
+          ratings: { commute: 1, expat: 2, food: 3, kids: 3, quiet: 3 },
+          rent3: "~S$3,800–5,000", rent4: "~S$5,500–7,500",
+          hubs: "Causeway Point · Woods Square",
+          enclaves: [
+            { name: "Woodlands Street / SAS enclave", body: { en: "Large private condos and landed rentals surrounding the Singapore American School campus.", ko: "Singapore American School 캠퍼스를 둘러싼 대형 콘도와 단독주택 임대." } },
+            { name: "Woodlands Regional Centre", body: { en: "High-density shopping hub at the Causeway Point MRT interchange.", ko: "Causeway Point 환승역의 고밀도 쇼핑 허브." } }
+          ],
+          insight: {
+            en: "One of the most cost-effective spots on the island for a big landed home or 4BR condo — if you work remotely or at SAS.",
+            ko: "재택이거나 SAS 근무라면, 큰 단독주택·4BR 콘도를 섬에서 가장 가성비 있게 구할 수 있는 곳이에요."
+          },
           name: { en: "Woodlands", ko: "Woodlands" },
           dist: "D25", vibe: { en: "Frontier", ko: "북부 관문" },
           tags: ["value", "quiet", "expat"],
@@ -1329,16 +1637,71 @@ var CONTENT = {
         },
         {
           id: "sentosa", zone: "sentosa",
-          name: { en: "Sentosa Cove / HarbourFront", ko: "Sentosa Cove · HarbourFront" },
+          mrt: [
+            { l: ["ne", "cc"], s: "HarbourFront (mainland hub)" },
+            { l: ["se"], s: "Sentosa Express — Resorts World · Imbiah · Beach" }
+          ],
+          ratings: { commute: 2, expat: 3, food: 1, kids: 2, quiet: 3 },
+          rent3: "~S$9,000–13,000", rent4: "~S$14,000–22,000+ (landed S$30,000–60,000+)",
+          hubs: "Quayside Isle · VivoCity (HarbourFront)",
+          enclaves: [
+            { name: "Ocean Drive / North Cove", body: { en: "Private waterfront landed bungalows with individual boat berths.", ko: "개별 보트 정박지가 딸린 프라이빗 수변 단독 방갈로." } },
+            { name: "Quayside Isle", body: { en: "Oceanfront condo belt around the marina's dining promenade (W Residences, The Oceanfront).", ko: "마리나 다이닝 산책로를 둘러싼 오션프런트 콘도 벨트(W Residences, The Oceanfront)." } }
+          ],
+          insight: {
+            en: "Inside the Cove itself you move by shuttle bus, bicycle, golf cart or car — and it remains the only place in Singapore where non-resident foreigners may buy landed homes (LDAU approval required).",
+            ko: "Cove 내부 이동은 셔틀버스·자전거·골프카트·자가용 몫이에요 — 그리고 여전히 싱가포르에서 유일하게 비거주 외국인이 단독주택을 살 수 있는 곳이에요(LDAU 승인 필요)."
+          },
+          name: { en: "Sentosa Cove", ko: "Sentosa Cove (센토사 코브)" },
           dist: "D4", vibe: { en: "Resort", ko: "리조트" },
           tags: ["beach", "amenities", "landed", "quiet"],
           body: {
-            en: "Ultra-luxury oceanfront condos and deep-water bungalows with private yacht berths (W Residences, The Oceanfront), plus the HarbourFront/Keppel Bay towers opposite. Landed rents routinely run ~S$30,000–60,000+ a month. Two things set it apart: it is the only place in Singapore where non-resident foreigners may buy landed homes (with Land Dealings Approval Unit sign-off), and the island gate adds time to every mainland trip — a resort sanctuary 15 minutes from the CBD, chosen by yacht owners and resort-lifestyle buyers.",
-            ko: "프라이빗 요트 정박지가 딸린 초호화 오션프런트 콘도와 수변 방갈로(W Residences, The Oceanfront), 그리고 맞은편 HarbourFront·Keppel Bay 타워들이에요. 단독주택 월세는 ~S$30,000–60,000+ 수준이 보통이에요. 특별한 점 두 가지: 싱가포르에서 유일하게 비거주 외국인이 단독주택을 매입할 수 있는 곳이고(Land Dealings Approval Unit 승인 필요), 섬 게이트 때문에 본섬 이동마다 시간이 조금씩 더 들어요 — CBD에서 15분 거리의 리조트 안식처로, 요트 오너와 리조트 라이프를 원하는 사람들이 선택해요."
+            en: "A gated resort enclave on Sentosa Island — ultra-luxury oceanfront condos and deep-water bungalows with private yacht berths (W Residences, The Oceanfront). The island gate adds time to every mainland trip, but the reward is a resort sanctuary 15 minutes from the CBD, chosen by yacht owners and resort-lifestyle buyers.",
+            ko: "센토사 섬 안의 게이티드 리조트 단지예요 — 프라이빗 요트 정박지가 딸린 초호화 오션프런트 콘도와 수변 방갈로(W Residences, The Oceanfront). 섬 게이트 때문에 본섬 이동마다 시간이 더 들지만, 그 대가로 CBD에서 15분 거리의 리조트 안식처를 얻어요. 요트 오너와 리조트 라이프를 원하는 사람들의 선택지예요."
+          }
+        },
+        {
+          id: "keppel-bay", zone: "sentosa",
+          name: { en: "Keppel Bay / HarbourFront", ko: "Keppel Bay · HarbourFront" },
+          dist: "D4", vibe: { en: "Marina-front", ko: "마리나 뷰" },
+          tags: ["beach", "amenities", "mrt", "quiet", "city"],
+          mrt: [
+            { l: ["cc", "ne"], s: "HarbourFront" },
+            { l: ["cc"], s: "Telok Blangah" }
+          ],
+          ratings: { commute: 3, expat: 3, food: 2, kids: 2, quiet: 3 },
+          rent3: "~S$8,500–11,500", rent4: "~S$13,000–19,000+",
+          hubs: "VivoCity · HarbourFront Centre · Marina at Keppel Bay",
+          enclaves: [
+            { name: "Keppel Bay marina belt", body: { en: "Architectural waterfront towers around the superyacht marina — Reflections, Caribbean and Corals at Keppel Bay.", ko: "슈퍼요트 마리나를 둘러싼 건축미 넘치는 수변 타워 — Reflections, Caribbean, Corals at Keppel Bay." } },
+            { name: "Telok Blangah foothills", body: { en: "Green hillside condos bordering Mount Faber and the Southern Ridges trail.", ko: "Mount Faber와 Southern Ridges 트레일에 맞닿은 푸른 언덕 콘도들." } }
+          ],
+          insight: {
+            en: "True waterfront living with mainland convenience — the boardwalk runs straight into VivoCity, Singapore's largest mall, and the HarbourFront MRT interchange.",
+            ko: "본섬의 편리함을 그대로 누리는 진짜 수변 생활이에요 — 보드워크가 싱가포르 최대 몰 VivoCity와 HarbourFront 환승역으로 바로 이어져요."
+          },
+          body: {
+            en: "Mainland luxury waterfront directly across from Sentosa, centred on superyacht marinas and architectural landmark condos — resort views without the island gate.",
+            ko: "센토사 바로 맞은편의 본섬 럭셔리 워터프런트예요. 슈퍼요트 마리나와 랜드마크급 콘도가 중심이고, 섬 게이트 없이 리조트 뷰를 누려요."
           }
         },
         {
           id: "bukit-batok", zone: "heartlands",
+          mrt: [
+            { l: ["dt"], s: "Bukit Panjang · Cashew" },
+            { l: ["ns"], s: "Bukit Batok · Bukit Gombak" }
+          ],
+          ratings: { commute: 2, expat: 1, food: 3, kids: 3, quiet: 3 },
+          rent3: "~S$4,200–5,200", rent4: "~S$6,000–7,800",
+          hubs: "Hillion Mall · Bukit Panjang Plaza · West Mall",
+          enclaves: [
+            { name: "Bukit Panjang integrated hub", body: { en: "Connected to Hillion Mall at the Downtown-line terminus.", ko: "다운타운선 종점의 Hillion Mall과 통합된 허브." } },
+            { name: "Bukit Batok Central", body: { en: "Traditional heartland hub around West Mall and Little Guilin park.", ko: "West Mall과 Little Guilin 공원을 낀 전통 주거 중심지." } }
+          ],
+          insight: {
+            en: "The Downtown line from Bukit Panjang is a one-seat ride to Newton and Bugis — no transfers.",
+            ko: "Bukit Panjang에서 다운타운선 한 번이면 환승 없이 Newton·Bugis까지 가요."
+          },
           name: { en: "Bukit Batok / Bukit Panjang", ko: "Bukit Batok · Bukit Panjang" },
           dist: "D23", vibe: { en: "Heartland-green", ko: "자연 옆 주거지" },
           tags: ["hdb", "value", "quiet", "families"],
@@ -1349,6 +1712,23 @@ var CONTENT = {
         },
         {
           id: "marina-bay", zone: "downtown",
+          mrt: [
+            { l: ["ns", "ew"], s: "Raffles Place" },
+            { l: ["te"], s: "Shenton Way · Marina Bay" },
+            { l: ["dt"], s: "Downtown · Bayfront" },
+            { l: ["cc"], s: "Marina Bay · Bayfront" }
+          ],
+          ratings: { commute: 3, expat: 3, food: 1, kids: 1, quiet: 2 },
+          rent3: "~S$12,000", rent4: "S$18,000–25,000+",
+          hubs: "Marina Bay Link Mall · Marina One · Suntec City",
+          enclaves: [
+            { name: "Marina Boulevard / Bayfront", body: { en: "Ultra-modern towers (Marina Bay Residences, The Sail) with panoramic bay views and direct subterranean MRT access.", ko: "초현대식 타워(Marina Bay Residences, The Sail) — 파노라마 베이 뷰에 지하로 MRT 직결이에요." } },
+            { name: "Marina One Complex", body: { en: "High-density integrated development (Marina One Residences) wrapped around an internal rainforest garden, with corporate amenities downstairs.", ko: "내부에 열대우림 정원을 품은 고밀도 복합 단지(Marina One Residences) — 아래층이 곧 오피스·리테일이에요." } }
+          ],
+          insight: {
+            en: "Very quiet on weekends once the office crowd departs. Groceries mean high-end basement grocers (CS Fresh at Marina One) — traditional wet markets don't exist here.",
+            ko: "주말엔 오피스 인파가 빠져 아주 조용해요. 장보기는 고급 지하 그로서리(Marina One의 CS Fresh) 몫이고, 재래시장은 아예 없어요."
+          },
           name: { en: "Marina Bay / Raffles Place", ko: "Marina Bay · Raffles Place" },
           dist: "D1", vibe: { en: "Skyline", ko: "스카이라인" },
           tags: ["city", "commute", "amenities"],
@@ -1359,6 +1739,23 @@ var CONTENT = {
         },
         {
           id: "tanjong-pagar", zone: "downtown",
+          mrt: [
+            { l: ["ew"], s: "Tanjong Pagar" },
+            { l: ["te"], s: "Maxwell · Shenton Way" },
+            { l: ["dt"], s: "Telok Ayer (fringe)" }
+          ],
+          ratings: { commute: 3, expat: 3, food: 3, kids: 1, quiet: 1 },
+          rent3: "~S$8,500–10,500", rent4: "~S$13,000–18,000",
+          hubs: "Guoco Tower · 100 AM · Icon Village · Maxwell Food Centre",
+          enclaves: [
+            { name: "Guoco Tower & Tanjong Pagar core", body: { en: "Direct MRT integration under the skyscraper homes (Wallich Residence, Altez, Icon).", ko: "초고층 주거(Wallich Residence, Altez, Icon) 아래로 MRT가 직결돼요." } },
+            { name: "Duxton Hill & Keong Saik", body: { en: "High-energy dining-and-nightlife shophouse pocket — boutique heritage walk-ups, artisan bakeries, cocktail lounges.", ko: "다이닝·나이트라이프 에너지가 넘치는 숍하우스 포켓 — 부티크 워크업, 아르티장 베이커리, 칵테일 라운지." } },
+            { name: "Shenton Way corridor", body: { en: "High-rise corporate residential edge (V on Shenton, One Shenton); noticeably quieter on weekends.", ko: "고층 오피스형 주거 라인(V on Shenton, One Shenton) — 주말엔 확실히 조용해져요." } }
+          ],
+          insight: {
+            en: "K-town proper — the island's densest run of Korean dining and marts. Weekend night noise is real along Tras Street, Duxton Road and Craig Road.",
+            ko: "명실상부 K-타운 — 한식당·한인마트 밀도가 섬에서 가장 높아요. 주말 밤 Tras Street·Duxton Road·Craig Road의 소음은 감안해야 해요."
+          },
           name: { en: "Tanjong Pagar / Shenton Way", ko: "Tanjong Pagar · Shenton Way (K-타운)" },
           dist: "D2", vibe: { en: "Work-live-play", ko: "직주근접" },
           tags: ["city", "commute", "korean", "amenities"],
@@ -1369,6 +1766,24 @@ var CONTENT = {
         },
         {
           id: "bugis-rochor", zone: "downtown",
+          mrt: [
+            { l: ["dt", "ew"], s: "Bugis" },
+            { l: ["cc", "dt"], s: "Promenade" },
+            { l: ["cc"], s: "Nicoll Highway" },
+            { l: ["dt"], s: "Rochor · Jalan Besar" }
+          ],
+          ratings: { commute: 3, expat: 2, food: 3, kids: 1, quiet: 1 },
+          rent3: "~S$7,500–9,500", rent4: "~S$11,000–15,000",
+          hubs: "Bugis Junction · Bugis+ · DUO Galleria · Suntec City",
+          enclaves: [
+            { name: "Beach Road / Midtown", body: { en: "Integrated luxury towers — DUO Residences, Midtown Modern, South Beach Residences.", ko: "복합 럭셔리 타워 — DUO Residences, Midtown Modern, South Beach Residences." } },
+            { name: "Kampong Glam fringe", body: { en: "Heritage walk-ups, boutique cafes and street art along Haji Lane and Arab Street.", ko: "Haji Lane·Arab Street의 헤리티지 워크업, 부티크 카페, 스트리트 아트." } },
+            { name: "Bras Basah arts pocket", body: { en: "Historic civic quarter of art museums, universities (SMU) and heritage hotels.", ko: "미술관, 대학(SMU), 헤리티지 호텔이 모인 역사 문화 지구." } }
+          ],
+          insight: {
+            en: "A major transit nexus where the Downtown and East-West lines cross. Beach Road traffic gets heavily congested on Friday evenings.",
+            ko: "다운타운선과 동서선이 교차하는 주요 환승 거점이에요. 금요일 저녁 Beach Road 정체는 심한 편이에요."
+          },
           name: { en: "Bugis / Rochor / Beach Road", ko: "Bugis · Rochor · Beach Road" },
           dist: "D7", vibe: { en: "Arts-fringe", ko: "아트 프린지" },
           tags: ["city", "commute", "mrt", "amenities"],
@@ -1379,6 +1794,22 @@ var CONTENT = {
         },
         {
           id: "little-india-balestier", zone: "fringe",
+          mrt: [
+            { l: ["ne", "dt"], s: "Little India" },
+            { l: ["ne"], s: "Farrer Park · Boon Keng" },
+            { l: ["dt"], s: "Jalan Besar · Bendemeer" }
+          ],
+          ratings: { commute: 3, expat: 2, food: 3, kids: 1, quiet: 1 },
+          rent3: "~S$5,500–7,000", rent4: "~S$8,000–10,500",
+          hubs: "City Square Mall · Mustafa Centre (24h) · Pek Kio Market",
+          enclaves: [
+            { name: "Farrer Park / City Square", body: { en: "Modern condos integrated with MRT and mall (City Square Residences).", ko: "MRT·몰과 통합된 현대식 콘도(City Square Residences)." } },
+            { name: "Balestier Road", body: { en: "Heritage eateries, lighting shops, mid-tier condos and historic walk-ups.", ko: "전통 맛집, 조명 상가, 중가 콘도, 역사적인 워크업이 섞인 거리." } }
+          ],
+          insight: {
+            en: "Mustafa Centre is Singapore's only true 24-hour mega-department store — electronics, gold, groceries and pharmaceuticals at 3 AM.",
+            ko: "Mustafa Centre는 싱가포르 유일의 진짜 24시간 대형 백화점이에요 — 새벽 3시에도 전자제품·금·식료품·약을 살 수 있어요."
+          },
           name: { en: "Little India / Farrer Park / Balestier", ko: "Little India · Farrer Park · Balestier" },
           dist: "D8/12", vibe: { en: "Colourful", ko: "컬러풀" },
           tags: ["city", "mrt", "value"],
@@ -1389,6 +1820,21 @@ var CONTENT = {
         },
         {
           id: "bedok-siglap", zone: "east",
+          mrt: [
+            { l: ["te"], s: "Siglap · Bayshore · Bedok South" },
+            { l: ["ew"], s: "Bedok" }
+          ],
+          ratings: { commute: 2, expat: 2, food: 3, kids: 3, quiet: 3 },
+          rent3: "~S$5,000–6,500", rent4: "~S$7,500–10,500",
+          hubs: "Siglap Centre · Bedok Mall · East Coast Lagoon Food Village",
+          enclaves: [
+            { name: "Siglap Village", body: { en: "Landed homes and shophouse cafes along Upper East Coast Road.", ko: "Upper East Coast Road의 단독주택과 숍하우스 카페." } },
+            { name: "Bayshore condo strip", body: { en: "High-density seafront towers (Bayshore Park, Costa Del Sol).", ko: "바닷가의 고밀도 타워(Bayshore Park, Costa Del Sol)." } }
+          ],
+          insight: {
+            en: "With TEL stations now at Siglap and Bayshore, this traditionally car-dependent enclave has fast direct rail into the city.",
+            ko: "Siglap·Bayshore에 TEL역이 생기면서, 차 없이는 힘들던 이 동네도 도심 직행 철도가 생겼어요."
+          },
           name: { en: "Bedok / Siglap / Bayshore", ko: "Bedok · Siglap · Bayshore" },
           dist: "D16", vibe: { en: "Suburban-coastal", ko: "근교 해안" },
           tags: ["beach", "quiet", "families", "landed", "value"],
@@ -1399,6 +1845,20 @@ var CONTENT = {
         },
         {
           id: "punggol-sengkang", zone: "heartlands",
+          mrt: [
+            { l: ["ne"], s: "Punggol · Sengkang · Buangkok · Punggol Coast" }
+          ],
+          ratings: { commute: 2, expat: 1, food: 3, kids: 3, quiet: 2 },
+          rent3: "~S$4,000–5,000", rent4: "~S$5,800–7,200",
+          hubs: "Waterway Point · Compass One · Sengkang Grand Mall",
+          enclaves: [
+            { name: "Waterway Point / Punggol Central", body: { en: "Integrated riverfront mega-mall and MRT hub.", ko: "강변의 복합 메가몰 + MRT 허브." } },
+            { name: "Compass One / Sengkang Central", body: { en: "Family town centre with a hospital and community facilities.", ko: "병원과 커뮤니티 시설을 갖춘 가족형 타운 센터." } }
+          ],
+          insight: {
+            en: "The park-connector network here lets you cycle for tens of kilometres along coastal rivers and out to Coney Island.",
+            ko: "파크 커넥터(PCN)를 따라 강변과 Coney Island까지 수십 km를 자전거로 달릴 수 있어요."
+          },
           name: { en: "Punggol / Sengkang", ko: "Punggol · Sengkang" },
           dist: "D19", vibe: { en: "New-town", ko: "신도시" },
           tags: ["hdb", "value", "families", "quiet"],
@@ -1409,6 +1869,21 @@ var CONTENT = {
         },
         {
           id: "jurong-lakeside", zone: "heartlands",
+          mrt: [
+            { l: ["ns", "ew"], s: "Jurong East" },
+            { l: ["ew"], s: "Chinese Garden · Lakeside" }
+          ],
+          ratings: { commute: 2, expat: 2, food: 3, kids: 3, quiet: 2 },
+          rent3: "~S$4,800–6,000", rent4: "~S$7,000–9,000",
+          hubs: "JEM · Westgate · IMM · Jurong Point",
+          enclaves: [
+            { name: "Jurong Gateway (CBD 2)", body: { en: "The commercial-and-shopping belt around Jurong East MRT.", ko: "Jurong East역을 둘러싼 상업·쇼핑 벨트." } },
+            { name: "Lakeside / Yuan Ching", body: { en: "Condos around the scenic Jurong Lake Gardens and the Canadian International School.", ko: "경치 좋은 Jurong Lake Gardens와 Canadian International School 주변의 콘도들." } }
+          ],
+          insight: {
+            en: "IMM is Singapore's largest outlet mall — 90+ brand outlets next to massive supermarkets.",
+            ko: "IMM은 싱가포르 최대 아울렛 몰이에요 — 브랜드 아울렛 90여 개에 대형 슈퍼마켓까지."
+          },
           name: { en: "Jurong East / Lakeside", ko: "Jurong East · Lakeside" },
           dist: "D22", vibe: { en: "Second CBD", ko: "제2 도심" },
           tags: ["hdb", "value", "mrt", "amenities", "families"],
@@ -1490,6 +1965,8 @@ var CONTENT = {
       /* rows reference atlas entries by id for names/links (name/cardId override for
          split rows); lat/lng are area centroids; walk 0–3 like the stock ratings */
       rows: [
+        { id: "woodleigh", district: "D13", lat: 1.3387, lng: 103.8709, br3: 6400, br4: 9200, rough: true, walk: 2, malls: "The Woodleigh Mall · The Poiz Centre", condo: 2, hdb: 2, landed: 0 },
+        { id: "keppel-bay", district: "D4", lat: 1.2662, lng: 103.8129, br3: 10000, br4: 16000, rough: true, walk: 2, malls: "VivoCity · HarbourFront Centre", condo: 3, hdb: 0, landed: 0 },
         { id: "beauty-world", district: "D21", lat: 1.3410, lng: 103.7758, br3: 5500, br4: 8500, walk: 3, malls: "Beauty World Centre · Bukit Timah Plaza (Sol Mart) · FairPrice Finest", condo: 2, hdb: 0, landed: 2 },
         { id: "kap-sixth", district: "D10/21", lat: 1.3315, lng: 103.7970, br3: 6800, br4: 10000, walk: 1, malls: "KAP Mall · Cold Storage (Guthrie House)", condo: 1, hdb: 0, landed: 3 },
         { id: "hillview", district: "D23", lat: 1.3624, lng: 103.7674, br3: 4400, br4: null, walk: 2, malls: "HillV2 (CS Fresh) · Rail Mall", condo: 2, hdb: 1, landed: 2 },
@@ -1670,6 +2147,8 @@ var CONTENT = {
            (they sit inside the corridor polygon, permanent pills would pile up). */
         spots: [
           { id: "beauty-world",   lat: 1.3410, lng: 103.7757, sub: true },
+          { id: "woodleigh",      lat: 1.3387, lng: 103.8709, sub: true },
+          { id: "keppel-bay",     lat: 1.2662, lng: 103.8129, sub: true },
           { id: "kap-sixth",      lat: 1.3328, lng: 103.7896, sub: true },
           { id: "hillview",       lat: 1.3625, lng: 103.7645, sub: true },
           { id: "river-valley",   lat: 1.2934, lng: 103.8360, dir: "left" },

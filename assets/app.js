@@ -1543,6 +1543,11 @@
         ),
         h("p", { text: t(e.body) })
       );
+      // prices: the guide's researched ranges when present, table figures otherwise
+      card.appendChild(h("p", { class: "atlas-stats" },
+        h("span", {}, h("b", { text: "3BR " }), h("span", { text: e.rent3 ? t(e.rent3) : (rows.length ? fmtPriceRange(rows, "br3") : "—") })),
+        h("span", {}, h("b", { text: "4BR " }), h("span", { text: e.rent4 ? t(e.rent4) : (rows.length ? fmtPriceRange(rows, "br4") : "—") }))
+      ));
       if (rows.length) {
         function maxOf(key) {
           return Math.max.apply(null, rows.map(function (r) { return r[key] || 0; }));
@@ -1552,10 +1557,6 @@
           return h("span", {}, h("b", { text: t(labelLeaf) + " " }),
             h("span", { class: "stock-cell", text: v ? "●●●".slice(0, v) : "—" }));
         }
-        card.appendChild(h("p", { class: "atlas-stats" },
-          h("span", {}, h("b", { text: "3BR " }), h("span", { text: fmtPriceRange(rows, "br3") })),
-          h("span", {}, h("b", { text: "4BR " }), h("span", { text: fmtPriceRange(rows, "br4") }))
-        ));
         var tcols = CONTENT.living.areaTable.cols;
         card.appendChild(h("p", { class: "atlas-stats" },
           dotSpan(CONTENT.ui.statWalk, "walk"),
@@ -1563,13 +1564,75 @@
           dotSpan(tcols.hdb, "hdb"),
           dotSpan(tcols.landed, "landed")
         ));
-        var malls = rows.map(function (r) { return r.malls; }).filter(Boolean)[0];
-        if (malls) card.appendChild(h("p", { class: "atlas-malls", text: malls }));
+      }
+      // five-axis livability ratings from the regional guide
+      if (e.ratings) {
+        function rate(labelLeaf, v) {
+          return h("span", {}, h("b", { text: t(labelLeaf) + " " }),
+            h("span", { class: "stock-cell", text: "●●●".slice(0, v) + "○○○".slice(0, 3 - v) }));
+        }
+        card.appendChild(h("p", { class: "atlas-stats atlas-ratings" },
+          rate(CONTENT.ui.ratingCommute, e.ratings.commute),
+          rate(CONTENT.ui.ratingExpat, e.ratings.expat),
+          rate(CONTENT.ui.ratingFood, e.ratings.food),
+          rate(CONTENT.ui.ratingKids, e.ratings.kids),
+          rate(CONTENT.ui.ratingQuiet, e.ratings.quiet)
+        ));
       }
       if (e.tags && e.tags.length) {
         card.appendChild(h("p", { class: "atlas-tags" }, e.tags.map(function (tg) {
           return tagLabels[tg] ? h("span", { class: "mini-tag", text: t(tagLabels[tg]) }) : null;
         })));
+      }
+      // area guide — MRT stations, micro-enclaves, anchor hubs, local insight
+      if (e.mrt || e.enclaves || e.insight) {
+        var MRT_LINES = {
+          ns: { code: "NS", color: "#d42e12", ink: "#fff" },
+          ew: { code: "EW", color: "#009645", ink: "#fff" },
+          cc: { code: "CC", color: "#fa9e0d", ink: "#231400" },
+          dt: { code: "DT", color: "#005ec4", ink: "#fff" },
+          ne: { code: "NE", color: "#9900aa", ink: "#fff" },
+          te: { code: "TE", color: "#9d5b25", ink: "#fff" },
+          se: { code: "SE", color: "#7a8890", ink: "#fff" }
+        };
+        var guide = h("div", { class: "area-guide-body" });
+        if (e.mrt) {
+          var ml = h("ul", { class: "mrt-list" });
+          e.mrt.forEach(function (m) {
+            var li = h("li", {});
+            (m.l || []).forEach(function (code) {
+              var ln = MRT_LINES[code];
+              if (ln) li.appendChild(h("span", {
+                class: "mrt-badge", text: ln.code,
+                style: "background:" + ln.color + ";color:" + ln.ink
+              }));
+            });
+            li.appendChild(h("span", { text: " " + m.s }));
+            ml.appendChild(li);
+          });
+          guide.appendChild(h("h5", { text: t(CONTENT.ui.mrtLabel) }));
+          guide.appendChild(ml);
+        }
+        if (e.enclaves) {
+          guide.appendChild(h("h5", { text: t(CONTENT.ui.enclavesTitle) }));
+          guide.appendChild(h("ul", { class: "enclave-list" }, e.enclaves.map(function (en) {
+            return h("li", {}, h("strong", { text: en.name + " — " }), h("span", { text: t(en.body) }));
+          })));
+        }
+        if (e.hubs) {
+          guide.appendChild(h("p", { class: "atlas-malls" },
+            h("b", { text: t(CONTENT.ui.hubsLabel) + " " }), h("span", { text: e.hubs })));
+        }
+        if (e.insight) {
+          guide.appendChild(h("div", { class: "local-take" },
+            h("span", { class: "take-badge", text: t(CONTENT.ui.localTake) }),
+            h("span", { text: t(e.insight) })
+          ));
+        }
+        card.appendChild(h("details", { class: "atlas-research area-guide" },
+          h("summary", {}, h("span", { class: "atlas-research-label", text: t(CONTENT.ui.areaGuide) })),
+          guide
+        ));
       }
       var area = null;
       if (e.researched && e.cardId) {
@@ -1588,7 +1651,7 @@
       }
       return card;
     }
-    at.zones.forEach(function (z) {
+    function renderZone(z) {
       var entries = at.entries.filter(function (e) { return e.zone === z.id; });
       if (!entries.length) return;
       var head = h("div", { class: "zone-head" },
@@ -1617,7 +1680,19 @@
       var grid = h("div", { class: "atlas-grid" });
       entries.forEach(function (e) { grid.appendChild(entryCard(e)); });
       wrap.appendChild(grid);
+    }
+
+    // regions (CENTRAL / WEST / EAST / NORTH / SOUTH) group the lettered sectors
+    var grouped = {};
+    (at.regions || []).forEach(function (rg) {
+      var zs = at.zones.filter(function (z) { return z.region === rg.id; });
+      if (!zs.length) return;
+      wrap.appendChild(h("h4", { class: "region-head", id: "region-" + rg.id },
+        h("span", { text: t(rg.title) })));
+      zs.forEach(function (z) { grouped[z.id] = true; renderZone(z); });
     });
+    at.zones.forEach(function (z) { if (!grouped[z.id]) renderZone(z); });
+
     // safety net: anything without a zone still renders
     var orphans = at.entries.filter(function (e) { return !e.zone; });
     if (orphans.length) {
