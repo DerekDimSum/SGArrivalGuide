@@ -634,9 +634,10 @@
       }
       rows.forEach(function (r) {
         tbody.appendChild(h("tr", {},
-          h("th", { scope: "row" },
+          h("th", { scope: "row", class: "school-name-cell" },
             r.site ? h("a", { href: r.site, target: "_blank", rel: "noopener", text: t(r.name) })
-                   : h("span", { text: t(r.name) })),
+                   : h("span", { text: t(r.name) }),
+            r.about ? h("span", { class: "school-about", text: t(r.about) }) : null),
           h("td", { text: t(sc.stages[r.stage]) }),
           h("td", {}, h("span", { text: t(sc.kinds[r.kind]) + " " }), r.kindVerify ? verifyBadge() : null),
           h("td", { text: r.tier ? t(sc.tiers[r.tier]) : "—" }),
@@ -725,13 +726,25 @@
           h("th", { text: t(ps.fees.cols.example) }),
           h("th", { text: t(ps.fees.cols.fee) })
         )),
-        h("tbody", {}, ps.fees.rows.map(function (r) {
-          return h("tr", {},
-            h("td", { class: "tier-cell", text: t(r.tier) }),
-            h("td", { text: t(r.example) }),
-            feeCell(r.fee, r.verify, r.url)
-          );
-        }))
+        h("tbody", {}, (function () {
+          // rows with a blank tier continue the group above — render the tier
+          // once with a rowspan so each school sits on its own clean line
+          var trs = [], i = 0;
+          while (i < ps.fees.rows.length) {
+            var span = 1;
+            while (i + span < ps.fees.rows.length && !t(ps.fees.rows[i + span].tier)) span++;
+            for (var k = 0; k < span; k++) {
+              var r = ps.fees.rows[i + k];
+              var tr = h("tr", { class: k ? "group-cont" : "group-start" });
+              if (k === 0) tr.appendChild(h("td", { class: "tier-cell", rowspan: String(span), text: t(r.tier) }));
+              tr.appendChild(h("td", { text: t(r.example) }));
+              tr.appendChild(feeCell(r.fee, r.verify, r.url));
+              trs.push(tr);
+            }
+            i += span;
+          }
+          return trs;
+        })())
       )),
       h("h4", { text: t(ps.siblings.title) }),
       h("p", { text: t(ps.siblings.body) }),
@@ -761,9 +774,19 @@
         h("th", { text: t(pr.intl.cols.eal) })
       )),
       h("tbody", {}, pr.intl.rows.map(function (r) {
+        // "Lead-in: School A (note) · School B (note)" → caption + one line per school
+        var raw = t(r.schools);
+        var colon = raw.indexOf(": ");
+        var lead = colon > 0 && colon < 60 ? raw.slice(0, colon) : null;
+        var items = (lead ? raw.slice(colon + 2) : raw).split(" · ");
+        var cell = h("td", { class: "school-list-cell" });
+        if (lead) cell.appendChild(h("span", { class: "school-lead", text: lead }));
+        cell.appendChild(h("ul", { class: "school-lines" }, items.map(function (s) {
+          return h("li", { text: s.trim() });
+        })));
         return h("tr", {},
           h("td", { class: "tier-cell", text: t(r.tier) }),
-          h("td", { text: t(r.schools) }),
+          cell,
           h("td", { text: t(r.fees) }),
           h("td", { text: t(r.waitlist) }),
           h("td", { text: t(r.eal) })
